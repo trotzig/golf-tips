@@ -63,4 +63,7 @@ Steps 1, 2 and 3 run in parallel now. The rest start as their dependencies merge
   be enabled, the options are making the repo public or another static host (ask first).
 - PR preview deployments need something beyond Pages (e.g. Cloudflare Pages / Netlify) — ask
   before adding.
+- CI on PRs is paused for throughput; checks run locally instead. Re-enable it (restore the
+  `pull_request` / `push` triggers in `.github/workflows/ci.yml`) once several people or agents
+  merge in parallel or `main` breaks, and consider making the `check` job required then.
 - How far to take the golfer: stylised mannequin vs. motion-captured realism.

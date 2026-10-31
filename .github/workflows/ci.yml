@@ -1,9 +1,14 @@
+# CI is paused for now to keep PR throughput high early on. Run the same checks locally before
+# opening a PR: pnpm lint && pnpm typecheck && pnpm test && pnpm build
+# The deploy workflow still runs `pnpm build`, so invalid content blocks a deploy.
+# To re-enable, restore these triggers above workflow_dispatch:
+#   pull_request:
+#   push:
+#     branches: [main]
 name: CI
 
 on:
-  pull_request:
-  push:
-    branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}

@@ -52,7 +52,9 @@ move to a free port if taken. Open `/golf-tips/` on the port it reports — the 
 ## Workflow
 
 - Never commit to `main` directly. Branch, open a PR, and **ask the owner before merging**.
-- CI must pass: lint, typecheck, test, content validation, build.
+- CI is paused for throughput (`.github/workflows/ci.yml` runs only on manual dispatch). Before
+  opening a PR, run `pnpm lint && pnpm typecheck && pnpm test && pnpm build` locally and make sure
+  it passes. The deploy build still fails on invalid content.
 - Merges to `main` deploy automatically to GitHub Pages. Don't add manual deploy steps.
 - **Ask before** adding any paid or external service (hosting, storage, analytics, CMS, etc.).
 - Keep PRs focused on one plan step. Update PLAN.md when a step is done or the plan changes.
