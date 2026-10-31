@@ -69,6 +69,10 @@
   [data-wind="m/s"] .wind-mph {
     display: none;
   }
+  /* Diagrams hide the m/s wind text by attribute so it stays hidden without this stylesheet. */
+  [data-wind="m/s"] tspan.wind-ms {
+    display: inline;
+  }
   :focus-visible {
     outline: 3px solid var(--color-accent);
     outline-offset: 2px;

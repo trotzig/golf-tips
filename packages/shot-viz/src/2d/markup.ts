@@ -16,10 +16,11 @@ function attrs(values: Record<string, string | number | undefined>): string {
     .join("");
 }
 
-// Text in every wind unit, for the page's `data-wind` CSS to show one (`.wind-mph`, `.wind-ms`).
+// Text in every wind unit for the page's `data-wind` CSS to pick from (`.wind-mph`, `.wind-ms`).
+// The m/s one is hidden by attribute, so mph shows wherever that CSS isn't loaded.
 const textMarkup = (shape: Extract<Shape, { kind: "text" }>) =>
   shape.wind
-    ? `<tspan class="wind-mph">${escape(shape.wind.mph)}</tspan><tspan class="wind-ms">${escape(shape.wind["m/s"])}</tspan>`
+    ? `<tspan class="wind-mph">${escape(shape.wind.mph)}</tspan><tspan class="wind-ms" display="none">${escape(shape.wind["m/s"])}</tspan>`
     : escape(shape.text);
 
 export function shapeMarkup(shape: Shape): string {

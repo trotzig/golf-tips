@@ -26,7 +26,7 @@ describe("SVG markup", () => {
       wind: { mph: "Wind 20 mph", "m/s": "Wind 9 m/s" },
     });
     expect(text).toContain(
-      '<tspan class="wind-mph">Wind 20 mph</tspan><tspan class="wind-ms">Wind 9 m/s</tspan>',
+      '<tspan class="wind-mph">Wind 20 mph</tspan><tspan class="wind-ms" display="none">Wind 9 m/s</tspan>',
     );
   });
 

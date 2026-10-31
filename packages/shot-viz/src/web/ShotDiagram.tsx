@@ -49,7 +49,9 @@ export function ShotDiagram({
       ) : (
         <text id={descId} opacity={0} fontSize={1}>
           <tspan className="wind-mph">{out.description}</tspan>
-          <tspan className="wind-ms">{metric}</tspan>
+          <tspan className="wind-ms" display="none">
+            {metric}
+          </tspan>
         </text>
       )}
       <g data-shapes="" dangerouslySetInnerHTML={markup} />
