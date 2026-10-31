@@ -19,8 +19,6 @@ import { bodyParagraphs, tagLabel } from "../../src/lib/text";
 import { useHanded, usePrefs } from "../../src/prefs";
 import { fonts, radius, useColors } from "../../src/theme";
 
-const LEVELS = { all: "All levels", beginner: "Beginner", advanced: "Advanced" };
-
 export default function SituationScreen() {
   const c = useColors();
   const handed = useHanded();
@@ -47,16 +45,6 @@ export default function SituationScreen() {
       <View style={{ gap: 8 }}>
         <PageTitle>{handed(s.title)}</PageTitle>
         <Body style={{ fontSize: 20, lineHeight: 27 }}>{handed(s.summary)}</Body>
-        <View accessibilityLabel="Applies to" style={styles.pills}>
-          <Text style={[styles.pill, { backgroundColor: c.accentSoft, color: c.accentStrong }]}>
-            {LEVELS[s.level]}
-          </Text>
-          {s.clubs?.map((club) => (
-            <Text key={club} style={[styles.pill, { backgroundColor: c.surface, color: c.ink }]}>
-              {club.charAt(0).toUpperCase() + club.slice(1)}
-            </Text>
-          ))}
-        </View>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Save to favourites"
@@ -144,15 +132,6 @@ export default function SituationScreen() {
 const styles = StyleSheet.create({
   breadcrumb: { alignSelf: "flex-start", paddingVertical: 4 },
   breadcrumbText: { fontFamily: fonts.medium, fontSize: 16, textDecorationLine: "underline" },
-  pills: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 4 },
-  pill: {
-    fontFamily: fonts.medium,
-    fontSize: 14,
-    borderRadius: radius.pill,
-    overflow: "hidden",
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-  },
   save: {
     alignSelf: "flex-start",
     flexDirection: "row",
