@@ -12,4 +12,5 @@ export * from "./core/handedness.ts";
 export * from "./core/timeline.ts";
 export * from "./2d/shapes.ts";
 export * from "./2d/markup.ts";
+export * from "./2d/elements.ts";
 export { exampleSceneInputs, exampleScenes } from "./scenes/index.ts";

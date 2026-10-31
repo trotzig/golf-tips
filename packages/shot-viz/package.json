@@ -8,6 +8,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./web": "./src/web/index.ts",
+    "./native": "./src/native/index.ts",
     "./player": "./src/web/player.ts",
     "./package.json": "./package.json"
   },
@@ -28,10 +29,14 @@
     "zod": "^4.6.7"
   },
   "peerDependencies": {
-    "react": "^19.0.0"
+    "react": "^19.0.0",
+    "react-native-svg": "^15.0.0"
   },
   "peerDependenciesMeta": {
     "react": {
+      "optional": true
+    },
+    "react-native-svg": {
       "optional": true
     }
   },
@@ -43,6 +48,8 @@
     "react-dom": "^19.3.0",
     "typescript": "~6.0.3",
     "vite": "^8.3.0",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.0",
+    "react-native": "0.88.1",
+    "react-native-svg": "15.16.0"
   }
 }

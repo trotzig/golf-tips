@@ -8,3 +8,7 @@ content/
 # Markdown is hand-written prose (and content/); keep it out of the formatter.
 *.md
 .happo-manifest/
+.expo/
+apps/mobile/ios/
+apps/mobile/android/
+apps/mobile/src/generated/

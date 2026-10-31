@@ -12,9 +12,10 @@ dropped for now; it is in the git history if we come back to it.)
 | `@shotbook/shot-viz`       | Types, zod schema, maths, example scenes, 2D scene → shapes   | Anywhere (no DOM)    |
 | `@shotbook/shot-viz/web`   | `<ShotDiagram>` (React DOM SVG)                               | Web                  |
 | `@shotbook/shot-viz/player` | `createShotPlayer`: plays/scrubs a rendered diagram, no React | Browser              |
+| `@shotbook/shot-viz/native` | `<ShotDiagram>` (react-native-svg) and `useShotPlayer`       | React Native         |
 
 The core must stay platform-neutral so the native app can import it. React is an optional peer
-dependency, only needed for `/web`.
+dependency, only needed for `/web` and `/native`; `react-native-svg` only for `/native`.
 
 ```tsx
 import { exampleScenes } from "@shotbook/shot-viz";

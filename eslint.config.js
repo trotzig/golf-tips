@@ -5,7 +5,17 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["**/node_modules/", "**/dist/", "**/dist-demo/", "**/.astro/", ".claude/"],
+    ignores: [
+      "**/node_modules/",
+      "**/dist/",
+      "**/dist-demo/",
+      "**/.astro/",
+      ".claude/",
+      "apps/mobile/.expo/",
+      "apps/mobile/ios/",
+      "apps/mobile/android/",
+      "apps/mobile/src/generated/",
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
