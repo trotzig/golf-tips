@@ -27,6 +27,7 @@ import { groundHeight, groundNormal } from "../core/terrain.ts";
 import { windSpeedText, type WindUnit } from "../core/units.ts";
 import {
   add,
+  cross,
   DEG,
   dot,
   mix,
@@ -84,9 +85,12 @@ export interface Theme {
   sand: string;
   green: string;
   skin: string;
+  hair: string;
+  visor: string;
   shirt: string;
   trousers: string;
   shoes: string;
+  soles: string;
   shaft: string;
   clubhead: string;
   ball: string;
@@ -97,23 +101,28 @@ export interface Theme {
   halo: string;
 }
 
+// Muted course greens around the site's accent green (`--color-accent`), with its red
+// (`--color-highlight`) kept for the ball flight, the one highlight.
 export const defaultTheme: Theme = {
-  sky: "#dcecf7",
-  fairway: "#6fa857",
-  rough: "#4c7f3a",
-  sand: "#e3cf9a",
-  green: "#82bf63",
-  skin: "#e2b48f",
-  shirt: "#1f5f99",
-  trousers: "#3b3f46",
-  shoes: "#f4f4f4",
-  shaft: "#55595f",
-  clubhead: "#2b2d31",
+  sky: "#e1eeee",
+  fairway: "#74a86c",
+  rough: "#4f8455",
+  sand: "#e8d6a8",
+  green: "#8cc583",
+  skin: "#e0b18e",
+  hair: "#4a3326",
+  visor: "#0f7a4a",
+  shirt: "#24405e",
+  trousers: "#cdbf9f",
+  shoes: "#ffffff",
+  soles: "#3f4341",
+  shaft: "#5d6360",
+  clubhead: "#1d211f",
   ball: "#ffffff",
-  flight: "#d9480f",
+  flight: "#c63823",
   annotation: "#ffffff",
   aim: "#ffd43b",
-  label: "#111111",
+  label: "#1d211f",
   halo: "#ffffff",
 };
 
@@ -410,31 +419,44 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
     return s ? (metres * focalPx) / s.depth : 0;
   };
 
-  push([j.leadShoulder, j.trailShoulder, j.trailHip, j.leadHip], (pts) => ({
+  const pushAt = (at: Vec3, nudge: number, shape: (c: Pt & { depth: number }) => Shape | null) => {
+    const c = toScreen(at);
+    const sh = c && shape(c);
+    if (c && sh) items.push({ depth: c.depth + nudge, shape: sh });
+  };
+
+  // Torso: a shirt panel from the shoulders to the hips, with a thick round-capped line across
+  // the shoulders on top so they come out rounded rather than as the panel's corners.
+  const towardNeck = (p: Vec3) => mix3(p, j.neck, 0.3);
+  push([towardNeck(j.leadShoulder), towardNeck(j.trailShoulder), j.trailHip, j.leadHip], (pts) => ({
     kind: "polygon",
     points: pts,
     fill: theme.shirt,
     stroke: theme.shirt,
-    strokeWidth: px(0.12, j.neck),
-    opacity: 1,
+    strokeWidth: px(0.13, j.neck),
   }));
+  const shoulderMid = scale(add(j.leadShoulder, j.trailShoulder), 0.5);
+  pushAt(shoulderMid, -0.001, () => {
+    const pts = [j.trailShoulder, j.leadShoulder].map((p) => toScreen(mix3(p, j.neck, 0.08)));
+    if (pts.some((p) => p === null)) return null;
+    return {
+      kind: "polyline",
+      points: (pts as Pt[]).map(({ x, y }) => ({ x, y })),
+      stroke: theme.shirt,
+      strokeWidth: px(0.11, shoulderMid),
+    };
+  });
   for (const [a, b] of BONES) {
     if (
       (a === "leadShoulder" && b === "trailShoulder") ||
       (a === "leadHip" && b === "trailHip") ||
-      a === "pelvis"
+      a === "pelvis" ||
+      b.includes("Toe")
     )
       continue;
     const isArm = b.includes("Elbow") || b.includes("Hand");
-    const isFoot = b.includes("Toe");
-    const colour = isFoot
-      ? theme.shoes
-      : isArm
-        ? b.includes("Hand")
-          ? theme.skin
-          : theme.shirt
-        : theme.trousers;
-    const widthM = LIMB_WIDTH[b] ?? (isFoot ? 0.08 : isArm ? 0.075 : 0.11);
+    const colour = isArm ? (b.includes("Hand") ? theme.skin : theme.shirt) : theme.trousers;
+    const widthM = LIMB_WIDTH[b] ?? (isArm ? 0.075 : 0.11);
     const mid = scale(add(j[a], j[b]), 0.5);
     push([j[a], j[b]], (pts) => ({
       kind: "polyline",
@@ -443,19 +465,53 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
       strokeWidth: px(widthM, mid),
     }));
   }
+  // Shoes: an upper from heel over the ankle to the toe, on a dark sole along the ground.
+  for (const side of ["lead", "trail"] as const) {
+    const ankle = j[`${side}Ankle`];
+    const toe = j[`${side}Toe`];
+    const along = normalize([toe[0] - ankle[0], 0, toe[2] - ankle[2]]);
+    const atHeight = (p: Vec3, h: number): Vec3 => [
+      p[0],
+      groundHeight(scene.terrain, p[0], p[2]) + h,
+      p[2],
+    ];
+    const heel = add(ankle, scale(along, -0.05));
+    const tip = add(toe, scale(along, 0.02));
+    const upper = [atHeight(heel, 0.04), atHeight(ankle, 0.06), atHeight(toe, 0.035)];
+    const sole = [atHeight(heel, 0.018), atHeight(tip, 0.018)];
+    const mid = scale(add(ankle, toe), 0.5);
+    for (const [pts, colour, w, nudge] of [
+      [sole, theme.soles, 0.05, 0.002],
+      [upper, theme.shoes, 0.075, 0.001],
+    ] as const) {
+      pushAt(mid, nudge, () => {
+        const s = pts.map(toScreen);
+        if (s.some((p) => p === null)) return null;
+        return {
+          kind: "polyline",
+          points: (s as Pt[]).map(({ x, y }) => ({ x, y })),
+          stroke: colour,
+          strokeWidth: px(w, mid),
+        };
+      });
+    }
+  }
   push([j.neck, j.head], (pts) => ({
     kind: "polyline",
     points: pts,
     stroke: theme.skin,
     strokeWidth: px(0.09, j.neck),
   }));
-  const headScreen = toScreen(j.head);
-  if (headScreen) {
-    items.push({
-      depth: headScreen.depth,
-      shape: { kind: "circle", c: headScreen, r: px(pose.headRadius, j.head), fill: theme.skin },
-    });
-  }
+  const headParts = headShapes(
+    j.head,
+    j.neck,
+    pose.face,
+    pose.headRadius,
+    px(pose.headRadius, j.head),
+    toScreen,
+    theme,
+  );
+  for (const { shape, nudge } of headParts) pushAt(j.head, nudge, () => shape);
   push([j.leadHand, j.trailHand], (pts) => ({
     kind: "polyline",
     points: pts,
@@ -573,6 +629,135 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
   return { width, height, view, shapes, title: scene.title, description };
 }
 
+const mix3 = (a: Vec3, b: Vec3, t: number): Vec3 => add(scale(a, 1 - t), scale(b, t));
+
+/**
+ * The head, seen from the camera: skin, hair over the top and back, and a visor (a band round
+ * the forehead with a brim). Worked out on a unit sphere in camera space (x right, y down,
+ * z toward the camera) and drawn orthographically around the head's centre, close enough at
+ * head size. `nudge` keeps the parts in order when depth-sorted with the body.
+ */
+function headShapes(
+  head: Vec3,
+  neck: Vec3,
+  face: Vec3,
+  radius: number,
+  rho: number,
+  toScreen: (p: Vec3) => (Pt & { depth: number }) | null,
+  theme: Theme,
+): { shape: Shape; nudge: number }[] {
+  const c = toScreen(head);
+  if (!c || rho <= 0) return [];
+  const eps = radius * 0.1;
+  const perM = rho / radius;
+  // A world direction in camera space, from how a short step along it projects.
+  const camDir = (d: Vec3): Vec3 | null => {
+    const s = toScreen(add(head, scale(d, eps)));
+    if (!s) return null;
+    return normalize([
+      (s.x - c.x) / (perM * eps),
+      (s.y - c.y) / (perM * eps),
+      (c.depth - s.depth) / eps,
+    ]);
+  };
+  const up = camDir(normalize(sub(head, neck)));
+  const look = camDir(normalize(sub(face, head)));
+  if (!up || !look) return [];
+  const fwd = normalize(sub(look, scale(up, dot(look, up))));
+  const side = cross(up, fwd);
+  const at = (v: Vec3): Pt => ({ x: c.x + rho * v[0], y: c.y + rho * v[1] });
+  const out: { shape: Shape; nudge: number }[] = [
+    { shape: { kind: "circle", c: { x: c.x, y: c.y }, r: rho, fill: theme.skin }, nudge: 0 },
+  ];
+
+  const hair = sphereCap(normalize(sub(up, scale(fwd, 0.8))), 0.1);
+  if (hair.length > 2)
+    out.push({
+      shape: { kind: "polygon", points: hair.map(at), fill: theme.hair },
+      nudge: -0.0005,
+    });
+
+  // Visor band: round the front and sides of the head, a little above its middle.
+  const ring = (u: number, r: number): Vec3 =>
+    add(scale(up, 0.45), add(scale(fwd, r * Math.cos(u)), scale(side, r * Math.sin(u))));
+  const band: Pt[] = [];
+  for (let i = 0; i <= 16; i++) {
+    const p = ring(((i / 16) * 2 - 1) * 1.7, 0.92);
+    if (p[2] >= 0) band.push(at(p));
+  }
+  if (band.length > 1)
+    out.push({
+      shape: { kind: "polyline", points: band, stroke: theme.visor, strokeWidth: rho * 0.2 },
+      nudge: -0.0007,
+    });
+  // Brim: from temple to temple, out past the forehead and dipping a little.
+  const brim: Vec3[] = [];
+  for (let i = 0; i <= 8; i++) brim.push(ring(((i / 8) * 2 - 1) * (Math.PI / 2), 0.92));
+  for (let i = 8; i >= 0; i--) {
+    const u = ((i / 8) * 2 - 1) * (Math.PI / 2);
+    const cu = Math.cos(u);
+    brim.push(
+      add(add(scale(up, 0.45 - 0.08 * cu), scale(fwd, 1.25 * cu)), scale(side, 0.92 * Math.sin(u))),
+    );
+  }
+  const tip = add(scale(up, 0.37), scale(fwd, 1.25));
+  out.push({
+    shape: {
+      kind: "polygon",
+      points: brim.map(at),
+      fill: theme.visor,
+      stroke: theme.visor,
+      strokeWidth: rho * 0.08,
+    },
+    nudge: tip[2] >= 0 ? -0.0009 : 0.0005,
+  });
+  return out;
+}
+
+/**
+ * Outline, on a unit sphere seen from +z, of the visible part of the cap where a point's
+ * direction `n` has `n · axis > k`: the cap's rim where it faces the camera, closed along
+ * the sphere's silhouette.
+ */
+function sphereCap(axis: Vec3, k: number): Vec3[] {
+  const helper: Vec3 = Math.abs(axis[0]) < 0.9 ? [1, 0, 0] : [0, 1, 0];
+  const p = normalize(cross(axis, helper));
+  const q = cross(axis, p);
+  const rr = Math.sqrt(1 - k * k);
+  const N = 32;
+  const rim = Array.from({ length: N }, (_, i): Vec3 => {
+    const u = (i / N) * 2 * Math.PI;
+    return add(scale(axis, k), add(scale(p, rr * Math.cos(u)), scale(q, rr * Math.sin(u))));
+  });
+  const seen = rim.map((v) => v[2] >= 0);
+  if (seen.every(Boolean)) return rim;
+  const start = seen.findIndex((v, i) => v && !seen[(i + N - 1) % N]);
+  if (start < 0) return [];
+  // Where the rim crosses the silhouette (z = 0), between a hidden and a visible point.
+  const onEdge = (a: Vec3, b: Vec3): Vec3 => {
+    const t = a[2] / (a[2] - b[2]);
+    const v = add(a, scale(sub(b, a), t));
+    const l = Math.hypot(v[0], v[1]) || 1;
+    return [v[0] / l, v[1] / l, 0];
+  };
+  const out: Vec3[] = [onEdge(rim[(start + N - 1) % N]!, rim[start]!)];
+  let i = start;
+  while (seen[i % N]) out.push(rim[i++ % N]!);
+  out.push(onEdge(rim[i % N]!, rim[(i + N - 1) % N]!));
+  // Back along the silhouette, through the side the cap is on.
+  const from = Math.atan2(out[out.length - 1]![1], out[out.length - 1]![0]);
+  const to = Math.atan2(out[0]![1], out[0]![0]);
+  let delta = Math.atan2(Math.sin(to - from), Math.cos(to - from));
+  const mid = from + delta / 2;
+  if (Math.cos(mid) * axis[0] + Math.sin(mid) * axis[1] < k)
+    delta -= Math.sign(delta) * 2 * Math.PI;
+  const steps = Math.max(1, Math.ceil(Math.abs(delta) / (Math.PI / 10)));
+  for (let s = 1; s < steps; s++) {
+    const a = from + (delta * s) / steps;
+    out.push([Math.cos(a), Math.sin(a), 0]);
+  }
+  return out;
+}
 function rect(w: number, h: number): Pt[] {
   return [
     { x: 0, y: 0 },

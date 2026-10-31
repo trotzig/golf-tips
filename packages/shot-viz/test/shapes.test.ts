@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildShapes2D,
   cameraPresets,
+  defaultTheme,
   computeFlight,
   describeScene,
   exampleScenes,
@@ -54,7 +55,7 @@ describe("2D shapes", () => {
     const before = buildShapes2D(scene, { view: "behind", ballTime: -0.5 });
     const after = buildShapes2D(scene, { view: "behind", ballTime: 2 });
     const flightLines = (o: typeof before) =>
-      o.shapes.filter((s) => s.kind === "polyline" && s.stroke === "#d9480f");
+      o.shapes.filter((s) => s.kind === "polyline" && s.stroke === defaultTheme.flight);
     expect(flightLines(before)).toHaveLength(0);
     expect(flightLines(after)).toHaveLength(1);
   });
@@ -64,7 +65,9 @@ describe("2D shapes", () => {
     const flight = computeFlight(scene);
     for (const view of ["face-on", "down-the-line"] as const) {
       const out = buildShapes2D(scene, { view, flight, ballTime: flight.flightTime - 0.2 });
-      const tracer = out.shapes.find((s) => s.kind === "polyline" && s.stroke === "#d9480f");
+      const tracer = out.shapes.find(
+        (s) => s.kind === "polyline" && s.stroke === defaultTheme.flight,
+      );
       const ball = out.shapes.find((s) => s.kind === "circle" && s.fill === "#ffffff");
       expect(tracer?.kind).toBe("polyline");
       expect(ball?.kind).toBe("circle");
