@@ -26,6 +26,12 @@
           }
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "797043cd-682a-4755-9e38-3db2b8e1d3f8"
+      }
+    },
+    "owner": "shotbooks-team"
   }
 }
