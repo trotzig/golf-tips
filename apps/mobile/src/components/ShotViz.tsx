@@ -1,7 +1,7 @@
 import Slider from "@react-native-community/slider";
 import { handedScene, type ShotScene } from "@shotbook/shot-viz";
 import { ShotDiagram, useShotPlayer } from "@shotbook/shot-viz/native";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from "react-native";
 import { usePrefs } from "../prefs";
 import { fonts, radius, useColors } from "../theme";
@@ -27,6 +27,7 @@ export function ShotViz({ scene: input }: { scene: ShotScene }) {
   const scene = useMemo(() => handedScene(input, hand), [input, hand]);
   const player = useShotPlayer(scene);
   const reduceMotion = useReduceMotion();
+  const dragging = useRef(false);
 
   return (
     <View style={[ui.card, cardStyle(c), styles.figure]}>
@@ -52,7 +53,19 @@ export function ShotViz({ scene: input }: { scene: ShotScene }) {
           minimumValue={0}
           maximumValue={player.duration}
           value={player.t}
-          onValueChange={player.seek}
+          // The slider also reports values set from code (during playback), so only seek while
+          // the reader is dragging it.
+          onSlidingStart={() => {
+            dragging.current = true;
+            player.stop();
+          }}
+          onValueChange={(v) => {
+            if (dragging.current) player.seek(v);
+          }}
+          onSlidingComplete={(v) => {
+            dragging.current = false;
+            player.seek(v);
+          }}
           minimumTrackTintColor={c.accent}
           maximumTrackTintColor={c.lineStrong}
           thumbTintColor={c.accent}
