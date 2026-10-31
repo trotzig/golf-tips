@@ -8,6 +8,7 @@ import {
   DEG,
   distance,
   dot,
+  length,
   mix,
   normalize,
   rotate,
@@ -280,7 +281,25 @@ export function poseGolfer(scene: ShotScene, phase = 0): Pose {
   const posed = phase === 0 ? body : buildBody(scene, setup, depth, key, turnMax);
   const armAngle = key.arm * armMax * DEG;
   const clubAngle = armAngle + key.hinge * hingeMax * DEG;
-  const handsTarget = add(hub, rotate(r, normal, armAngle));
+  const clubDir = rotate(shaftDir, normal, clubAngle);
+  let handsTarget = add(hub, rotate(r, normal, armAngle));
+  if (!isPutt && phase > PHASE.impact) {
+    // The hub stays put while the shoulders turn and rise, which would fold the lead arm right
+    // after impact ("chicken wing"). Keep it extended through the ball, with the trail arm still
+    // reaching the grip (alternating the two limits settles where both hold); fold at the finish.
+    const fold = smoothstep((phase - 0.8) / (1 - 0.8));
+    const minReach = (UPPER_ARM + FOREARM) * mix(0.95, 0.7, fold);
+    const maxTrail = (UPPER_ARM + FOREARM) * 0.99;
+    for (let i = 0; i < 8; i++) {
+      const toHands = sub(handsTarget, posed.joints.leadShoulder);
+      if (length(toHands) < minReach) {
+        handsTarget = add(posed.joints.leadShoulder, scale(normalize(toHands), minReach));
+      }
+      const toGrip = sub(add(handsTarget, scale(clubDir, 0.09)), posed.joints.trailShoulder);
+      const excess = length(toGrip) - maxTrail;
+      if (excess > 0) handsTarget = sub(handsTarget, scale(normalize(toGrip), excess));
+    }
+  }
   const lead = solveTwoBone(
     posed.joints.leadShoulder,
     handsTarget,
@@ -288,7 +307,6 @@ export function poseGolfer(scene: ShotScene, phase = 0): Pose {
     FOREARM,
     add(sub(posed.joints.pelvis, posed.joints.leadShoulder), scale(Z, -0.2)),
   );
-  const clubDir = rotate(shaftDir, normal, clubAngle);
   const leadHand = add(lead.end, scale(clubDir, -0.02));
   const trailHandTarget = add(lead.end, scale(clubDir, 0.09));
   const trail = solveTwoBone(

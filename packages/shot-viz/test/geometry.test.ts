@@ -101,6 +101,17 @@ describe("golfer pose", () => {
     expect(distance(impact.club.hosel, [0, 0, 0])).toBeLessThan(0.15);
   });
 
+  it("extends both arms through the ball (no chicken wing), folding only at the finish", () => {
+    for (const p of [0.7, 0.75, 0.8]) {
+      const j = poseGolfer(flat, p).joints;
+      expect(distance(j.leadShoulder, j.leadHand)).toBeGreaterThan(0.54);
+      expect(distance(j.trailShoulder, j.trailHand)).toBeGreaterThan(0.54);
+      expect(distance(j.leadHand, j.trailHand)).toBeCloseTo(0.11, 2);
+    }
+    const finish = poseGolfer(flat, 1).joints;
+    expect(distance(finish.leadShoulder, finish.leadHand)).toBeLessThan(0.5);
+  });
+
   it("tilts the shoulders with the slope", () => {
     const tilt = (slopeAlong: number) => {
       const j = poseGolfer(parseScene({ id: "s", title: "s", terrain: { slopeAlong } })).joints;
