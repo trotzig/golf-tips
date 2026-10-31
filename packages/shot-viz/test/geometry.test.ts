@@ -13,6 +13,7 @@ import {
   solveTwoBone,
   timelineAt,
   PHASE,
+  type ShotScene,
   type Vec3,
 } from "../src/index.ts";
 
@@ -110,6 +111,21 @@ describe("golfer pose", () => {
     }
     const finish = poseGolfer(flat, 1).joints;
     expect(distance(finish.leadShoulder, finish.leadHand)).toBeLessThan(0.5);
+  });
+
+  it("lifts the trail heel through to the finish, less in a short swing and not in a putt", () => {
+    const rise = (scene: ShotScene) =>
+      poseGolfer(scene, 1).joints.trailAnkle[1] - poseGolfer(scene, 0).joints.trailAnkle[1];
+    const half = parseScene({ id: "h", title: "h", swing: { length: "half" } });
+    const putt = parseScene({ id: "p", title: "p", swing: { club: "putter" } });
+    expect(rise(flat)).toBeGreaterThan(0.04);
+    expect(rise(half)).toBeGreaterThan(0.005);
+    expect(rise(half)).toBeLessThan(rise(flat));
+    expect(rise(putt)).toBeCloseTo(0, 5);
+    expect(poseGolfer(flat, 0.2).joints.trailAnkle[1]).toBeCloseTo(
+      poseGolfer(flat, 0).joints.trailAnkle[1],
+      5,
+    );
   });
 
   it("tilts the shoulders with the slope", () => {

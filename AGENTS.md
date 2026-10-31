@@ -197,6 +197,11 @@ Rules: scenes are data, not code. Core geometry/flight maths is pure TypeScript 
 Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
 `prefers-reduced-motion`.
 
+The swing motion is data too: `SwingTuning` in `packages/shot-viz/src/core/pose.ts` (keyframes
+plus body-rotation knobs), with `DEFAULT_SWING` the one every diagram uses. Tune it in the swing
+playground (`pnpm --filter @shotbook/shot-viz dev`, then `/swing.html`; preview config `shot-viz`
+in the desktop app), which compares against the classic swing and copies the result as JSON.
+
 ## Web app
 
 - Astro static output; React islands only for interactive parts (search, animated viz).

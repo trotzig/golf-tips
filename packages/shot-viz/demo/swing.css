@@ -1,0 +1,144 @@
+.pg {
+  padding: 16px 20px 40px;
+}
+.pg-head h1 {
+  margin: 0 0 4px;
+  font-size: 22px;
+}
+.pg-head .grow {
+  flex: 1;
+  min-width: 240px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.pg-head .grow input {
+  flex: 1;
+}
+.pg-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 540px;
+  gap: 20px;
+  align-items: start;
+}
+.pg-views .diagrams {
+  max-width: none;
+}
+.pg h2 {
+  font-size: 15px;
+  margin: 16px 0 8px;
+}
+.strip-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.strip {
+  display: grid;
+  grid-template-columns: 64px repeat(9, minmax(0, 1fr));
+  gap: 4px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.strip-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #52606d;
+}
+.frame {
+  padding: 0;
+  border: 1px solid #dde3da;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  color: #52606d;
+}
+.frame span {
+  display: block;
+  padding: 2px 0;
+}
+.pg-tune {
+  position: sticky;
+  top: 12px;
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #dde3da;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.pg-tune .row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.pg-tune button,
+.pg select,
+.pg-head button {
+  min-height: 34px;
+  font: inherit;
+  font-size: 14px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid #b9c2b5;
+  background: #fff;
+  cursor: pointer;
+}
+.knob {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.knob input,
+.knob select {
+  width: 100%;
+}
+.hint {
+  font-size: 12px;
+  color: #52606d;
+  margin: 0 0 8px;
+}
+.keys {
+  overflow-x: auto;
+}
+.keys table {
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.keys th {
+  font-weight: 600;
+  text-align: left;
+  padding: 2px;
+}
+.keys td {
+  padding: 1px;
+}
+.keys input {
+  width: 46px;
+  font: inherit;
+  padding: 2px;
+}
+.keys tr.near {
+  background: #e7f1e7;
+}
+.keys .ops button {
+  min-height: 24px;
+  padding: 0 6px;
+}
+@media (max-width: 1100px) {
+  .pg-body {
+    grid-template-columns: 1fr;
+  }
+  .pg-tune {
+    position: static;
+    max-height: none;
+  }
+  .strip {
+    grid-template-columns: 48px repeat(9, minmax(60px, 1fr));
+    overflow-x: auto;
+  }
+}

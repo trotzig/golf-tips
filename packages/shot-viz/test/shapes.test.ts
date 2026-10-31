@@ -41,13 +41,18 @@ describe("2D shapes", () => {
   it("mirrors the drawing for a left-handed golfer", () => {
     const right = parseScene({ id: "r", title: "r" });
     const left = parseScene({ id: "l", title: "l", golfer: { handedness: "left" } });
+    // The head is the skin-coloured outline with the most points.
     const head = (s: typeof right) => {
-      const circles = buildShapes2D(s, { view: "down-the-line", width: 400 }).shapes.filter(
-        (x) => x.kind === "circle",
+      const skin = buildShapes2D(s, { view: "down-the-line", width: 400 }).shapes.filter(
+        (x) => x.kind === "polygon" && x.fill === defaultTheme.skin,
       );
-      return circles.reduce((a, b) => (b.r > a.r ? b : a));
+      const outline = skin.reduce((a, b) =>
+        b.kind === "polygon" && a.kind === "polygon" && b.points.length > a.points.length ? b : a,
+      );
+      if (outline.kind !== "polygon") throw new Error("no head");
+      return outline.points.reduce((sum, p) => sum + p.x, 0) / outline.points.length;
     };
-    expect(head(right).c.x).toBeCloseTo(400 - head(left).c.x, 3);
+    expect(head(right)).toBeCloseTo(400 - head(left), 3);
   });
 
   it("hides the ball flight before impact when animating", () => {

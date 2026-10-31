@@ -2,6 +2,13 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "shot-viz",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@shotbook/shot-viz", "dev", "--port", "4400"],
+      "port": 4400,
+      "autoPort": true
+    },
+    {
       "name": "dev",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["--filter", "@shotbook/web", "dev", "--port", "4380"],

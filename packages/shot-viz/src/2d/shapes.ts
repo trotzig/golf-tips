@@ -21,18 +21,21 @@ import {
   windVector,
   type FlightResult,
 } from "../core/flight.ts";
-import { BONES, poseGolfer, type Joint } from "../core/pose.ts";
+import { BONES, poseGolfer, type Joint, type SwingTuning } from "../core/pose.ts";
 import type { CameraPreset, ShotScene } from "../core/schema.ts";
 import { groundHeight, groundNormal } from "../core/terrain.ts";
 import { windSpeedText, type WindUnit } from "../core/units.ts";
 import {
   add,
+  clamp,
   cross,
   DEG,
+  distance,
   dot,
   mix,
   normalize,
   rotate,
+  rotateAbout,
   scale,
   smoothstep,
   sub,
@@ -86,13 +89,21 @@ export interface Theme {
   green: string;
   skin: string;
   hair: string;
-  visor: string;
+  cap: string;
   shirt: string;
   trousers: string;
   shoes: string;
   soles: string;
   shaft: string;
+  /** Edge of the shaft, so steel reads against a light sky. */
+  shaftEdge: string;
+  grip: string;
+  /** Iron and putter body, and the iron face. */
   clubhead: string;
+  clubface: string;
+  /** Driver, wood and hybrid body and face. */
+  woodhead: string;
+  woodface: string;
   ball: string;
   flight: string;
   annotation: string;
@@ -111,13 +122,18 @@ export const defaultTheme: Theme = {
   green: "#8cc583",
   skin: "#e0b18e",
   hair: "#4a3326",
-  visor: "#0f7a4a",
+  cap: "#0f7a4a",
   shirt: "#24405e",
   trousers: "#cdbf9f",
   shoes: "#ffffff",
   soles: "#3f4341",
-  shaft: "#5d6360",
-  clubhead: "#1d211f",
+  shaft: "#c4c9ce",
+  shaftEdge: "#6c7379",
+  grip: "#222624",
+  clubhead: "#7d848a",
+  clubface: "#d3d7db",
+  woodhead: "#1d211f",
+  woodface: "#454b50",
   ball: "#ffffff",
   flight: "#c63823",
   annotation: "#ffffff",
@@ -137,6 +153,8 @@ export interface Shapes2DOptions {
   theme?: Partial<Theme>;
   /** Precomputed flight, to avoid re-simulating on every animation frame. */
   flight?: FlightResult;
+  /** Swing motion; defaults to `DEFAULT_SWING`. For the tuning playground. */
+  swing?: SwingTuning;
 }
 
 export interface Shapes2D {
@@ -401,51 +419,74 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
     }
   }
 
-  // Golfer, club and ball, depth-sorted together.
-  const pose = poseGolfer(scene, options.phase ?? 0);
-  const items: { depth: number; shape: Shape }[] = [];
+  // Golfer, club and ball, depth-sorted together. The clothes are one block at the torso's depth,
+  // layered shoes, then trousers, then shirt (each layer depth-sorted within itself), so a leg
+  // never covers the shirt or a shoe the trousers.
+  const pose = poseGolfer(scene, options.phase ?? 0, options.swing);
+  const items: { depth: number; shape: Shape | Shape[] }[] = [];
+  const clothes: { depth: number; shape: Shape; layer: Layer }[] = [];
+  const LAYERS = ["shoes", "trousers", "shirt"] as const;
+  type Layer = (typeof LAYERS)[number];
   const j = pose.joints;
-  const push = (pts: Vec3[], shape: (s: Pt[]) => Shape) => {
+  const push = (pts: Vec3[], shape: (s: Pt[]) => Shape, layer?: Layer) => {
     const s = pts.map(toScreen);
     if (s.some((p) => p === null)) return;
     const ok = s as (Pt & { depth: number })[];
-    items.push({
+    const item = {
       depth: ok.reduce((sum, p) => sum + p.depth, 0) / ok.length,
       shape: shape(ok.map(({ x, y }) => ({ x, y }))),
-    });
+    };
+    if (layer) clothes.push({ ...item, layer });
+    else items.push(item);
   };
   const px = (metres: number, at: Vec3) => {
     const s = toScreen(at);
     return s ? (metres * focalPx) / s.depth : 0;
   };
 
-  const pushAt = (at: Vec3, nudge: number, shape: (c: Pt & { depth: number }) => Shape | null) => {
+  const pushAt = (
+    at: Vec3,
+    nudge: number,
+    shape: (c: Pt & { depth: number }) => Shape | null,
+    layer?: Layer,
+  ) => {
     const c = toScreen(at);
     const sh = c && shape(c);
-    if (c && sh) items.push({ depth: c.depth + nudge, shape: sh });
+    if (!c || !sh) return;
+    if (layer) clothes.push({ depth: c.depth + nudge, shape: sh, layer });
+    else items.push({ depth: c.depth + nudge, shape: sh });
   };
 
   // Torso: a shirt panel from the shoulders to the hips, with a thick round-capped line across
   // the shoulders on top so they come out rounded rather than as the panel's corners.
   const towardNeck = (p: Vec3) => mix3(p, j.neck, 0.3);
-  push([towardNeck(j.leadShoulder), towardNeck(j.trailShoulder), j.trailHip, j.leadHip], (pts) => ({
-    kind: "polygon",
-    points: pts,
-    fill: theme.shirt,
-    stroke: theme.shirt,
-    strokeWidth: px(0.13, j.neck),
-  }));
-  const shoulderMid = scale(add(j.leadShoulder, j.trailShoulder), 0.5);
-  pushAt(shoulderMid, -0.001, () => {
-    const pts = [j.trailShoulder, j.leadShoulder].map((p) => toScreen(mix3(p, j.neck, 0.08)));
-    if (pts.some((p) => p === null)) return null;
-    return {
-      kind: "polyline",
-      points: (pts as Pt[]).map(({ x, y }) => ({ x, y })),
+  push(
+    [towardNeck(j.leadShoulder), towardNeck(j.trailShoulder), j.trailHip, j.leadHip],
+    (pts) => ({
+      kind: "polygon",
+      points: pts,
+      fill: theme.shirt,
       stroke: theme.shirt,
-      strokeWidth: px(0.11, shoulderMid),
-    };
-  });
+      strokeWidth: px(0.13, j.neck),
+    }),
+    "shirt",
+  );
+  const shoulderMid = scale(add(j.leadShoulder, j.trailShoulder), 0.5);
+  pushAt(
+    shoulderMid,
+    -0.001,
+    () => {
+      const pts = [j.trailShoulder, j.leadShoulder].map((p) => toScreen(mix3(p, j.neck, 0.08)));
+      if (pts.some((p) => p === null)) return null;
+      return {
+        kind: "polyline",
+        points: (pts as Pt[]).map(({ x, y }) => ({ x, y })),
+        stroke: theme.shirt,
+        strokeWidth: px(0.11, shoulderMid),
+      };
+    },
+    "shirt",
+  );
   for (const [a, b] of BONES) {
     if (
       (a === "leadShoulder" && b === "trailShoulder") ||
@@ -458,23 +499,33 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
     const colour = isArm ? (b.includes("Hand") ? theme.skin : theme.shirt) : theme.trousers;
     const widthM = LIMB_WIDTH[b] ?? (isArm ? 0.075 : 0.11);
     const mid = scale(add(j[a], j[b]), 0.5);
-    push([j[a], j[b]], (pts) => ({
-      kind: "polyline",
-      points: pts,
-      stroke: colour,
-      strokeWidth: px(widthM, mid),
-    }));
+    push(
+      [j[a], j[b]],
+      (pts) => ({
+        kind: "polyline",
+        points: pts,
+        stroke: colour,
+        strokeWidth: px(widthM, mid),
+      }),
+      isArm ? undefined : "trousers",
+    );
   }
-  // Shoes: an upper from heel over the ankle to the toe, on a dark sole along the ground.
+  // Shoes: an upper from heel over the ankle to the toe, on a dark sole along the ground. A raised
+  // heel (the trail foot in the finish) tips the whole shoe up about its toe.
   for (const side of ["lead", "trail"] as const) {
-    const ankle = j[`${side}Ankle`];
     const toe = j[`${side}Toe`];
-    const along = normalize([toe[0] - ankle[0], 0, toe[2] - ankle[2]]);
-    const atHeight = (p: Vec3, h: number): Vec3 => [
-      p[0],
-      groundHeight(scene.terrain, p[0], p[2]) + h,
-      p[2],
-    ];
+    const along = normalize([toe[0] - j[`${side}Ankle`][0], 0, toe[2] - j[`${side}Ankle`][2]]);
+    const tiltAxis = cross([0, 1, 0], along);
+    const gh = (p: Vec3) => groundHeight(scene.terrain, p[0], p[2]);
+    const footLen = distance(j[`${side}Ankle`], toe);
+    const flatRise = clamp((gh(j[`${side}Ankle`]) + 0.08 - (gh(toe) + 0.02)) / footLen, -1, 1);
+    const rise = clamp((j[`${side}Ankle`][1] - toe[1]) / footLen, -1, 1);
+    // Under a degree is slope noise (the ankle sits off the heel), not a raised heel.
+    const raised = Math.asin(rise) - Math.asin(flatRise);
+    const tilt = raised > DEG ? raised : 0;
+    const ankle = rotateAbout(j[`${side}Ankle`], toe, tiltAxis, -tilt);
+    const atHeight = (p: Vec3, h: number): Vec3 =>
+      rotateAbout([p[0], gh(p) + h, p[2]], toe, tiltAxis, tilt);
     const heel = add(ankle, scale(along, -0.05));
     const tip = add(toe, scale(along, 0.02));
     const upper = [atHeight(heel, 0.04), atHeight(ankle, 0.06), atHeight(toe, 0.035)];
@@ -484,16 +535,21 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
       [sole, theme.soles, 0.05, 0.002],
       [upper, theme.shoes, 0.075, 0.001],
     ] as const) {
-      pushAt(mid, nudge, () => {
-        const s = pts.map(toScreen);
-        if (s.some((p) => p === null)) return null;
-        return {
-          kind: "polyline",
-          points: (s as Pt[]).map(({ x, y }) => ({ x, y })),
-          stroke: colour,
-          strokeWidth: px(w, mid),
-        };
-      });
+      pushAt(
+        mid,
+        nudge,
+        () => {
+          const s = pts.map(toScreen);
+          if (s.some((p) => p === null)) return null;
+          return {
+            kind: "polyline",
+            points: (s as Pt[]).map(({ x, y }) => ({ x, y })),
+            stroke: colour,
+            strokeWidth: px(w, mid),
+          };
+        },
+        "shoes",
+      );
     }
   }
   push([j.neck, j.head], (pts) => ({
@@ -518,18 +574,38 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
     stroke: theme.skin,
     strokeWidth: px(0.07, j.leadHand),
   }));
-  push([pose.club.grip, pose.club.hosel], (pts) => ({
-    kind: "polyline",
-    points: pts,
-    stroke: theme.shaft,
-    strokeWidth: Math.max(1.2, px(0.014, pose.club.hosel)),
-  }));
-  push([pose.club.hosel, pose.club.toe], (pts) => ({
-    kind: "polyline",
-    points: pts,
-    stroke: theme.clubhead,
-    strokeWidth: Math.max(2, px(0.045, pose.club.hosel)),
-  }));
+  // Steel shaft (a dark edge under a lighter core) with the grip at the top, as one item so the
+  // three stay in order.
+  const { grip, hosel, toe: clubToe } = pose.club;
+  // The shaft stops at the top of the hosel; the head's heel covers the rest.
+  const hoselTop = add(hosel, scale(normalize(sub(grip, hosel)), 0.035));
+  const shaftPts = [grip, hoselTop].map(toScreen);
+  const gripEnd = add(grip, scale(normalize(sub(hosel, grip)), GRIP_LENGTH));
+  const gripPts = [grip, gripEnd].map(toScreen);
+  if (shaftPts.every(Boolean) && gripPts.every(Boolean)) {
+    const flat = (ps: typeof shaftPts) => ps.map((q) => ({ x: q!.x, y: q!.y }));
+    const shaftWidth = Math.max(1.6, px(0.017, hosel));
+    items.push({
+      depth: (shaftPts[0]!.depth + shaftPts[1]!.depth) / 2,
+      shape: [
+        {
+          kind: "polyline",
+          points: flat(shaftPts),
+          stroke: theme.shaftEdge,
+          strokeWidth: shaftWidth + 1.2,
+        },
+        { kind: "polyline", points: flat(shaftPts), stroke: theme.shaft, strokeWidth: shaftWidth },
+        {
+          kind: "polyline",
+          points: flat(gripPts),
+          stroke: theme.grip,
+          strokeWidth: Math.max(2.4, px(0.026, grip)),
+        },
+      ],
+    });
+  }
+  const headItem = clubheadShapes(scene.swing.club, grip, hosel, clubToe, toScreen, theme);
+  if (headItem) items.push(headItem);
 
   // Flight path and ball. Face-on the path passes between camera and golfer; in the other views
   // (and face-on once the camera has swung round behind) it heads away from the camera, so it is
@@ -567,7 +643,14 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
       : null;
   const pathInFront = view === "face-on" && follow < 0.5;
   if (pathShape && !pathInFront) shapes.push(pathShape);
-  items.sort((a, b) => b.depth - a.depth).forEach((i) => shapes.push(i.shape));
+  const torso = clothes.find((c) => c.layer === "shirt");
+  items.push({
+    depth: torso?.depth ?? clothes[0]?.depth ?? 0,
+    shape: clothes
+      .sort((a, b) => LAYERS.indexOf(a.layer) - LAYERS.indexOf(b.layer) || b.depth - a.depth)
+      .map((c) => c.shape),
+  });
+  items.sort((a, b) => b.depth - a.depth).forEach((i) => shapes.push(...[i.shape].flat()));
   if (pathShape && pathInFront) shapes.push(pathShape);
 
   const flightNote = scene.annotations.find((a) => a.type === "ball-flight");
@@ -631,11 +714,178 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
 
 const mix3 = (a: Vec3, b: Vec3, t: number): Vec3 => add(scale(a, 1 - t), scale(b, t));
 
+const GRIP_LENGTH = 0.26;
+
+type ClubKind = ShotScene["swing"]["club"];
+
 /**
- * The head, seen from the camera: skin, hair over the top and back, and a visor (a band round
- * the forehead with a brim). Worked out on a unit sphere in camera space (x right, y down,
- * z toward the camera) and drawn orthographically around the head's centre, close enough at
- * head size. `nudge` keeps the parts in order when depth-sorted with the body.
+ * Clubhead outlines, seen face-on, in metres: x from the heel (the hosel, where the shaft meets
+ * the head) toward the toe, y up from the sole. `depth` is how far the head reaches back from
+ * the face; the back outline is the face outline shrunk toward its middle.
+ */
+const HEADS: Record<
+  "iron" | "wood" | "hybrid" | "putter",
+  { outline: [number, number][]; depth: number }
+> = {
+  iron: {
+    outline: [
+      [0, 0.04],
+      [-0.006, 0.014],
+      [0.004, 0],
+      [0.05, -0.002],
+      [0.085, 0.003],
+      [0.095, 0.018],
+      [0.092, 0.042],
+      [0.078, 0.053],
+      [0.035, 0.044],
+    ],
+    depth: 0.022,
+  },
+  wood: {
+    outline: [
+      [0, 0.035],
+      [-0.006, 0.012],
+      [0.01, 0],
+      [0.085, 0],
+      [0.112, 0.016],
+      [0.117, 0.04],
+      [0.1, 0.06],
+      [0.055, 0.066],
+      [0.016, 0.052],
+    ],
+    depth: 0.1,
+  },
+  hybrid: {
+    outline: [
+      [0, 0.035],
+      [-0.005, 0.012],
+      [0.008, 0],
+      [0.075, 0],
+      [0.098, 0.014],
+      [0.1, 0.036],
+      [0.086, 0.052],
+      [0.045, 0.054],
+      [0.014, 0.045],
+    ],
+    depth: 0.06,
+  },
+  putter: {
+    outline: [
+      [0, 0.028],
+      [0, 0.002],
+      [0.012, 0],
+      [0.098, 0],
+      [0.106, 0.008],
+      [0.106, 0.026],
+      [0.098, 0.028],
+    ],
+    depth: 0.03,
+  },
+};
+
+const headKind = (club: ClubKind): keyof typeof HEADS =>
+  club === "putter"
+    ? "putter"
+    : club === "driver" || club === "3-wood"
+      ? "wood"
+      : club === "hybrid"
+        ? "hybrid"
+        : "iron";
+
+/**
+ * The clubhead as a solid: the hull of its face and back outlines in the body colour, then the
+ * face (with grooves on irons) when it turns toward the camera.
+ */
+function clubheadShapes(
+  club: ClubKind,
+  grip: Vec3,
+  hosel: Vec3,
+  toe: Vec3,
+  toScreen: (p: Vec3) => (Pt & { depth: number }) | null,
+  theme: Theme,
+): { depth: number; shape: Shape[] } | null {
+  const kind = headKind(club);
+  const { outline, depth } = HEADS[kind];
+  const size = club === "driver" ? 1.12 : 1;
+  const along = normalize(sub(toe, hosel));
+  const shaftUp = normalize(sub(grip, hosel));
+  const up = normalize(sub(shaftUp, scale(along, dot(shaftUp, along))));
+  // The face points toward the target at address.
+  const face = cross(up, along);
+  const mid = outline.reduce<[number, number]>(
+    (m, [x, y]) => [m[0] + x / outline.length, m[1] + y / outline.length],
+    [0, 0],
+  );
+  const point = ([x, y]: [number, number], back: number): Vec3 =>
+    add(hosel, add(add(scale(along, x * size), scale(up, y * size)), scale(face, -back * size)));
+  const front = outline.map((p) => toScreen(point(p, 0)));
+  const rear = outline.map(([x, y]) =>
+    toScreen(point([mid[0] + (x - mid[0]) * 0.8, mid[1] + (y - mid[1]) * 0.8], depth)),
+  );
+  if (front.some((p) => p === null) || rear.some((p) => p === null)) return null;
+  const f = front as (Pt & { depth: number })[];
+  const r = rear as (Pt & { depth: number })[];
+  const metal = kind === "wood" || kind === "hybrid" ? theme.woodhead : theme.clubhead;
+  const shapes: Shape[] = [
+    {
+      kind: "polygon",
+      points: convexHull([...f, ...r]),
+      fill: metal,
+      stroke: metal,
+      strokeWidth: 1,
+    },
+  ];
+  const nearDepth = f.reduce((sum, p) => sum + p.depth, 0) / f.length;
+  const farDepth = r.reduce((sum, p) => sum + p.depth, 0) / r.length;
+  if (nearDepth < farDepth) {
+    const faceColour = kind === "wood" || kind === "hybrid" ? theme.woodface : theme.clubface;
+    shapes.push({ kind: "polygon", points: f.map(({ x, y }) => ({ x, y })), fill: faceColour });
+    if (kind === "iron")
+      for (const y of [0.012, 0.022, 0.032]) {
+        const ends = [
+          [0.012, y],
+          [0.075, y + 0.002],
+        ].map((p) => toScreen(point(p as [number, number], -0.0005)));
+        if (ends.every(Boolean))
+          shapes.push({
+            kind: "polyline",
+            points: ends.map((q) => ({ x: q!.x, y: q!.y })),
+            stroke: theme.clubhead,
+            strokeWidth: 0.6,
+          });
+      }
+  }
+  return { depth: (nearDepth + farDepth) / 2, shape: shapes };
+}
+
+/** Convex hull of screen points (monotone chain), for drawing a solid from two outlines. */
+function convexHull(points: Pt[]): Pt[] {
+  const ps = points.map(({ x, y }) => ({ x, y })).sort((a, b) => a.x - b.x || a.y - b.y);
+  if (ps.length < 3) return ps;
+  const turn = (o: Pt, a: Pt, b: Pt) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+  const half = (list: Pt[]) => {
+    const out: Pt[] = [];
+    for (const p of list) {
+      while (out.length >= 2 && turn(out[out.length - 2]!, out[out.length - 1]!, p) <= 0) out.pop();
+      out.push(p);
+    }
+    out.pop();
+    return out;
+  };
+  return [...half(ps), ...half([...ps].reverse())];
+}
+
+/** Head proportions (× head radius): narrower side to side, a little taller. */
+const HEAD_SHAPE = { up: 1.1, side: 0.84, fwd: 1 };
+
+/**
+ * The head, seen from the camera: skin, hair at the back, and a baseball cap (a crown over the
+ * top of the head with a bill over the eyes). The head is an ellipsoid, narrower than it is deep
+ * and a little taller, drawn orthographically around its centre (close enough at head size).
+ * The parts are worked out on a unit sphere in "view" space, a rotation of camera space (x right,
+ * y down, z toward the camera) in which the sphere's z ≥ 0 half maps to the ellipsoid's visible
+ * half; `HEAD_SHAPE` then stretches the sphere into the ellipsoid. `nudge` keeps the parts in
+ * order when depth-sorted with the body.
  */
 function headShapes(
   head: Vec3,
@@ -663,56 +913,98 @@ function headShapes(
   const up = camDir(normalize(sub(head, neck)));
   const look = camDir(normalize(sub(face, head)));
   if (!up || !look) return [];
-  const fwd = normalize(sub(look, scale(up, dot(look, up))));
-  const side = cross(up, fwd);
-  const at = (v: Vec3): Pt => ({ x: c.x + rho * v[0], y: c.y + rho * v[1] });
+  const camFwd = normalize(sub(look, scale(up, dot(look, up))));
+  const camSide = cross(up, camFwd);
+  const stretch = (v: Vec3, k: (s: number) => number): Vec3 =>
+    add(
+      add(
+        add(v, scale(up, (k(HEAD_SHAPE.up) - 1) * dot(v, up))),
+        scale(camSide, (k(HEAD_SHAPE.side) - 1) * dot(v, camSide)),
+      ),
+      scale(camFwd, (k(HEAD_SHAPE.fwd) - 1) * dot(v, camFwd)),
+    );
+  // The ellipsoid's silhouette is the image of the sphere's great circle facing `toCamera`.
+  const toCamera = normalize(stretch([0, 0, 1], (s) => 1 / s));
+  const turnAxis = cross(toCamera, [0, 0, 1]);
+  const turn = Math.acos(clamp(toCamera[2], -1, 1));
+  const toView = (v: Vec3) => (turn > 1e-6 ? rotate(v, turnAxis, turn) : v);
+  const toCam = (v: Vec3) => stretch(turn > 1e-6 ? rotate(v, turnAxis, -turn) : v, (s) => s);
+  const at = (v: Vec3): Pt => {
+    const p = toCam(v);
+    return { x: c.x + rho * p[0], y: c.y + rho * p[1] };
+  };
+  const fwd = toView(camFwd);
   const out: { shape: Shape; nudge: number }[] = [
-    { shape: { kind: "circle", c: { x: c.x, y: c.y }, r: rho, fill: theme.skin }, nudge: 0 },
+    {
+      shape: {
+        kind: "polygon",
+        points: Array.from({ length: 36 }, (_, i) => {
+          const a = (i / 36) * 2 * Math.PI;
+          return at([Math.cos(a), Math.sin(a), 0]);
+        }),
+        fill: theme.skin,
+      },
+      nudge: 0,
+    },
   ];
 
-  // Hair over the back of the head, and over the crown down to just under the visor band, so
-  // no skin shows between the two.
-  for (const hair of [sphereCap(normalize(sub(up, scale(fwd, 0.8))), 0.1), sphereCap(up, 0.38)]) {
-    if (hair.length > 2)
-      out.push({
-        shape: { kind: "polygon", points: hair.map(at), fill: theme.hair },
-        nudge: -0.0005,
-      });
-  }
+  const vUp = toView(up);
 
-  // Visor band: round the front and sides of the head, a little above its middle.
-  const ring = (u: number, r: number): Vec3 =>
-    add(scale(up, 0.45), add(scale(fwd, r * Math.cos(u)), scale(side, r * Math.sin(u))));
-  const band: Pt[] = [];
-  for (let i = 0; i <= 16; i++) {
-    const p = ring(((i / 16) * 2 - 1) * 1.7, 0.92);
-    if (p[2] >= 0) band.push(at(p));
-  }
-  if (band.length > 1)
+  // Hair at the back of the head, showing below the cap.
+  const hair = sphereCap(normalize(sub(vUp, scale(fwd, 0.8))), 0.1);
+  if (hair.length > 2)
     out.push({
-      shape: { kind: "polyline", points: band, stroke: theme.visor, strokeWidth: rho * 0.2 },
+      shape: { kind: "polygon", points: hair.map(at), fill: theme.hair },
+      nudge: -0.0005,
+    });
+
+  // Crown: the top of the head, a little proud of it, its rim tipped down at the back and just
+  // above the eyes at the front.
+  const PROUD = 1.06;
+  const axis = normalize(sub(vUp, scale(fwd, 0.25)));
+  const k = 0.2;
+  const crown = sphereCap(axis, k);
+  if (crown.length > 2)
+    out.push({
+      shape: {
+        kind: "polygon",
+        points: crown.map((v) => at(scale(v, PROUD))),
+        fill: theme.cap,
+        stroke: theme.cap,
+        strokeWidth: rho * 0.04,
+      },
       nudge: -0.0007,
     });
-  // Brim: from temple to temple, out past the forehead and dipping a little.
-  const brim: Vec3[] = [];
-  for (let i = 0; i <= 8; i++) brim.push(ring(((i / 8) * 2 - 1) * (Math.PI / 2), 0.92));
-  for (let i = 8; i >= 0; i--) {
-    const u = ((i / 8) * 2 - 1) * (Math.PI / 2);
-    const cu = Math.cos(u);
-    brim.push(
-      add(add(scale(up, 0.45 - 0.08 * cu), scale(fwd, 1.25 * cu)), scale(side, 0.92 * Math.sin(u))),
+
+  // Bill: from the front of the rim, out over the face and curving back at the sides, dipping a
+  // little toward its edge.
+  const rimFwd = normalize(sub(fwd, scale(axis, dot(fwd, axis))));
+  const rimSide = cross(axis, rimFwd);
+  const rr = Math.sqrt(1 - k * k);
+  const rim = (u: number): Vec3 =>
+    scale(
+      add(scale(axis, k), add(scale(rimFwd, rr * Math.cos(u)), scale(rimSide, rr * Math.sin(u)))),
+      PROUD,
     );
+  const bill: Vec3[] = [];
+  const N = 10;
+  const span = 0.42 * Math.PI;
+  for (let i = 0; i <= N; i++) bill.push(rim(((i / N) * 2 - 1) * span));
+  for (let i = N; i >= 0; i--) {
+    const u = ((i / N) * 2 - 1) * span;
+    const reach = 0.75 * Math.cos(u * 1.1);
+    bill.push(add(rim(u), add(scale(fwd, reach), scale(vUp, -0.18 * reach))));
   }
-  const tip = add(scale(up, 0.37), scale(fwd, 1.25));
+  const tip = add(rim(0), add(scale(fwd, 0.75), scale(vUp, -0.14)));
   out.push({
     shape: {
       kind: "polygon",
-      points: brim.map(at),
-      fill: theme.visor,
-      stroke: theme.visor,
-      strokeWidth: rho * 0.08,
+      points: bill.map(at),
+      fill: shade(theme.cap, 0.8),
+      stroke: shade(theme.cap, 0.8),
+      strokeWidth: rho * 0.1,
     },
-    nudge: tip[2] >= 0 ? -0.0009 : 0.0005,
+    nudge: toCam(tip)[2] >= 0 ? -0.0009 : 0.0005,
   });
   return out;
 }
