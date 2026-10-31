@@ -37,7 +37,7 @@ let played: { svg: SVGSVGElement; player: ShotPlayer } | undefined;
 function reset(htmlAttrs: Record<string, string>, bodyAttrs: Record<string, string>) {
   root?.unmount();
   root = undefined;
-  played?.player.stop();
+  played?.player.pause();
   played = undefined;
   for (const [el, attrs] of [
     [document.documentElement, htmlAttrs],
@@ -110,7 +110,7 @@ const shotPlayerDriver: AnimationDriver = {
             startMs: 0,
             durationMs: Math.round(played.player.duration * 1000),
             seek: (ms) => played?.player.seek(ms / 1000),
-            pause: () => played?.player.stop(),
+            pause: () => played?.player.pause(),
           },
         ]
       : [],
