@@ -33,6 +33,16 @@ export const DIAGRAM_COMPONENT = "Shot diagram";
 /** The size situation pages draw diagrams at (see ShotViz.astro). */
 export const DIAGRAM_SIZE = { width: 360, height: 300 };
 
+/**
+ * Diagrams also captured playing, as animated (APNG) snapshots: a full swing face-on, a short
+ * chip, and the behind view whose camera follows the ball with a tracer.
+ */
+export const ANIMATED_DIAGRAMS = ["flat-lie", "basic-chip", "high-shot"];
+
+export function animatedVariant(id: string): string {
+  return `${id}, played`;
+}
+
 export function handedVariant(name: string, hand: Hand): string {
   return hand === "right" ? name : `${name}, left-handed`;
 }

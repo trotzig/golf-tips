@@ -218,7 +218,12 @@ Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
 mode, plus an accessibility check). It uses Happo's custom integration: `apps/web/happo/build.ts` turns every page of the built
 site (static HTML, scripts stripped, CSS inlined) and every shot-viz scene (rendered with React)
 into an example. Pages with handed text, and every diagram, get a left-handed variant too.
-Examples are named in `apps/web/happo/examples.ts`; renaming one starts a new history in Happo.
+Diagrams are captured at address, except three that are also captured playing (`ANIMATED_DIAGRAMS`
+in `examples.ts`: `flat-lie`, `basic-chip`, `high-shot`, as variant `<id>, played`): Happo's
+experimental `animate` option steps the "Play swing" player through fixed times (key swing
+positions, then the flight) via a `shot-player` animation driver and stores one animated PNG,
+whose first frame is the address pose. Examples are named in `apps/web/happo/examples.ts`;
+renaming one starts a new history in Happo.
 
 PRs run only the affected examples. The build writes a fingerprint per example (its HTML and the
 site CSS, or a diagram's scene and renderer source), CI caches that manifest per commit, and

@@ -9,6 +9,8 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { build } from "vite";
 import {
+  ANIMATED_DIAGRAMS,
+  animatedVariant,
   DIAGRAM_COMPONENT,
   HANDS,
   handedVariant,
@@ -154,6 +156,15 @@ function buildManifest(pages: PageExample[], css: string): Manifest {
         fingerprint: sha(harness, cssHash, renderer, scene, hand),
       });
     }
+  }
+  // Played diagrams: the same sources, with the player and timeline among the renderer's.
+  for (const id of ANIMATED_DIAGRAMS) {
+    const scene = readFileSync(join(shotVizDir, `src/scenes/${id}.json`), "utf8");
+    examples.push({
+      component: DIAGRAM_COMPONENT,
+      variant: animatedVariant(id),
+      fingerprint: sha(harness, cssHash, renderer, scene, "played"),
+    });
   }
   return { version: 1, examples };
 }
