@@ -3,6 +3,9 @@ import { describe, expect, it } from "vitest";
 import {
   CATEGORIES,
   CATEGORY_IDS,
+  forHand,
+  handednessIssues,
+  splitHanded,
   parseSituation,
   SITUATIONS_JSON_VERSION,
   toSituationsJson,
@@ -150,5 +153,32 @@ describe("toSituationsJson", () => {
 describe("categories", () => {
   it("has metadata for every category id", () => {
     expect(CATEGORIES.map((c) => c.id)).toEqual([...CATEGORY_IDS]);
+  });
+});
+
+describe("handedness", () => {
+  const text = "{Right} to {left}: aim {right} of the target.";
+
+  it("resolves tokens for each hand", () => {
+    expect(forHand(text, "right")).toBe("Right to left: aim right of the target.");
+    expect(forHand(text, "left")).toBe("Left to right: aim left of the target.");
+  });
+
+  it("splits text into plain runs and directions", () => {
+    expect(splitHanded("aim {left} now")).toEqual(["aim ", { right: "left", left: "right" }, " now"]);
+    expect(splitHanded("no directions")).toEqual(["no directions"]);
+  });
+
+  it("flags unknown tokens and one-handed phrasing", () => {
+    expect(handednessIssues(text)).toEqual([]);
+    expect(handednessIssues("aim {lft}")).toEqual([expect.stringMatching(/unknown token \{lft\}/)]);
+    expect(handednessIssues("aim left (left-handers: mirror this)")).toHaveLength(1);
+    expect(handednessIssues("for right-handers, aim left")).toHaveLength(1);
+  });
+
+  it("is enforced by validateSituations", () => {
+    const raw = minimal("").replace("swing: [Swing.]", "swing: ['Aim left (left-handers: mirror this).']");
+    const { errors } = validateSituations([{ id: "x", raw }]);
+    expect(errors.map((e) => e.message)).toEqual([expect.stringMatching(/^swing\[0\]: "left-handers"/)]);
   });
 });

@@ -1,6 +1,7 @@
 import { StrictMode, useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
+  handedScene,
   computeFlight,
   exampleSceneInputs,
   exampleScenes,
@@ -27,7 +28,7 @@ function App() {
   const [leftHanded, setLeftHanded] = useState(false);
   const base = exampleScenes[id]!;
   const scene: ShotScene = useMemo(
-    () => ({ ...base, golfer: { ...base.golfer, handedness: leftHanded ? "left" : "right" } }),
+    () => handedScene(base, leftHanded ? "left" : "right"),
     [base, leftHanded],
   );
   const flight = useMemo(() => computeFlight(scene), [scene]);

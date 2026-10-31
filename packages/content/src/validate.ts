@@ -1,3 +1,4 @@
+import { handednessIssues } from "./handedness.ts";
 import { parseSituation, type ContentError, type SourceFile } from "./parse.ts";
 import type { Situation } from "./schema.ts";
 
@@ -34,8 +35,31 @@ export function validateSituations(files: readonly SourceFile[]): ValidationResu
     }
   }
 
+  for (const s of situations) {
+    for (const [field, text] of textFields(s)) {
+      for (const issue of handednessIssues(text)) errors.push({ id: s.id, message: `${field}: ${issue}` });
+    }
+  }
+
   situations.sort((a, b) => a.title.localeCompare(b.title, "en"));
   return { situations, errors };
+}
+
+/** Every piece of reader-facing text in a situation, labelled by field. */
+export function textFields(s: Situation): Array<[string, string]> {
+  const fields: Array<[string, string]> = [
+    ["title", s.title],
+    ["summary", s.summary],
+    ["body", s.body],
+  ];
+  for (const key of ["club_choice", "drill", "advanced"] as const) {
+    const value = s[key];
+    if (value) fields.push([key, value]);
+  }
+  for (const key of ["aliases", "setup", "swing", "expect", "mistakes"] as const) {
+    s[key]?.forEach((value, i) => fields.push([`${key}[${i}]`, value]));
+  }
+  return fields;
 }
 
 export function formatErrors(errors: readonly ContentError[]): string {

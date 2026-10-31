@@ -1,0 +1,11 @@
+---
+import { handedHtml } from "../lib/handed";
+
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<Fragment set:html={handedHtml(text)} />

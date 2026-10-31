@@ -1,6 +1,7 @@
 ---
 import { getCategory, type Situation } from "@shotbook/content";
 import { href } from "../lib/content";
+import Handed from "./Handed.astro";
 
 interface Props {
   situations: Situation[];
@@ -18,14 +19,18 @@ const { situations, showCategory = true } = Astro.props;
         class="block rounded-2xl border border-stone-300 bg-white p-4 shadow-sm transition hover:border-fairway-600 active:bg-fairway-50"
       >
         <span class="flex items-baseline justify-between gap-3">
-          <span class="text-lg font-semibold text-fairway-800">{s.title}</span>
+          <span class="text-lg font-semibold text-fairway-800">
+            <Handed text={s.title} />
+          </span>
           {showCategory && (
             <span class="shrink-0 text-xs font-medium uppercase tracking-wide text-stone-600">
               {getCategory(s.category).title}
             </span>
           )}
         </span>
-        <span class="mt-1 block text-stone-700">{s.summary}</span>
+        <span class="mt-1 block text-stone-700">
+          <Handed text={s.summary} />
+        </span>
       </a>
     </li>
   ))}

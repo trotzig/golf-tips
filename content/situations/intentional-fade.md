@@ -1,13 +1,13 @@
 ---
 title: Intentional fade
-summary: Curve the ball gently from left to right on purpose (for right-handers) for a softer, more controlled shot.
+summary: Curve the ball gently from {left} to {right} on purpose for a softer, more controlled shot.
 category: trajectory
 tags: [shot-shaping, aim, alignment]
-aliases: [hitting a fade, curving the ball right, left to right shot]
+aliases: [hitting a fade, "curving the ball {right}", "{left} to {right} shot"]
 level: advanced
 clubs: [driver, woods, hybrids, irons]
 setup:
-  - "For right-handers, set your feet, hips and shoulders aimed left of the target (left-handers: mirror this)."
+  - Set your feet, hips and shoulders aimed {left} of the target.
   - Point the clubface at the final target — it is open to your body line.
   - Grip the club after setting the face, not before.
   - Play the ball in its normal position, or a fraction forward.
@@ -15,7 +15,7 @@ swing:
   - Swing along your body line, not toward the target.
   - Keep the face from closing through impact; feel a slightly held-off finish.
 expect:
-  - The ball starts left of the target and curves back toward it.
+  - The ball starts {left} of the target and curves back toward it.
   - A slightly higher flight that lands softer and rolls less.
 mistakes:
   - Aiming the face where you aimed your body, which gives a straight pull.

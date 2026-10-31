@@ -1,13 +1,13 @@
 ---
 title: Intentional draw
-summary: Curve the ball gently from right to left on purpose (for right-handers) to get around an obstacle or to a flag.
+summary: Curve the ball gently from {right} to {left} on purpose to get around an obstacle or to a flag.
 category: trajectory
 tags: [shot-shaping, aim, alignment]
-aliases: [hitting a draw, curving the ball left, right to left shot]
+aliases: [hitting a draw, "curving the ball {left}", "{right} to {left} shot"]
 level: advanced
 clubs: [driver, woods, hybrids, irons]
 setup:
-  - "For right-handers, set your feet, hips and shoulders aimed right of the target (left-handers: mirror this)."
+  - Set your feet, hips and shoulders aimed {right} of the target.
   - Point the clubface at the final target — it is closed to your body line.
   - Grip the club after setting the face, not before.
   - Play the ball in its normal position, or a fraction back.
@@ -15,7 +15,7 @@ swing:
   - Swing along your body line, not toward the target.
   - Make your normal swing and let the setup create the curve.
 expect:
-  - The ball starts right of the target and curves back toward it.
+  - The ball starts {right} of the target and curves back toward it.
   - A slightly lower flight with more roll than a straight shot.
 mistakes:
   - Aiming the face where you aimed your body, which gives a straight push.

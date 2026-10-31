@@ -15,7 +15,7 @@
   "annotations": [
     {
       "type": "aim-line",
-      "label": "Aim a little right"
+      "label": "Aim a little {right}"
     },
     {
       "type": "target-line",
@@ -28,7 +28,7 @@
   ],
   "camera": "down-the-line",
   "tips": [
-    "Trust that the ball is going to draw and aim right of the target (left-handers: mirror this).",
+    "Trust that the ball is going to draw and aim {right} of the target.",
     "Gripping down makes it fly a little shorter, so take more club."
   ]
 }

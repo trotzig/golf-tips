@@ -16,7 +16,7 @@ swing:
   - Hit down firmly behind the ball and keep swinging through the grass.
 expect:
   - Less spin and control; the ball runs out more after landing.
-  - "Grass grabs the hosel and can close the face, sending the ball left (left-handers: mirror this)."
+  - Grass grabs the hosel and can close the face, sending the ball {left}.
 mistakes:
   - Taking a long club to reach the green, which rarely gets out cleanly.
   - Decelerating into the grass; commit to the swing.

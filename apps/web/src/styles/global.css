@@ -17,6 +17,11 @@
   a {
     text-underline-offset: 3px;
   }
+  /* Directions in content render both variants; show the one for the reader's hand. */
+  [data-hand="right"] .hand-l,
+  [data-hand="left"] .hand-r {
+    display: none;
+  }
   :focus-visible {
     outline: 3px solid var(--color-fairway-600);
     outline-offset: 2px;

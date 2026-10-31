@@ -1,5 +1,6 @@
 import { CLUB_SPECS } from "./clubs.ts";
 import type { CameraPreset, ShotScene } from "./schema.ts";
+import { handedScene } from "./handedness.ts";
 import { deriveSetup } from "./setup.ts";
 
 const VIEW_NAMES: Record<CameraPreset, string> = {
@@ -27,7 +28,8 @@ function slopeText(scene: ShotScene): string {
  * Plain-language description of a scene for alt text and screen readers: the setup, then the
  * scene's tips. Directions are given for the golfer's handedness.
  */
-export function describeScene(scene: ShotScene, view?: CameraPreset): string {
+export function describeScene(input: ShotScene, view?: CameraPreset): string {
+  const scene = handedScene(input);
   const setup = deriveSetup(scene);
   const club = CLUB_SPECS[scene.swing.club].label.toLowerCase();
   const hand = scene.golfer.handedness === "left" ? "left-handed" : "right-handed";

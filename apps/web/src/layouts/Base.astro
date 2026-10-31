@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
+import HandToggle from "../components/HandToggle.astro";
 import { href } from "../lib/content";
+import { defaultHand } from "../lib/handed";
 
 interface Props {
   title?: string;
@@ -13,15 +15,24 @@ const fullTitle = title ? `${title} · Shotbook` : "Shotbook — how do I play t
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-hand="right">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
+    <meta name="description" content={defaultHand(description)} />
     <meta name="theme-color" content="#124b24" />
     <link rel="icon" type="image/svg+xml" href={href("favicon.svg")} />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
-    <title>{fullTitle}</title>
+    <title>{defaultHand(fullTitle)}</title>
+    <script is:inline>
+      // Apply the saved handedness before first paint so directions never flicker.
+      try {
+        if (localStorage.getItem("shotbook:hand") === "left")
+          document.documentElement.dataset.hand = "left";
+      } catch {
+        // Storage unavailable: stay right-handed.
+      }
+    </script>
   </head>
   <body class="min-h-dvh bg-stone-100 font-sans text-stone-950 antialiased">
     <a
@@ -38,6 +49,7 @@ const fullTitle = title ? `${title} · Shotbook` : "Shotbook — how do I play t
           </span>{" "}
           Shotbook
         </a>
+        <HandToggle />
       </div>
     </header>
     <main id="main" class="mx-auto max-w-2xl px-4 pb-16 pt-6">

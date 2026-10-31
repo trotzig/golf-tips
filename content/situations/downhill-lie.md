@@ -1,6 +1,6 @@
 ---
 title: Downhill lie
-summary: Ball on a slope running down toward the target — expect a lower, running shot that tends to curve right.
+summary: Ball on a slope running down toward the target — expect a lower, running shot that tends to curve {right}.
 category: lies
 tags: [slope, ball-position, balance, club-selection]
 aliases: [ball on a downslope, hitting down a hill, downhill stance]
@@ -16,7 +16,7 @@ swing:
   - Stay down through the shot; don't try to lift the ball.
 expect:
   - Lower flight and more roll than normal; the slope takes loft off the club.
-  - "The ball tends to curve right (left-handers: mirror this) — aim a little left."
+  - The ball tends to curve {right} — aim a little {left}.
 mistakes:
   - Leaning back to "help" the ball up, which causes thin or fat shots.
   - Using a low-lofted wood from a steep downslope; it's very hard to get airborne.

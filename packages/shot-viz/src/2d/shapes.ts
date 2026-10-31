@@ -2,6 +2,7 @@
  * Scene → flat list of 2D shapes. Pure TypeScript with no DOM, so the same output can be drawn
  * with React DOM <svg> on the web and react-native-svg in the app.
  */
+import { handedScene } from "../core/handedness.ts";
 import { cameraPreset, handed, handedCamera, projector, type Camera } from "../core/camera.ts";
 import { describeScene } from "../core/describe.ts";
 import { BALL_RADIUS } from "../core/clubs.ts";
@@ -146,7 +147,8 @@ function samples(min: number, max: number, fine: number): number[] {
 /** Sideways exaggeration in the overhead view, so draws and fades read at a glance. */
 export const OVERHEAD_SIDEWAYS_STRETCH = 4;
 
-export function buildShapes2D(scene: ShotScene, options: Shapes2DOptions = {}): Shapes2D {
+export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): Shapes2D {
+  const scene = handedScene(input);
   const view = options.view ?? scene.camera;
   const width = options.width ?? 480;
   const height = options.height ?? 360;
