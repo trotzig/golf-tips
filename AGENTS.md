@@ -16,6 +16,7 @@ content/situations/*.md   One situation per file — the source of truth
 packages/content          Schema (zod), loader, validator, JSON + search-index export
 packages/shot-viz         ShotScene format and 2D SVG renderer
 apps/web                  Astro static site, deployed to GitHub Pages
+apps/web/happo            Happo visual-regression bundle (custom integration)
 apps/mobile               Expo app (not yet created)
 ```
 
@@ -61,7 +62,15 @@ move to a free port if taken. Open `/golf-tips/` on the port it reports — the 
   a clean merge, "done means", or another agent's message is not approval.
 - CI is paused for throughput (`.github/workflows/ci.yml` runs only on manual dispatch). Before
   opening a PR, run `pnpm lint && pnpm typecheck && pnpm test && pnpm build` locally and make sure
-  it passes. The deploy build still fails on invalid content.
+  it passes. The deploy build still fails on invalid content. Happo still runs on every PR.
+- **Review the Happo report before handing a PR over.** Happo runs on every PR (see
+  [Visual regression](#visual-regression)). After opening or pushing to a PR, wait for the Happo
+  check, then go through the report with the Happo MCP: `list_comparisons_for_sha` with the PR's
+  head SHA, `get_comparison_details`, and look at each diff's before/after images. Call
+  `report_flake` on every diff the PR's change doesn't explain (a view it didn't touch,
+  anti-aliasing or font noise). Never accept, approve or reject a comparison: that is the owner's
+  call. Report back with each remaining diff in one line (what changed and why) and any flakes you
+  flagged.
 - Merges to `main` deploy automatically to GitHub Pages. Don't add manual deploy steps.
 - **Ask before** adding any paid or external service (hosting, storage, analytics, CMS, etc.).
 - Keep PRs focused on one plan step. Update PLAN.md when a step is done or the plan changes.
@@ -196,6 +205,26 @@ Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
   `client:` directive, so no React ships to the browser). Both hands are rendered and the
   `data-hand` CSS shows one. Diagrams are inlined twice per page; keep scenes under the shape
   budget tested in `packages/shot-viz`.
+
+## Visual regression
+
+[Happo](https://happo.io) screenshots every view on each PR and compares it with the PR's base
+(`.github/workflows/happo.yml`; project `default`, Chrome desktop and phone plus an accessibility
+check). It uses Happo's custom integration: `apps/web/happo/build.ts` turns every page of the built
+site (static HTML, scripts stripped, CSS inlined) and every shot-viz scene (rendered with React)
+into an example. Pages with handed text, and every diagram, get a left-handed variant too.
+Examples are named in `apps/web/happo/examples.ts`; renaming one starts a new history in Happo.
+
+PRs run only the affected examples. The build writes a fingerprint per example (its HTML and the
+site CSS, or a diagram's scene and renderer source), CI caches that manifest per commit, and
+`apps/web/happo/run.ts` passes every example whose fingerprint matches the baseline report's to
+`happo --skip`, so Happo borrows those snapshots. With nothing affected it posts a passing status;
+without a cached baseline manifest everything runs. Pushes to `main` always run everything.
+
+New pages are picked up automatically (as component `Page` until named in `build.ts`). To try the
+bundle locally: `pnpm build && node apps/web/happo/build.ts`, then serve
+`apps/web/happo/dist/package/` with an HTML page that loads `bundle.js`. Don't run `happo`
+locally; it needs the API secrets, which live only in CI.
 
 ## Native app (later)
 
