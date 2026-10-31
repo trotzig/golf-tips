@@ -46,7 +46,7 @@ for (const scene of Object.values(exampleScenes)) {
       component: DIAGRAM_COMPONENT,
       variant: handedVariant(scene.id, hand),
       render: () => {
-        reset({ lang: "en", "data-hand": hand }, { class: "bg-white font-sans" });
+        reset({ lang: "en", "data-hand": hand }, { class: "bg-canvas font-sans" });
         const el = document.createElement("div");
         el.className = "inline-block";
         document.body.append(el);

@@ -19,12 +19,12 @@ const label = tagLabel(tag);
 
 <Base title={label} description={`Golf situations tagged “${label.toLowerCase()}”.`}>
   <nav aria-label="Breadcrumb" class="mb-3">
-    <a href={href("tags/")} class="inline-block py-2 font-medium text-fairway-700 underline">
+    <a href={href("tags/")} class="inline-block py-2 font-medium text-accent underline">
       ← All tags
     </a>
   </nav>
-  <h1 class="text-3xl font-extrabold tracking-tight text-fairway-900">{label}</h1>
-  <p class="mt-2 mb-6 text-lg text-stone-700">
+  <h1 class="text-3xl font-serif font-bold tracking-tight text-ink-strong">{label}</h1>
+  <p class="mt-2 mb-6 text-lg text-ink-muted">
     {situations.length === 1 ? "1 situation" : `${situations.length} situations`}
   </p>
   <SituationList situations={situations} />

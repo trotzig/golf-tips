@@ -195,6 +195,10 @@ Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
 - Pages must work and be readable without JavaScript.
 - Mobile-first: most readers are on a phone on the course. Large tap targets, high contrast in
   sunlight, works offline once PWA lands.
+- Look and feel follow nordicgolftours.app: Jost (self-hosted) for text, Georgia for page titles,
+  green for structure, red only for highlights. Light and dark follow the system setting. Use the
+  colour tokens in `apps/web/src/styles/global.css` (`bg-card`, `text-ink-muted`, `text-accent`…),
+  never raw palette colours or `dark:` variants: each token has a light and a dark value.
 - Accessibility: semantic HTML, alt text / `aria` descriptions for diagrams, keyboard support.
 - The build emits `/data/situations.json` for the native app; treat its shape as a public API
   (additive changes only, version field bumps on breaking changes). The same goes for
@@ -210,8 +214,8 @@ Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
 ## Visual regression
 
 [Happo](https://happo.io) screenshots every view on each PR and compares it with the PR's base
-(`.github/workflows/happo.yml`; project `default`, Chrome desktop and phone plus an accessibility
-check). It uses Happo's custom integration: `apps/web/happo/build.ts` turns every page of the built
+(`.github/workflows/happo.yml`; project `default`, Chrome desktop and phone, the phone again in dark
+mode, plus an accessibility check). It uses Happo's custom integration: `apps/web/happo/build.ts` turns every page of the built
 site (static HTML, scripts stripped, CSS inlined) and every shot-viz scene (rendered with React)
 into an example. Pages with handed text, and every diagram, get a left-handed variant too.
 Examples are named in `apps/web/happo/examples.ts`; renaming one starts a new history in Happo.

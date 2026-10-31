@@ -24,6 +24,13 @@ export default defineConfig({
       viewport: "375x667",
     },
 
+    // The phone view again with the dark colour scheme (the site follows the system setting).
+    "chrome-small-dark": {
+      type: "chrome",
+      viewport: "375x667",
+      prefersColorScheme: "dark",
+    },
+
     accessibility: {
       type: "accessibility",
       viewport: "1024x768",
