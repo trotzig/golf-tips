@@ -24,6 +24,7 @@ club_choice: A draw flies a little farther and rolls more; consider one club les
 drill: Place an alignment stick along your body line and practice starting balls along it.
 advanced: Ball start direction is mostly set by the face; the curve comes from the path relative to the face.
 related: [intentional-fade, crosswind, ball-above-feet, choosing-a-target]
+viz: intentional-draw
 updated: 2026-10-31
 ---
 

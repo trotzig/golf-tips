@@ -22,5 +22,6 @@ mistakes:
 club_choice: A crosswind usually costs some distance too — allow about a half club extra in a strong wind.
 advanced: Better players can shape the ball into the wind (a draw into a {left}-to-{right} wind) to hold the line.
 related: [into-the-wind, downwind, intentional-draw, intentional-fade]
+viz: crosswind
 updated: 2026-10-31
 ---

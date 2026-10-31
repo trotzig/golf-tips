@@ -1,0 +1,150 @@
+---
+// Search box with instant results. Without JavaScript it is a plain form that opens the search
+// page, which lists every situation.
+import { CATEGORIES } from "@shotbook/content";
+import { href } from "../lib/content";
+
+interface Props {
+  /** Focus the field on load (the search page). */
+  autofocus?: boolean;
+}
+
+const { autofocus = false } = Astro.props;
+const categories = Object.fromEntries(CATEGORIES.map((c) => [c.id, c.title]));
+---
+
+<div
+  data-search
+  data-index-url={href("data/search-index.json")}
+  data-situation-url={href("situations/")}
+  data-categories={JSON.stringify(categories)}
+>
+  <form role="search" action={href("search/")} method="get" class="flex gap-2">
+    <label for="search-q" class="sr-only">
+      Search situations
+    </label>
+    <input
+      id="search-q"
+      type="search"
+      name="q"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+      enterkeyhint="search"
+      autofocus={autofocus}
+      placeholder="e.g. ball above my feet"
+      aria-controls="search-results"
+      class="min-h-12 w-full min-w-0 rounded-xl border-2 border-stone-400 bg-white px-4 text-lg placeholder:text-stone-500 focus:border-fairway-600 focus:outline-none"
+    />
+    <button
+      type="submit"
+      class="min-h-12 shrink-0 rounded-xl bg-fairway-700 px-4 font-semibold text-white hover:bg-fairway-800"
+    >
+      Search
+    </button>
+  </form>
+  <p data-search-status role="status" class="mt-2 text-sm text-stone-600 empty:hidden"></p>
+  <ul id="search-results" data-search-results class="mt-2 space-y-3 empty:hidden"></ul>
+</div>
+
+<script>
+  import {
+    loadSearchIndex,
+    searchSituations,
+    type SearchIndexJson,
+  } from "@shotbook/content/search";
+
+  type Index = ReturnType<typeof loadSearchIndex>;
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-search]")) {
+    const input = root.querySelector("input")!;
+    const form = root.querySelector("form")!;
+    const status = root.querySelector<HTMLElement>("[data-search-status]")!;
+    const list = root.querySelector<HTMLElement>("[data-search-results]")!;
+    const categories = JSON.parse(root.dataset.categories!) as Record<string, string>;
+    // On the search page the full list is the no-JS fallback; it steps aside for results.
+    const fallback = document.querySelector<HTMLElement>("[data-search-fallback]");
+    const onSearchPage = fallback !== null;
+
+    let index: Promise<Index> | undefined;
+    const getIndex = () =>
+      (index ??= fetch(root.dataset.indexUrl!)
+        .then((r) => r.json() as Promise<SearchIndexJson>)
+        .then(loadSearchIndex));
+
+    const render = async () => {
+      const query = input.value.trim();
+      if (onSearchPage) {
+        const url = new URL(location.href);
+        if (query) url.searchParams.set("q", query);
+        else url.searchParams.delete("q");
+        history.replaceState(null, "", url);
+      }
+      if (fallback) fallback.hidden = query !== "";
+      if (!query) {
+        list.replaceChildren();
+        status.textContent = "";
+        return;
+      }
+      let hits;
+      try {
+        const hand = document.documentElement.dataset.hand === "left" ? "left" : "right";
+        hits = searchSituations(await getIndex(), query, hand, 12);
+      } catch {
+        index = undefined;
+        status.textContent = "Search isn't available right now. Try browsing by category.";
+        return;
+      }
+      if (input.value.trim() !== query) return; // A newer keystroke will render.
+      status.textContent =
+        hits.length === 0
+          ? `Nothing matches “${query}”. Try fewer or different words.`
+          : `${hits.length === 1 ? "1 situation" : `${hits.length} situations`} for “${query}”`;
+      list.replaceChildren(
+        ...hits.map((hit) => {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = `${root.dataset.situationUrl}${hit.id}/`;
+          a.className =
+            "block rounded-2xl border border-stone-300 bg-white p-4 shadow-sm transition hover:border-fairway-600 active:bg-fairway-50";
+          const top = document.createElement("span");
+          top.className = "flex items-baseline justify-between gap-3";
+          const title = document.createElement("span");
+          title.className = "text-lg font-semibold text-fairway-800";
+          title.textContent = hit.title;
+          const category = document.createElement("span");
+          category.className =
+            "shrink-0 text-xs font-medium uppercase tracking-wide text-stone-600";
+          category.textContent = categories[hit.category] ?? "";
+          const summary = document.createElement("span");
+          summary.className = "mt-1 block text-stone-700";
+          summary.textContent = hit.summary;
+          top.append(title, category);
+          a.append(top, summary);
+          li.append(a);
+          return li;
+        }),
+      );
+    };
+
+    input.addEventListener("focus", () => void getIndex().catch(() => {}), { once: true });
+    input.addEventListener("input", () => void render());
+    // With results showing, Enter opens the best match; otherwise the form goes to the search page.
+    form.addEventListener("submit", (event) => {
+      const first = list.querySelector("a");
+      if (first) {
+        event.preventDefault();
+        location.href = first.href;
+      }
+    });
+    // Directions in results follow the global handedness switch.
+    new MutationObserver(() => void render()).observe(document.documentElement, {
+      attributeFilter: ["data-hand"],
+    });
+
+    if (onSearchPage) {
+      input.value = new URL(location.href).searchParams.get("q") ?? "";
+      if (input.value) void render();
+    }
+  }
+</script>

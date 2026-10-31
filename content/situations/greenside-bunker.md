@@ -25,6 +25,7 @@ club_choice: Use a sand wedge for most shots; the wide sole (bounce) is designed
 drill: In a practice bunker, draw a line in the sand and practice entering the sand on the line, without a ball.
 advanced: For a longer bunker shot, square the face more or use a gap or pitching wedge.
 related: [plugged-bunker-lie, fairway-bunker, lob-shot, pitch-shot]
+viz: greenside-bunker
 updated: 2026-10-31
 ---
 

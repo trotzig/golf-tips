@@ -125,6 +125,8 @@ Optional short body (1–3 short paragraphs) for context that doesn't fit the li
 
 Required: `title`, `summary` (≤ 140 chars), `category`, `tags`, `setup` or `swing` (at least
 one), `expect`, `updated`. Everything else is optional. `related` must reference existing ids.
+`viz` must name a scene in `packages/shot-viz/src/scenes/` (the site build fails otherwise); by
+convention the scene id equals the situation id.
 
 Categories (fixed list — add new ones only via a PR that updates this file and the schema):
 
@@ -140,7 +142,14 @@ Categories (fixed list — add new ones only via a PR that updates this file and
 | `mental` | nerves, routine, focus, recovering from a bad hole |
 | `strategy` | course management, club selection, aiming |
 
-Tags are lowercase kebab-case. Reuse existing tags before inventing new ones.
+Tags are lowercase kebab-case. Reuse existing tags before inventing new ones. Every tag gets a
+page at `/tags/<tag>/`, so a tag used once is a page with one entry: prefer the common ones.
+
+### Search
+
+Search covers title, aliases, summary, tags and every bullet. Aliases are the main lever: add the
+words a golfer would type ("ball buried in sand", "fried egg"), not variants of the title.
+Text with `{left}`/`{right}` tokens is indexed once per hand, so write aliases with tokens too.
 
 ## Shot visualisations
 
@@ -170,7 +179,14 @@ Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
   sunlight, works offline once PWA lands.
 - Accessibility: semantic HTML, alt text / `aria` descriptions for diagrams, keyboard support.
 - The build emits `/data/situations.json` for the native app; treat its shape as a public API
-  (additive changes only, version field bumps on breaking changes).
+  (additive changes only, version field bumps on breaking changes). The same goes for
+  `/data/search-index.json` (a MiniSearch index): build and query it only through
+  `@shotbook/content/search` (`toSearchIndexJson`, `loadSearchIndex`, `searchSituations`), so
+  the web and the app share options, stemming and ranking.
+- Shot diagrams are rendered to static SVG at build time (React via `@astrojs/react`, with no
+  `client:` directive, so no React ships to the browser). Both hands are rendered and the
+  `data-hand` CSS shows one. Diagrams are inlined twice per page; keep scenes under the shape
+  budget tested in `packages/shot-viz`.
 
 ## Native app (later)
 

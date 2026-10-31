@@ -4,4 +4,5 @@ export * from "./export.ts";
 export * from "./handedness.ts";
 export * from "./parse.ts";
 export * from "./schema.ts";
+export * from "./search.ts";
 export * from "./validate.ts";

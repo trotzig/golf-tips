@@ -49,7 +49,27 @@ const fullTitle = title ? `${title} · Shotbook` : "Shotbook — how do I play t
           </span>{" "}
           Shotbook
         </a>
-        <HandToggle />
+        <div class="flex items-center gap-2">
+          <a
+            href={href("search/")}
+            class="flex size-11 items-center justify-center rounded-full hover:bg-fairway-900"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              class="size-6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+            >
+              <circle cx="10.5" cy="10.5" r="6.5"></circle>
+              <path d="m15.5 15.5 5 5"></path>
+            </svg>
+            <span class="sr-only">Search</span>
+          </a>
+          <HandToggle />
+        </div>
       </div>
     </header>
     <main id="main" class="mx-auto max-w-2xl px-4 pb-16 pt-6">

@@ -1,0 +1,38 @@
+{
+  "id": "basic-chip",
+  "title": "Basic chip",
+  "description": "Narrow stance, ball back, weight forward and a small rocking stroke of the shoulders.",
+  "terrain": {
+    "lie": "fringe",
+    "firmness": "firm"
+  },
+  "golfer": {
+    "stanceWidth": "narrow",
+    "alignment": 6,
+    "ballPosition": -0.3,
+    "weightLead": 0.6
+  },
+  "swing": {
+    "club": "pitching-wedge",
+    "length": "quarter",
+    "attackAngle": -3
+  },
+  "flight": {
+    "trajectory": "low",
+    "launchAngle": 20,
+    "ballSpeed": 9,
+    "spinRpm": 600
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Land on the green, then roll"
+    }
+  ],
+  "camera": "face-on",
+  "tips": [
+    "Keep your weight on your lead foot and your hands ahead of the ball.",
+    "Ball pops up just onto the green, then rolls out like a putt.",
+    "Pick a landing spot and let the roll do the rest."
+  ]
+}

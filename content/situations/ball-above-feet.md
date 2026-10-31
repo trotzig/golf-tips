@@ -23,5 +23,6 @@ mistakes:
 club_choice: Take about one club more to make up for gripping down and swinging easier.
 advanced: Hold the face slightly open through impact to reduce the hook on steep slopes.
 related: [ball-below-feet, uphill-lie, downhill-lie, intentional-draw]
+viz: ball-above-feet
 updated: 2026-10-31
 ---

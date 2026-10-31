@@ -23,5 +23,6 @@ club_choice: As a rough guide, add one club for every 10 mph (15 km/h) of headwi
 drill: On a windy range, hit the same target with your normal club, then with one more club swung easier; compare.
 advanced: Tee the ball slightly lower with the driver to reduce spin and launch.
 related: [downwind, crosswind, low-shot, bump-and-run]
+viz: into-the-wind
 updated: 2026-10-31
 ---

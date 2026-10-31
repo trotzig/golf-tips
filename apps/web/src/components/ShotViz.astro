@@ -1,0 +1,35 @@
+---
+// Shot diagram for a situation, drawn to static SVG at build time. Both hands are rendered and
+// the global `data-hand` CSS shows the reader's, so switching never waits on JavaScript.
+import { exampleScenes, handedScene } from "@shotbook/shot-viz";
+import { ShotDiagram } from "@shotbook/shot-viz/web";
+import Bullets from "./Bullets.astro";
+
+interface Props {
+  viz?: string;
+}
+
+const { viz } = Astro.props;
+const scene = viz ? exampleScenes[viz] : undefined;
+// A smaller canvas than the default keeps the labels readable when scaled to a phone's width.
+const size = { width: 360, height: 300 };
+---
+
+{scene && (
+  <figure
+    data-viz={scene.id}
+    class="overflow-hidden rounded-2xl border border-stone-300 bg-white shadow-sm"
+  >
+    <div class="hand-r">
+      <ShotDiagram scene={handedScene(scene, "right")} {...size} />
+    </div>
+    <div class="hand-l">
+      <ShotDiagram scene={handedScene(scene, "left")} {...size} />
+    </div>
+    {scene.tips.length > 0 && (
+      <figcaption class="p-4 text-lg leading-snug">
+        <Bullets items={scene.tips} />
+      </figcaption>
+    )}
+  </figure>
+)}

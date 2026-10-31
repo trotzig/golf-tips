@@ -25,5 +25,6 @@ club_choice: More club, less effort — a smooth swing with a longer club keeps 
 drill: Hit balls with a 7-iron and try to finish with your hands no higher than your shoulders.
 advanced: Vary height by ball position alone — a ball's width farther back gives a noticeably lower flight.
 related: [high-shot, into-the-wind, punch-out-from-trees, divot-lie]
+viz: low-shot
 updated: 2026-10-31
 ---

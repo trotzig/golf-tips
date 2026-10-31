@@ -1,0 +1,36 @@
+{
+  "id": "greenside-bunker",
+  "title": "Greenside bunker",
+  "description": "Open face, ball forward and a full swing that splashes the sand out from under the ball.",
+  "terrain": {
+    "lie": "bunker"
+  },
+  "golfer": {
+    "stanceWidth": "wide",
+    "ballPosition": 0.35,
+    "weightLead": 0.6
+  },
+  "swing": {
+    "club": "sand-wedge",
+    "length": "three-quarter",
+    "attackAngle": -6
+  },
+  "flight": {
+    "trajectory": "high",
+    "launchAngle": 38,
+    "ballSpeed": 13,
+    "spinRpm": 4500
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Pops out softly"
+    }
+  ],
+  "camera": "face-on",
+  "tips": [
+    "Hit the sand just behind the ball; the sand carries it out, not the club.",
+    "Swing longer than for a chip of the same distance and keep accelerating.",
+    "Ball pops out high and soft and stops fairly quickly."
+  ]
+}

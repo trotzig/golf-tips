@@ -1,3 +1,4 @@
+import react from "@astrojs/react";
 import { findContentDir } from "@shotbook/content/node";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
@@ -9,6 +10,8 @@ export default defineConfig({
   site: "https://trotzig.github.io",
   base: "/golf-tips",
   trailingSlash: "ignore",
+  // React renders shot diagrams to static SVG at build time; no React ships to the browser.
+  integrations: [react()],
   vite: {
     plugins: [
       tailwindcss(),
