@@ -1,6 +1,7 @@
 import { handednessIssues } from "./handedness.ts";
 import { parseSituation, type ContentError, type SourceFile } from "./parse.ts";
 import type { Situation } from "./schema.ts";
+import { measurementIssues } from "./units.ts";
 
 export interface ValidationResult {
   /** Valid situations, sorted by title. */
@@ -37,7 +38,9 @@ export function validateSituations(files: readonly SourceFile[]): ValidationResu
 
   for (const s of situations) {
     for (const [field, text] of textFields(s)) {
-      for (const issue of handednessIssues(text)) errors.push({ id: s.id, message: `${field}: ${issue}` });
+      for (const issue of [...handednessIssues(text), ...measurementIssues(text)]) {
+        errors.push({ id: s.id, message: `${field}: ${issue}` });
+      }
     }
   }
 

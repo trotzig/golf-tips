@@ -36,13 +36,6 @@ export function splitHanded(text: string): HandedSegment[] {
   return segments;
 }
 
-/** Resolves direction tokens for one handedness. */
-export function forHand(text: string, hand: Handedness): string {
-  return splitHanded(text)
-    .map((segment) => (typeof segment === "string" ? segment : segment[hand]))
-    .join("");
-}
-
 /** Phrases that mean a direction was written for one hand only instead of using a token. */
 const ONE_HANDED_PHRASES = /mirror this|(left|right)-hand(ed|ers?)\b|for (left|right)ies/i;
 

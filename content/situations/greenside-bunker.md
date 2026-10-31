@@ -12,7 +12,7 @@ setup:
   - Play the ball forward, toward your lead heel.
   - Favor your lead side.
 swing:
-  - Enter the sand about two inches (5 cm) behind the ball.
+  - Enter the sand about {2 in} behind the ball.
   - Swing longer than for a chip of the same distance.
   - Accelerate through to a full finish.
 expect:

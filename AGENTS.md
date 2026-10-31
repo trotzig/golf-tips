@@ -100,6 +100,12 @@ move to a free port if taken. Open `/golf-tips/` on the port it reports — the 
   - In YAML flow lists (`aliases: [...]`) quote any item containing a token.
   - Tokens work in every text field and the body. `/data/situations.json` keeps the raw tokens;
     consumers resolve them with `forHand(text, hand)` from `@shotbook/content`.
+- Units: readers also pick yards or meters and mph or m/s (on the settings page, stored per
+  device). Write every distance and wind speed as a token in the unit you think in: `{150 yd}`,
+  `{15–60 yd}`, `{3 ft}`, `{2 in}`, `{10 mph}`. Readers see "15–60 yards" or "14–55 m", "10 mph"
+  or "4 m/s", rounded to numbers a golfer would say. The validator rejects measurements written
+  out ("10 mph") and malformed tokens. Resolve them, with direction tokens, through
+  `forReader(text, { hand, distance, wind })` from `@shotbook/content`.
 - Explain the *why* in one line where it helps ("the slope delofts the club, so the ball comes
   out lower").
 - Include safety where relevant (e.g. lightning in storms, slippery stances).
@@ -201,6 +207,11 @@ Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
   green for structure, red only for highlights. Light and dark follow the system setting. Use the
   colour tokens in `apps/web/src/styles/global.css` (`bg-card`, `text-ink-muted`, `text-accent`…),
   never raw palette colours or `dark:` variants: each token has a light and a dark value.
+- Reader settings (hand, distance and wind units) live on `/settings/`; the header keeps a quick
+  hand switch. Each is a `data-hand` / `data-distance` / `data-wind` attribute on `<html>`, set
+  from localStorage (`shotbook:<pref>`) before first paint. Text renders every variant and
+  `global.css` shows the matching one, so pages stay static and work without JavaScript
+  (right-handed, yards, mph).
 - Accessibility: semantic HTML, alt text / `aria` descriptions for diagrams, keyboard support.
 - The build emits `/data/situations.json` for the native app; treat its shape as a public API
   (additive changes only, version field bumps on breaking changes). The same goes for
@@ -254,8 +265,9 @@ and Settings, plus category, tag and situation screens that mirror the site.
   `src/generated/situations.json` and `search-index.json` (gitignored) with the same exporters as
   the site's `/data/` files. `start`, `ios`, `android` and `typecheck` run it first. Search uses
   `searchSituations` from `@shotbook/content/search` on that prebuilt index.
-- **Preferences stay on the device** (AsyncStorage): the hand setting (`shotbook:hand`, same key
-  as the site's localStorage) and favourites. Every text goes through `useHanded()` / `forHand`.
+- **Preferences stay on the device** (AsyncStorage): hand and units (`shotbook:hand`,
+  `shotbook:distance`, `shotbook:wind`, the same keys as the site's localStorage) and
+  favourites. Every text goes through `useHanded()`, which resolves directions and units.
 - **Diagrams** come from `@shotbook/shot-viz/native`: `ShotDiagram` (react-native-svg, drawn from
   the same shapes as the web via `shapesElements`) and `useShotPlayer` (Play swing / step-through
   on the shared timeline). Play is hidden when the system asks for reduced motion.

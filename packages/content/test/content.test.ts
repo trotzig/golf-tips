@@ -4,7 +4,11 @@ import {
   CATEGORIES,
   CATEGORY_IDS,
   forHand,
+  forReader,
   handednessIssues,
+  measurementIssues,
+  parseMeasurement,
+  splitText,
   splitHanded,
   parseSituation,
   SITUATIONS_JSON_VERSION,
@@ -180,5 +184,54 @@ describe("handedness", () => {
     const raw = minimal("").replace("swing: [Swing.]", "swing: ['Aim left (left-handers: mirror this).']");
     const { errors } = validateSituations([{ id: "x", raw }]);
     expect(errors.map((e) => e.message)).toEqual([expect.stringMatching(/^swing\[0\]: "left-handers"/)]);
+  });
+});
+
+describe("measurements", () => {
+  it("converts to friendly numbers in the other unit", () => {
+    expect(parseMeasurement("{15–60 yd}")).toEqual({
+      pref: "distance",
+      yards: "15–60 yards",
+      meters: "14–55 m",
+    });
+    expect(parseMeasurement("{150 yd}")).toMatchObject({ meters: "135 m" });
+    expect(parseMeasurement("{1 yd}")).toMatchObject({ yards: "1 yard", meters: "1 m" });
+    expect(parseMeasurement("{3-6 ft}")).toMatchObject({ yards: "3–6 feet", meters: "1–2 m" });
+    expect(parseMeasurement("{10 ft}")).toMatchObject({ meters: "3 m" });
+    expect(parseMeasurement("{2 in}")).toMatchObject({ yards: "2 inches", meters: "5 cm" });
+    expect(parseMeasurement("{10–15 mph}")).toEqual({ pref: "wind", mph: "10–15 mph", "m/s": "4–7 m/s" });
+    expect(parseMeasurement("{10 km}")).toBeNull();
+  });
+
+  it("resolves every token for a reader, with defaults for what is left out", () => {
+    const text = "Aim {left} and add a club per {10 mph} from {150 yd}.";
+    expect(forReader(text, {})).toBe("Aim left and add a club per 10 mph from 150 yards.");
+    expect(forReader(text, { hand: "left", distance: "meters", wind: "m/s" })).toBe(
+      "Aim right and add a club per 4 m/s from 135 m.",
+    );
+    expect(forHand(text, "left")).toBe("Aim right and add a club per 10 mph from 150 yards.");
+  });
+
+  it("splits text into plain runs, directions and measurements", () => {
+    expect(splitText("{Left} at {3 ft}")).toEqual([
+      { pref: "hand", right: "Left", left: "Right" },
+      " at ",
+      { pref: "distance", yards: "3 feet", meters: "1 m" },
+    ]);
+  });
+
+  it("flags malformed tokens and measurements written out", () => {
+    expect(measurementIssues("from {15–60 yd} in {10 mph}, 60% on the lead foot")).toEqual([]);
+    expect(measurementIssues("from {15 yards}")).toEqual([expect.stringMatching(/unknown measurement/)]);
+    expect(measurementIssues("from 15–60 yards")).toEqual([expect.stringMatching(/^"15–60 yards"/)]);
+    expect(measurementIssues("per 10 mph (15 km/h)")).toHaveLength(1);
+    expect(measurementIssues("a 2m putt")).toHaveLength(1);
+    expect(measurementIssues("one in three")).toEqual([]);
+  });
+
+  it("is enforced by validateSituations", () => {
+    const raw = minimal("").replace("swing: [Swing.]", "swing: ['Add a club per 10 mph.']");
+    const { errors } = validateSituations([{ id: "x", raw }]);
+    expect(errors.map((e) => e.message)).toEqual([expect.stringMatching(/^swing\[0\]: "10 mph"/)]);
   });
 });

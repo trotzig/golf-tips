@@ -1,52 +1,19 @@
 ---
-// Global right/left-handed switch. Without JavaScript the page stays right-handed, so the switch
-// is hidden until the script runs.
+// Global right/left-handed switch.
+import PrefToggle from "./PrefToggle.astro";
+
+interface Props {
+  wide?: boolean;
+}
 ---
 
-<div
-  data-hand-toggle
-  hidden
-  role="group"
-  aria-label="Which way do you swing?"
+<PrefToggle
+  pref="hand"
+  label="Which way do you swing?"
   title="Directions in the advice follow this setting"
-  class="flex text-sm font-medium"
->
-  <button
-    type="button"
-    data-hand-value="right"
-    class="min-h-10 rounded-[10px] px-3 text-ink transition-colors hover:text-ink-strong aria-pressed:bg-raised aria-pressed:text-accent aria-pressed:shadow-sm"
-  >
-    Right<span class="sr-only">-handed</span>
-  </button>
-  <button
-    type="button"
-    data-hand-value="left"
-    class="min-h-10 rounded-[10px] px-3 text-ink transition-colors hover:text-ink-strong aria-pressed:bg-raised aria-pressed:text-accent aria-pressed:shadow-sm"
-  >
-    Left<span class="sr-only">-handed</span>
-  </button>
-</div>
-
-<script>
-  const root = document.documentElement;
-  for (const toggle of document.querySelectorAll<HTMLElement>("[data-hand-toggle]")) {
-    const buttons = [...toggle.querySelectorAll<HTMLButtonElement>("[data-hand-value]")];
-    const sync = () => {
-      for (const b of buttons)
-        b.setAttribute("aria-pressed", String(b.dataset.handValue === root.dataset.hand));
-    };
-    for (const b of buttons) {
-      b.addEventListener("click", () => {
-        root.dataset.hand = b.dataset.handValue;
-        try {
-          localStorage.setItem("shotbook:hand", b.dataset.handValue!);
-        } catch {
-          // Storage can be unavailable (private mode); the choice still applies to this page.
-        }
-        sync();
-      });
-    }
-    sync();
-    toggle.hidden = false;
-  }
-</script>
+  wide={Astro.props.wide}
+  options={[
+    { value: "right", label: "Right", srSuffix: "-handed" },
+    { value: "left", label: "Left", srSuffix: "-handed" },
+  ]}
+/>

@@ -1,6 +1,6 @@
 ---
 title: Pitch shot
-summary: A higher, softer shot from around 15–60 yards, flying most of the way to the hole and landing softly.
+summary: A higher, softer shot from around {15–60 yd}, flying most of the way to the hole and landing softly.
 category: short-game
 tags: [pitching, short-game, distance-control]
 aliases: [pitching, half wedge, short wedge shot]

@@ -81,3 +81,15 @@ describe("searchSituations", () => {
     expect(searchSituations(index, "bunker zzzzqqq", "right").length).toBeGreaterThan(0);
   });
 });
+
+describe("measurements in search", () => {
+  it("finds text by either unit and shows the reader's", () => {
+    const pitch = situation("drill: Pitch to {30 yd} targets.\n");
+    pitch.summary = "Pitch from {15–60 yd}.";
+    const idx = loadSearchIndex(JSON.parse(JSON.stringify(toSearchIndexJson([pitch]))));
+    expect(searchSituations(idx, "yards", "right")[0]?.summary).toBe("Pitch from 15–60 yards.");
+    expect(searchSituations(idx, "55 m", { distance: "meters" })[0]?.summary).toBe(
+      "Pitch from 14–55 m.",
+    );
+  });
+});
