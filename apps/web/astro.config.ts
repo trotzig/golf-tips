@@ -1,7 +1,9 @@
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 import { findContentDir } from "@shotbook/content/node";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
+import { serviceWorker } from "./src/pwa/integration.ts";
 
 const contentDir = process.env.SHOTBOOK_CONTENT_DIR ?? findContentDir();
 
@@ -10,8 +12,12 @@ export default defineConfig({
   site: "https://trotzig.github.io",
   base: "/golf-tips",
   trailingSlash: "ignore",
-  // React renders shot diagrams to static SVG at build time; no React ships to the browser.
-  integrations: [react()],
+  integrations: [
+    // React renders shot diagrams to static SVG at build time; no React ships to the browser.
+    react(),
+    sitemap({ filter: (page) => !page.endsWith("/404/") }),
+    serviceWorker(),
+  ],
   vite: {
     plugins: [
       tailwindcss(),

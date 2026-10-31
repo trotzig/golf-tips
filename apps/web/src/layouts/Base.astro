@@ -7,11 +7,27 @@ import { defaultHand } from "../lib/handed";
 interface Props {
   title?: string;
   description?: string;
+  /** Share image, relative to the site root; defaults to the site-wide card. */
+  image?: string;
+  /** Open Graph type: "article" for situations. */
+  type?: "website" | "article";
+  /** Keep the page out of search engines (the 404 page). */
+  noindex?: boolean;
 }
 
-const { title, description = "How to play every golf shot and situation, on one card." } =
-  Astro.props;
-const fullTitle = title ? `${title} · Shotbook` : "Shotbook — how do I play this shot?";
+const {
+  title,
+  description = "How to play every golf shot and situation, on one card.",
+  image = "og/default.png",
+  type = "website",
+  noindex = false,
+} = Astro.props;
+const fullTitle = defaultHand(
+  title ? `${title} · Shotbook` : "Shotbook — how do I play this shot?",
+);
+const metaDescription = defaultHand(description);
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const imageUrl = new URL(href(image), Astro.site).href;
 ---
 
 <!doctype html>
@@ -19,12 +35,25 @@ const fullTitle = title ? `${title} · Shotbook` : "Shotbook — how do I play t
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={defaultHand(description)} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={metaDescription} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical} />
+    <meta property="og:site_name" content="Shotbook" />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={fullTitle} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#1b201e" media="(prefers-color-scheme: dark)" />
     <link rel="icon" type="image/svg+xml" href={href("favicon.svg")} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
-    <title>{defaultHand(fullTitle)}</title>
+    <link rel="apple-touch-icon" href={href("icons/apple-touch-icon.png")} />
+    <link rel="manifest" href={href("manifest.webmanifest")} />
     <script is:inline>
       // Apply the saved handedness before first paint so directions never flicker.
       try {
@@ -34,6 +63,17 @@ const fullTitle = title ? `${title} · Shotbook` : "Shotbook — how do I play t
         // Storage unavailable: stay right-handed.
       }
     </script>
+    {import.meta.env.PROD && <script
+      is:inline
+      define:vars={{ sw: href("sw.js"), scope: href("/") }}
+    >
+      // Offline support (src/pwa). The site works without it, so failures are ignored.
+      if ("serviceWorker" in navigator) {
+        addEventListener("load", () => {
+          navigator.serviceWorker.register(sw, { scope }).catch(() => {});
+        });
+      }
+    </script>}
   </head>
   <body class="min-h-dvh bg-canvas font-sans text-ink antialiased">
     <a
