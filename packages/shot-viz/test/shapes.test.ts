@@ -89,6 +89,28 @@ describe("2D shapes", () => {
     }
   });
 
+  it("shows aim, start line and the curve back to the target on slopes along the line", () => {
+    for (const [id, side] of [
+      ["uphill-lie", 1],
+      ["downhill-lie", -1],
+    ] as const) {
+      const scene = exampleScenes[id]!;
+      const flight = computeFlight(scene);
+      // Aim off the target, start between aim and target, finish near the target line.
+      expect(Math.sign(scene.golfer.aim)).toBe(side);
+      expect(Math.sign(flight.launch.direction)).toBe(side);
+      expect(Math.abs(flight.launch.direction)).toBeLessThan(Math.abs(scene.golfer.aim));
+      expect(Math.abs(flight.rest[2])).toBeLessThan(3);
+
+      const end = buildShapes2D(scene, { flight, ballTime: flight.duration, width: 360 });
+      const texts = end.shapes.flatMap((s) => (s.kind === "text" ? [s] : []));
+      const at = (t: string) => texts.find((s) => s.text.startsWith(t))!.at;
+      for (const t of ["Target", "Aim", "Start line", "Curves back"]) expect(at(t)).toBeDefined();
+      // From behind the ball the lines fan out: aim and start line lie on the aim side.
+      expect((at("Aim").x - at("Target").x) * side).toBeGreaterThan(20);
+    }
+  });
+
   it("describes the scene in plain language for screen readers", () => {
     const scene = exampleScenes["uphill-lie"]!;
     const text = describeScene(scene, "face-on");

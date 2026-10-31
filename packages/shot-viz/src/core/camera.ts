@@ -1,6 +1,18 @@
 import type { FlightResult } from "./flight.ts";
 import type { CameraPreset, ShotScene } from "./schema.ts";
-import { add, clamp, cross, dot, lerp, mix, normalize, sub, type Vec3 } from "./vec.ts";
+import {
+  add,
+  clamp,
+  cross,
+  dot,
+  length,
+  lerp,
+  mix,
+  normalize,
+  scale,
+  sub,
+  type Vec3,
+} from "./vec.ts";
 
 export interface Camera {
   position: Vec3;
@@ -41,17 +53,22 @@ const FOLLOW_POSITION: Record<"face-on" | "down-the-line", Vec3> = {
   "down-the-line": [-9, 2, -0.35],
 };
 
+/** Behind the ball, looking down the target line: where aim, start line and curve read best. */
+const DOWN_RANGE_POSITION: Vec3 = [-30, 7, -0.5];
+
 /**
  * The wide shot a golfer view moves to during the flight: from a point further back, aimed and
  * zoomed so the golfer and the whole flight (air and roll) fit the frame. `aspect` is
- * width / height of the view.
+ * width / height of the view. `downRange` pulls back behind the ball instead, for scenes about
+ * where to aim.
  */
 export function followCamera(
   preset: "face-on" | "down-the-line",
   flight: FlightResult,
   aspect = 4 / 3,
+  downRange = false,
 ): Camera {
-  const position = FOLLOW_POSITION[preset];
+  const position = downRange ? DOWN_RANGE_POSITION : FOLLOW_POSITION[preset];
   const points: Vec3[] = [
     [-0.4, 0, -1.1],
     [0.4, 0, -1.1],
@@ -78,7 +95,14 @@ export function followCamera(
     Math.sin(pitch),
     Math.cos(pitch) * Math.sin(yaw),
   ];
-  const cam: Camera = { position, target: add(position, dir), up: [0, 1, 0], fov: 90 };
+  // Behind the ball the target is a real point down range, so a blend can slide toward it.
+  const reach = downRange ? length(sub(flight.landing, position)) * 0.5 : 1;
+  const cam: Camera = {
+    position,
+    target: add(position, scale(dir, reach)),
+    up: [0, 1, 0],
+    fov: 90,
+  };
   const proj = projector(cam);
   let extent = 0;
   for (const p of points) {
@@ -90,11 +114,17 @@ export function followCamera(
   return { ...cam, fov: clamp(fov, 30, 75) };
 }
 
-/** A camera part-way from `a` to `b` (k from 0 to 1), turning smoothly rather than cutting. */
-export function blendCameras(a: Camera, b: Camera, k: number): Camera {
+/**
+ * A camera part-way from `a` to `b` (k from 0 to 1), turning smoothly rather than cutting.
+ * `byTarget` slides the look-at point from one target to the other instead of turning the view
+ * direction, which keeps the ball in frame on a long move from the golfer to behind the ball.
+ */
+export function blendCameras(a: Camera, b: Camera, k: number, byTarget = false): Camera {
   if (k <= 0) return a;
   if (k >= 1) return b;
   const position = lerp(a.position, b.position, k);
+  if (byTarget)
+    return { position, target: lerp(a.target, b.target, k), up: a.up, fov: mix(a.fov, b.fov, k) };
   const dir = normalize(
     lerp(normalize(sub(a.target, a.position)), normalize(sub(b.target, b.position)), k),
   );

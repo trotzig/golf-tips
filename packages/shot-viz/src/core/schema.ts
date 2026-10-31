@@ -95,7 +95,14 @@ export const flightSchema = z.object({
 
 export const annotationSchema = z.discriminatedUnion("type", [
   z.object({
-    type: z.enum(["target-line", "aim-line", "shoulder-line", "slope-line", "ball-flight"]),
+    type: z.enum([
+      "target-line",
+      "aim-line",
+      "start-line",
+      "shoulder-line",
+      "slope-line",
+      "ball-flight",
+    ]),
     label: z.string().max(60).optional(),
   }),
   z.object({
