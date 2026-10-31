@@ -1,0 +1,59 @@
+# Visual regression tests: screenshots every built page and shot diagram (see apps/web/happo/).
+# Pull requests only render the examples they changed; the rest are borrowed from the baseline
+# report. That needs the baseline's fingerprint manifest, cached per commit below. Pushes to main
+# render everything, so baselines never drift.
+name: Happo
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: happo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  happo:
+    runs-on: ubuntu-latest
+    env:
+      HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
+      HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The pull request's head commit, not GitHub's merge commit. Full history lets Happo
+          # find the merge base and fall back to earlier reports.
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+
+      - name: Find the baseline report
+        id: baseline
+        if: github.event_name == 'pull_request'
+        run: |
+          sha=$(pnpm exec happo baseline | tail -n 1)
+          if [[ "$sha" =~ ^[0-9a-f]{40}$ ]]; then echo "sha=$sha" >> "$GITHUB_OUTPUT"; fi
+      - name: Restore the baseline's manifest
+        if: steps.baseline.outputs.sha
+        uses: actions/cache/restore@v6
+        with:
+          path: .happo-manifest
+          key: happo-manifest-${{ steps.baseline.outputs.sha }}
+
+      - name: Run Happo
+        run: node apps/web/happo/run.ts ${{ github.event_name == 'pull_request' && '.happo-manifest/manifest.json' || '' }}
+
+      - name: Keep this commit's manifest for later runs
+        run: mkdir -p .happo-manifest && cp apps/web/happo/dist/manifest.json .happo-manifest/
+      - uses: actions/cache/save@v6
+        with:
+          path: .happo-manifest
+          key: happo-manifest-${{ env.HEAD_SHA }}

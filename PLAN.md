@@ -52,7 +52,7 @@ Each step is its own session and PR. PRs are merged only after the owner approve
 | 5 | **Polish & reach** | 4 | PWA/offline, SEO and share images, print-friendly "leaflet" view, accessibility pass, performance budget |
 | 6 | **Animated golfer** (on hold: 2D only for now) | 3 | Rigged, animated golfer (glTF) driven by ShotScene (setup → swing → impact → flight), scrubbable timeline |
 | 7 | **Native app** | 4 (6 optional) | Expo app (iOS/Android): offline content, search, favourites, 2D viz natively; EAS build pipeline |
-| 8 | **Visual regression** | 3, 4 | Screenshot tests for pages and viz renderers in CI |
+| 8 | **Visual regression** ✅ | 3, 4 | Screenshot tests for pages and viz renderers in CI — done: Happo custom integration over every built page and scene, partial runs on PRs, agents flag unrelated diffs as flakes (see AGENTS.md) |
 
 Steps 1, 2 and 3 run in parallel now. The rest start as their dependencies merge.
 

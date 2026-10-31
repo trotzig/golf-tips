@@ -7,3 +7,4 @@ pnpm-lock.yaml
 content/
 # Markdown is hand-written prose (and content/); keep it out of the formatter.
 *.md
+.happo-manifest/
