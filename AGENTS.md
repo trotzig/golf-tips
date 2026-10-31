@@ -89,7 +89,7 @@ move to a free port if taken. Open `/golf-tips/` on the port it reports — the 
   `advanced` notes rather than in the main steps.
 - Short and scannable. Imperative voice ("Play the ball slightly back"). Each bullet ≤ ~20 words.
   It should fit on a card you could read between shots.
-- Handedness: readers set right- or left-handed once (a global switch in the site header, stored
+- Handedness: readers set right- or left-handed once (on the settings page, stored
   per device), and every direction is shown for *their* hand. Never write "left-handers: mirror
   this" or "for right-handers" — the validator rejects it.
   - Body parts: say **lead/trail** (lead foot, trail shoulder); these read correctly for both.
@@ -213,9 +213,8 @@ in the desktop app), which compares against the classic swing and copies the res
   green for structure, red only for highlights. Light and dark follow the system setting. Use the
   colour tokens in `apps/web/src/styles/global.css` (`bg-card`, `text-ink-muted`, `text-accent`…),
   never raw palette colours or `dark:` variants: each token has a light and a dark value.
-- Reader settings (hand, distance and wind units, golfer in the diagrams) live on `/settings/`;
-  the header keeps a quick hand switch. Each is a `data-hand` / `data-distance` / `data-wind` /
-  `data-golfer` attribute on `<html>`, set from localStorage (`shotbook:<pref>`) before first
+- Reader settings (hand, distance and wind units, golfer in the diagrams) live on `/settings/`.
+  Each is a `data-hand` / `data-distance` / `data-wind` / `data-golfer` attribute on `<html>`, set from localStorage (`shotbook:<pref>`) before first
   paint. Text and diagrams render every variant and `global.css` shows the matching one, so pages
   stay static and work without JavaScript (right-handed, yards, mph, a man).
 - Accessibility: semantic HTML, alt text / `aria` descriptions for diagrams, keyboard support.

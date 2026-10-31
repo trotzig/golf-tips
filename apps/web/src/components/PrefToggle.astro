@@ -58,7 +58,7 @@ const { pref, label, options, title, wide = false } = Astro.props;
         }
       });
     }
-    // Another switch for the same setting (header and settings page) stays in step.
+    // Stay in step if the setting changes elsewhere on the page.
     new MutationObserver(sync).observe(root, { attributeFilter: [`data-${pref}`] });
     sync();
     toggle.hidden = false;
