@@ -8,6 +8,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./web": "./src/web/index.ts",
+    "./player": "./src/web/player.ts",
     "./package.json": "./package.json"
   },
   "files": [

@@ -1,0 +1,38 @@
+{
+  "id": "tight-lie",
+  "title": "Tight lie",
+  "description": "Ball sitting down on firm, bare ground: ball first, then turf, with a low-bounce club.",
+  "terrain": {
+    "lie": "fairway",
+    "grass": "none",
+    "firmness": "firm"
+  },
+  "golfer": {
+    "stanceWidth": "narrow",
+    "ballPosition": -0.15,
+    "weightLead": 0.6
+  },
+  "swing": {
+    "club": "pitching-wedge",
+    "length": "half",
+    "attackAngle": -4
+  },
+  "flight": {
+    "trajectory": "low",
+    "launchAngle": 22,
+    "ballSpeed": 17,
+    "spinRpm": 3500
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Lower, with more run"
+    }
+  ],
+  "camera": "face-on",
+  "tips": [
+    "Brush the ground just after the ball; don't try to lift it.",
+    "Ball comes out lower and runs more than from grass.",
+    "Near the green, a putt or a low chip is often the safer play."
+  ]
+}

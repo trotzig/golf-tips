@@ -11,6 +11,7 @@ dropped for now; it is in the git history if we come back to it.)
 | -------------------------- | ------------------------------------------------------------- | -------------------- |
 | `@shotbook/shot-viz`       | Types, zod schema, maths, example scenes, 2D scene → shapes   | Anywhere (no DOM)    |
 | `@shotbook/shot-viz/web`   | `<ShotDiagram>` (React DOM SVG)                               | Web                  |
+| `@shotbook/shot-viz/player` | `createShotPlayer`: plays/scrubs a rendered diagram, no React | Browser              |
 
 The core must stay platform-neutral so the native app can import it. React is an optional peer
 dependency, only needed for `/web`.
@@ -26,6 +27,21 @@ const scene = exampleScenes["downhill-lie"];
 
 `ShotDiagram` is plain SVG: it renders on the server (Astro) and needs no JavaScript or WebGL. It
 is one `role="img"` with a `<title>` and a generated plain-language `<desc>` (`describeScene`).
+
+To animate it in the browser without shipping React, hand the same `<svg>` to the player. It
+redraws the shapes layer (`<g data-shapes>`) from `shapesMarkup()` on every frame, using the
+shared `timelineAt` clock (setup → swing → impact → flight):
+
+```ts
+import { createShotPlayer, handedScene } from "@shotbook/shot-viz/player";
+
+const player = createShotPlayer(svg, handedScene(scene, "left"), { width: 360, height: 300 });
+player.play((t) => (slider.value = String(t / player.duration)));
+player.seek(1.2); // impact
+```
+
+The site uses it on situation pages (Play swing + a scrubber; Play is hidden under
+`prefers-reduced-motion`). The standalone demo (`pnpm dev`) shows all scenes from every camera.
 
 ## Scene format
 
@@ -100,7 +116,7 @@ pnpm build:demo  # static demo in dist-demo/
 ## Native app (step 7)
 
 - **2D:** `buildShapes2D(scene, options)` returns a flat list of polygons, polylines, circles and
-  text in screen coordinates, with no DOM types. `ShotDiagram.tsx` maps them to `<svg>` elements
-  in about 60 lines. A `@shotbook/shot-viz/native` entry would do the same with `react-native-svg`
+  text in screen coordinates, with no DOM types. `shapesMarkup()` turns them into SVG markup for
+  the web. A `@shotbook/shot-viz/native` entry would do the same with `react-native-svg`
   (`Polygon`, `Polyline`, `Circle`, `Text`; arrowheads come from `arrowHead()`, not SVG markers).
 - Scene JSON is bundled with the app content; the core maths runs unchanged in Hermes.

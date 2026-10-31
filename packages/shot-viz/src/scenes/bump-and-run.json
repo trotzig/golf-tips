@@ -1,0 +1,38 @@
+{
+  "id": "bump-and-run",
+  "title": "Bump-and-run",
+  "description": "A less-lofted iron and a putting-style stroke: short flight, long roll.",
+  "terrain": {
+    "lie": "fringe",
+    "firmness": "firm"
+  },
+  "golfer": {
+    "stanceWidth": "narrow",
+    "ballPosition": -0.35,
+    "weightLead": 0.65,
+    "gripDown": 0.06
+  },
+  "swing": {
+    "club": "7-iron",
+    "length": "quarter",
+    "attackAngle": -2
+  },
+  "flight": {
+    "trajectory": "low",
+    "launchAngle": 12,
+    "ballSpeed": 10,
+    "spinRpm": 400
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Short hop, long roll"
+    }
+  ],
+  "camera": "face-on",
+  "tips": [
+    "Rock your shoulders like a putt and keep your wrists quiet.",
+    "Land the ball just onto the green, not in the long grass.",
+    "Ball barely gets airborne, then rolls most of the way like a putt."
+  ]
+}

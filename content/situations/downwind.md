@@ -22,5 +22,6 @@ mistakes:
 club_choice: Take about one club less for every 10–15 mph (15–25 km/h) of tailwind, and aim at the front half of the green.
 advanced: Off the tee, a slightly higher launch lets the ball ride the wind for extra distance.
 related: [into-the-wind, crosswind, choosing-a-target]
+viz: downwind
 updated: 2026-10-31
 ---

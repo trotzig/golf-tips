@@ -1,0 +1,34 @@
+{
+  "id": "thick-rough",
+  "title": "Thick rough",
+  "description": "A lofted club, ball slightly back and a steep swing that keeps going through the grass.",
+  "terrain": {
+    "lie": "rough",
+    "grass": "long"
+  },
+  "golfer": {
+    "ballPosition": -0.2,
+    "weightLead": 0.6
+  },
+  "swing": {
+    "club": "9-iron",
+    "length": "full",
+    "face": -4,
+    "attackAngle": -6
+  },
+  "flight": {
+    "spinRpm": 3000
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Comes out hot, turns {left}"
+    }
+  ],
+  "camera": "overhead",
+  "tips": [
+    "Take a lofted club and hit down firmly; don't stop at the grass.",
+    "Grass can twist the face closed, so the ball tends to go {left}.",
+    "Less spin means it runs out more after landing."
+  ]
+}

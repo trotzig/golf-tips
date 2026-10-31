@@ -1,0 +1,29 @@
+{
+  "id": "fairway-bunker",
+  "title": "Fairway bunker",
+  "description": "Grip down, ball in the middle and a quiet lower body: pick the ball cleanly off the sand.",
+  "terrain": {
+    "lie": "bunker"
+  },
+  "golfer": {
+    "ballPosition": -0.1,
+    "gripDown": 0.04
+  },
+  "swing": {
+    "club": "7-iron",
+    "length": "three-quarter",
+    "attackAngle": -3
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Ball first, then sand"
+    }
+  ],
+  "camera": "face-on",
+  "tips": [
+    "Choose enough loft to clear the lip before thinking about distance.",
+    "Keep your legs quiet and hit the ball before the sand.",
+    "Expect a little less distance than from the fairway."
+  ]
+}

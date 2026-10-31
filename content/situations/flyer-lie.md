@@ -21,5 +21,6 @@ mistakes:
 club_choice: Take one club less than the distance suggests, or the same club with a softer swing.
 advanced: Flyers are most pronounced with mid and short irons; wedges from flyer lies can also come out with little spin and run.
 related: [thick-rough, choosing-a-target]
+viz: flyer-lie
 updated: 2026-10-31
 ---

@@ -24,6 +24,7 @@ mistakes:
 club_choice: Take one club more than the distance to allow for gripping down and a controlled swing — but never so little loft that the lip is in play.
 advanced: From a good lie with a low lip, a hybrid or fairway wood can be swept off the sand.
 related: [greenside-bunker, plugged-bunker-lie, divot-lie, laying-up]
+viz: fairway-bunker
 updated: 2026-10-31
 ---
 

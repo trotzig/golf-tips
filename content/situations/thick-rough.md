@@ -23,6 +23,7 @@ mistakes:
 club_choice: Take the most lofted club that gets you safely back to the fairway or short of trouble.
 advanced: If the grass is growing toward the target, the ball comes out more easily; if against, take even more loft.
 related: [flyer-lie, punch-out-from-trees, laying-up, high-shot]
+viz: thick-rough
 updated: 2026-10-31
 ---
 
