@@ -16,6 +16,12 @@ export default tseslint.config(
     },
   },
   {
+    files: ["apps/web/src/pwa/sw.js"],
+    languageOptions: {
+      globals: globals.serviceworker,
+    },
+  },
+  {
     rules: {
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
     },

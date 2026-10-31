@@ -2,7 +2,7 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    // Each package is its own project; a package may add its own vitest.config.ts.
-    projects: ["packages/*"],
+    // Each package (and the web app) is its own project; one may add its own vitest.config.ts.
+    projects: ["packages/*", "apps/web"],
   },
 });

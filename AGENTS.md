@@ -205,6 +205,13 @@ Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
   `/data/search-index.json` (a MiniSearch index): build and query it only through
   `@shotbook/content/search` (`toSearchIndexJson`, `loadSearchIndex`, `searchSituations`), so
   the web and the app share options, stemming and ranking.
+- Offline: `src/pwa/integration.ts` writes `dist/sw.js` after the build from the `src/pwa/sw.js`
+  template. It precaches every page and asset (not share images or sitemaps), serves them
+  cache-first, and names the cache after a hash of their contents, so each deploy rolls out a new
+  cache. New pages and assets are picked up automatically; the site must still work without it.
+- SEO: `Base.astro` sets title, description, canonical, Open Graph and Twitter tags; pass `image`
+  for a page's own share image. Share images and app icons are PNGs drawn at build time in
+  `src/lib/images.tsx` (satori + sharp, bundled Jost font). `@astrojs/sitemap` writes the sitemap.
 - Shot diagrams are rendered to static SVG at build time (React via `@astrojs/react`, with no
   `client:` directive, so no React ships to the browser). Both hands are rendered and the
   `data-hand` CSS shows one. Diagrams are inlined twice per page; keep scenes under the shape
