@@ -29,7 +29,7 @@ const bodyHtml = s.body ? await marked.parse(handedMarkdown(s.body)) : "";
 const levelLabel = { all: "All levels", beginner: "Beginner", advanced: "Advanced" }[s.level];
 ---
 
-<Base title={s.title} description={s.summary}>
+<Base title={s.title} description={s.summary} image={`og/situations/${s.id}.png`} type="article">
   <nav aria-label="Breadcrumb" class="mb-3">
     <a
       href={href(`category/${category.id}/`)}
