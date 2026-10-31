@@ -23,8 +23,3 @@ export function bodyParagraphs(body: string): string[] {
     )
     .filter(Boolean);
 }
-
-/** Favourites with `id` added or removed, newest first. */
-export function toggleFavourite(favourites: readonly string[], id: string): string[] {
-  return favourites.includes(id) ? favourites.filter((f) => f !== id) : [id, ...favourites];
-}

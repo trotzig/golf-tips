@@ -13,7 +13,7 @@ const { situations, showCategory = true } = Astro.props;
 
 <ul class="space-y-3">
   {situations.map((s) => (
-    <li>
+    <li data-situation={s.id}>
       <a
         href={href(`situations/${s.id}/`)}
         class="block rounded-card border border-line bg-card p-4 shadow-card transition hover:border-accent active:bg-accent-soft"

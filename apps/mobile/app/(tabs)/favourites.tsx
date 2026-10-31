@@ -11,8 +11,8 @@ export default function Favourites() {
     <Screen>
       {situations.length === 0 ? (
         <Body style={{ color: c.inkMuted, fontSize: 18, lineHeight: 24 }}>
-          Tap the heart on a situation to keep it here, ready for the course. Favourites are saved
-          on this device.
+          Tap “Save to favourites” on a situation to keep it here, ready for the course. Favourites
+          are saved on this device.
         </Body>
       ) : (
         <SituationList situations={situations} />

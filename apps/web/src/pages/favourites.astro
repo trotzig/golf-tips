@@ -1,0 +1,58 @@
+---
+import SituationList from "../components/SituationList.astro";
+import Base from "../layouts/Base.astro";
+import { getSituations } from "../lib/content";
+---
+
+<Base
+  title="Favourites"
+  description="Situations you've saved on this device, ready for the course."
+  noindex
+>
+  <h1 class="mb-4 text-3xl font-serif font-bold tracking-tight text-ink-strong">Favourites</h1>
+  <noscript>
+    <p class="text-lg text-ink-muted">
+      Favourites are saved in your browser and need JavaScript to show.
+    </p>
+  </noscript>
+  <p data-favourites-empty hidden class="text-lg text-ink-muted">
+    Tap “Save to favourites” on a situation to keep it here, ready for the course. Favourites are
+    saved on this device.
+  </p>
+  <!-- Every situation is in the page so favourites show offline; the script keeps the saved ones. -->
+  <div data-favourites hidden>
+    <SituationList situations={getSituations()} />
+  </div>
+</Base>
+
+<script>
+  import { FAVOURITES_KEY, parseFavourites } from "@shotbook/content/favourites";
+
+  const root = document.querySelector<HTMLElement>("[data-favourites]")!;
+  const empty = document.querySelector<HTMLElement>("[data-favourites-empty]")!;
+  const list = root.querySelector("ul")!;
+  const items = new Map(
+    [...list.querySelectorAll<HTMLElement>("[data-situation]")].map((li) => [
+      li.dataset.situation!,
+      li,
+    ]),
+  );
+
+  const render = () => {
+    let saved: string[] = [];
+    try {
+      saved = parseFavourites(localStorage.getItem(FAVOURITES_KEY));
+    } catch {
+      // Storage unavailable: show the empty state.
+    }
+    const shown = saved.flatMap((id) => items.get(id) ?? []);
+    list.replaceChildren(...shown);
+    root.hidden = shown.length === 0;
+    empty.hidden = shown.length > 0;
+  };
+
+  addEventListener("storage", (e) => {
+    if (e.key === FAVOURITES_KEY) render();
+  });
+  render();
+</script>

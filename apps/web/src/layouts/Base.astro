@@ -86,7 +86,7 @@ const imageUrl = new URL(href(image), Astro.site).href;
       Skip to content
     </a>
     <header class="border-b border-line">
-      <div class="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
+      <div class="mx-auto flex max-w-2xl items-center justify-between gap-2 px-4 py-3">
         <a
           href={href("/")}
           class="flex items-center gap-2 py-1 text-lg font-semibold tracking-wide text-ink-strong"
@@ -101,12 +101,13 @@ const imageUrl = new URL(href(image), Astro.site).href;
               <circle cx="18.5" cy="17.5" r="1"></circle>
             </g>
           </svg>
-          Shotbook
+          <!-- Below 375px the icons need the room; the logo still links home. -->
+          <span class="max-[374px]:sr-only">Shotbook</span>
         </a>
-        <div class="flex items-center gap-1 rounded-tray bg-surface p-1">
+        <div class="flex items-center gap-0.5 rounded-tray bg-surface p-1">
           <a
             href={href("search/")}
-            class="flex size-10 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
+            class="flex h-10 w-9 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
           >
             <svg
               aria-hidden="true"
@@ -122,10 +123,27 @@ const imageUrl = new URL(href(image), Astro.site).href;
             </svg>
             <span class="sr-only">Search</span>
           </a>
+          <a
+            href={href("favourites/")}
+            class="flex h-10 w-9 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              class="size-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linejoin="round"
+            >
+              <path d="M12 20s-7.5-4.6-7.5-10A4.5 4.5 0 0 1 12 7.2 4.5 4.5 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"></path>
+            </svg>
+            <span class="sr-only">Favourites</span>
+          </a>
           <HandToggle />
           <a
             href={href("settings/")}
-            class="flex size-10 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
+            class="flex h-10 w-9 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
           >
             <svg
               aria-hidden="true"

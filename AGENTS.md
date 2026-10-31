@@ -222,6 +222,10 @@ Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
   template. It precaches every page and asset (not share images or sitemaps), serves them
   cache-first, and names the cache after a hash of their contents, so each deploy rolls out a new
   cache. New pages and assets are picked up automatically; the site must still work without it.
+- Favourites: "Save to favourites" on a situation page stores ids in localStorage under
+  `shotbook:favourites` (the app's AsyncStorage key), through `@shotbook/content/favourites`.
+  `/favourites/` holds every situation in its HTML and shows the saved ones, so it works offline;
+  without JavaScript the button is hidden and the page says favourites need it.
 - SEO: `Base.astro` sets title, description, canonical, Open Graph and Twitter tags; pass `image`
   for a page's own share image. Share images and app icons are PNGs drawn at build time in
   `src/lib/images.tsx` (satori + sharp, bundled Jost font). `@astrojs/sitemap` writes the sitemap.
@@ -267,7 +271,8 @@ and Settings, plus category, tag and situation screens that mirror the site.
   `searchSituations` from `@shotbook/content/search` on that prebuilt index.
 - **Preferences stay on the device** (AsyncStorage): hand and units (`shotbook:hand`,
   `shotbook:distance`, `shotbook:wind`, the same keys as the site's localStorage) and
-  favourites. Every text goes through `useHanded()`, which resolves directions and units.
+  favourites (`shotbook:favourites`, saved with the button under a situation's title). Every text
+  goes through `useHanded()`, which resolves directions and units.
 - **Diagrams** come from `@shotbook/shot-viz/native`: `ShotDiagram` (react-native-svg, drawn from
   the same shapes as the web via `shapesElements`) and `useShotPlayer` (Play swing / step-through
   on the shared timeline). Play is hidden when the system asks for reduced motion.

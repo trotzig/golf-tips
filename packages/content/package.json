@@ -6,6 +6,7 @@
   "description": "Situation schema, parsing, validation and JSON export. Core is platform-neutral; ./node adds filesystem loading.",
   "exports": {
     ".": "./src/index.ts",
+    "./favourites": "./src/favourites.ts",
     "./node": "./src/node.ts",
     "./search": "./src/search.ts"
   },

@@ -3,6 +3,7 @@ import { getCategory, type Situation } from "@shotbook/content";
 import { marked } from "marked";
 import Bullets from "../../components/Bullets.astro";
 import Card from "../../components/Card.astro";
+import FavouriteButton from "../../components/FavouriteButton.astro";
 import Handed from "../../components/Handed.astro";
 import ShotViz from "../../components/ShotViz.astro";
 import Base from "../../layouts/Base.astro";
@@ -53,6 +54,7 @@ const levelLabel = { all: "All levels", beginner: "Beginner", advanced: "Advance
           <li class="rounded-full bg-surface px-3 py-1 capitalize text-ink">{club}</li>
         ))}
       </ul>
+      <FavouriteButton id={s.id} />
     </header>
 
     <ShotViz viz={s.viz} />
