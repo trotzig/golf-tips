@@ -256,8 +256,10 @@ positions, then the flight) via a `shot-player` animation driver and stores one 
 whose first frame is the address pose. Examples are named in `apps/web/happo/examples.ts`;
 renaming one starts a new history in Happo.
 
-PRs run only the affected examples. The build writes a fingerprint per example (its HTML and the
-site CSS, or a diagram's scene and renderer source), CI caches that manifest per commit, and
+PRs run only the affected examples. The build writes a fingerprint per example (its HTML, or a
+diagram's scene and renderer source, plus only the CSS that can reach it: rules for classes it
+uses and custom properties it reads, see `apps/web/happo/css.ts`), CI caches that manifest per
+commit, and
 `apps/web/happo/run.ts` passes every example whose fingerprint matches the baseline report's to
 `happo --skip`, so Happo borrows those snapshots. With nothing affected it posts a passing status;
 without a cached baseline manifest everything runs. Pushes to `main` always run everything.
