@@ -5,10 +5,29 @@
   "terrain": {
     "slopeAlong": 10
   },
+  "golfer": {
+    "aim": 5.5
+  },
   "swing": {
     "club": "7-iron"
   },
   "annotations": [
+    {
+      "type": "aim-line",
+      "label": "Aim a little {right}"
+    },
+    {
+      "type": "start-line",
+      "label": "Start line"
+    },
+    {
+      "type": "target-line",
+      "label": "Target"
+    },
+    {
+      "type": "ball-flight",
+      "label": "Curves back {left}"
+    },
     {
       "type": "slope-line",
       "label": "Slope"

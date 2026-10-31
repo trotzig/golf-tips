@@ -84,7 +84,7 @@ export function deriveLaunch(scene: ShotScene): LaunchConditions {
   const traj = TRAJECTORY[flight.trajectory];
   const attack = swing.attackAngle ?? 0;
 
-  const face = swing.face - slopeAcross * 0.3 - slopeAlong * 0.12;
+  const face = swing.face - slopeAcross * 0.3 - slopeAlong * 0.3;
   const launchAngle =
     flight.launchAngle ?? clamp(spec.launch + traj.launch + slopeAlong * 0.6 + attack * 0.3, 1, 55);
 

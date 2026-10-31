@@ -28,6 +28,7 @@ import {
   add,
   DEG,
   dot,
+  mix,
   normalize,
   rotate,
   scale,
@@ -184,10 +185,17 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
       ? smoothstep(ballTime / FOLLOW_TIME)
       : 0;
   const preset = cameraPreset(view, flight);
+  // Scenes about where to aim pull back behind the ball, where aim and curve show.
+  const downRange = scene.annotations.some((a) => a.type === "aim-line" || a.type === "start-line");
   const cam: Camera = handedCamera(
     scene,
     follow > 0 && golferView
-      ? blendCameras(preset, followCamera(view, flight, width / height), follow)
+      ? blendCameras(
+          preset,
+          followCamera(view, flight, width / height, downRange),
+          follow,
+          downRange,
+        )
       : preset,
   );
   const proj = projector(cam);
@@ -207,7 +215,7 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
   // Ground: shaded quads, painted far to near. Shading shows the slope.
   // The wide shot sees more ground: behind the golfer and out to where the ball stops.
   const xs = golferView
-    ? samples(follow > 0 ? -12 : -6, Math.max(200, reach * 1.25), 0.5)
+    ? samples(follow > 0 ? (downRange ? -36 : -12) : -6, Math.max(200, reach * 1.25), 0.5)
     : samples(-11, reach * 1.25, 1);
   const zs = golferView
     ? samples(-40, follow > 0 ? 10 : 4.2, 0.5)
@@ -278,6 +286,7 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
   cells.sort((a, b) => b.depth - a.depth).forEach((c) => shapes.push(c.shape));
 
   const labels: Shape[] = [];
+  const boxes: { x0: number; x1: number; y: number }[] = [];
   const label = (
     at: Pt | null,
     text: string,
@@ -291,7 +300,18 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
     if (anchor === "start" && x + w > width - 6) anchor = "end";
     if (anchor === "end" && x - w < 6) anchor = "start";
     if (anchor === "middle") x = Math.min(width - 6 - w / 2, Math.max(6 + w / 2, x));
-    const y = Math.min(height - 8, Math.max(18, at.y + dy));
+    const x0 = anchor === "start" ? x : anchor === "end" ? x - w : x - w / 2;
+    const fit = (y: number) => Math.min(height - 8, Math.max(18, y));
+    // Step clear of labels already placed (lines that meet, or several pinned to an edge).
+    const clashes = (y: number) =>
+      boxes.some((b) => Math.abs(b.y - y) < 15 && b.x0 < x0 + w && x0 < b.x1);
+    const y0 = fit(at.y + dy);
+    let y = y0;
+    for (const step of [16, -16, 32, -32, 48, -48]) {
+      if (!clashes(y)) break;
+      y = fit(y0 + step);
+    }
+    boxes.push({ x0, x1: x0 + w, y });
     labels.push({
       kind: "text",
       at: { x, y },
@@ -316,16 +336,37 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
       return onGround(p[0], p[2]);
     });
 
-  // Annotations under the golfer.
-  const lineLength = golferView ? 6 : reach;
+  // Annotations under the golfer. Golfer views start with short lines at the feet and stretch
+  // them out to the target as the camera pulls back, so aim and start line read against it.
+  const lineLength = golferView ? mix(6, reach, follow) : reach;
+  const aimDir = rotate([1, 0, 0], [0, 1, 0], -scene.golfer.aim * DEG);
+  const startDir = rotate([1, 0, 0], [0, 1, 0], -flight.launch.direction * DEG);
+  // In the wide shot the lines meet near the horizon: put the aim and start-line labels on the
+  // side their lines lean to and the target's on the other, so they don't pile up.
+  const far = (dir: Vec3) => toScreen(onGround(dir[0] * lineLength, dir[2] * lineLength));
+  const targetFar = far([1, 0, 0]);
+  const aimFar = far(aimDir);
+  const leans = (p: Pt | null): "start" | "end" | null =>
+    follow > 0 && p && targetFar && Math.abs(p.x - targetFar.x) > 1
+      ? p.x > targetFar.x
+        ? "start"
+        : "end"
+      : null;
+  const aimSide = scene.golfer.aim !== 0 ? leans(aimFar) : null;
   for (const a of scene.annotations) {
     if (a.type === "target-line") {
       const pts = line(groundLine([0, 0, 0], [1, 0, 0], lineLength), theme.annotation, 2, [8, 6]);
-      label(pts[pts.length - 1] ?? null, a.label ?? "Target line", "end", -8);
+      const side = aimSide && (aimSide === "start" ? "end" : "start");
+      label(pts[pts.length - 1] ?? null, a.label ?? "Target line", side ?? "end", -8);
     } else if (a.type === "aim-line") {
-      const dir = rotate([1, 0, 0], [0, 1, 0], -scene.golfer.aim * DEG);
-      const pts = line(groundLine([0, 0, 0], dir, lineLength), theme.aim, 2.5, [8, 6]);
-      label(pts[pts.length - 1] ?? null, a.label ?? "Aim", "end", 18);
+      const pts = line(groundLine([0, 0, 0], aimDir, lineLength), theme.aim, 2.5, [8, 6]);
+      label(pts[pts.length - 1] ?? null, a.label ?? "Aim", aimSide ?? "end", aimSide ? 0 : 18);
+    } else if (a.type === "start-line") {
+      // Where the ball starts: the face at impact, before spin curves it.
+      const pts = line(groundLine([0, 0, 0], startDir, lineLength), theme.flight, 2, [3, 5]);
+      const at = pts[Math.floor(pts.length * 0.6)] ?? null;
+      const side = leans(at);
+      label(at, a.label ?? "Start line", side ?? "middle", 18);
     } else if (a.type === "slope-line" && view !== "overhead") {
       const { slopeAlong, slopeAcross } = scene.terrain;
       const across =
@@ -341,7 +382,8 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
         undefined,
         true,
       );
-      label(pts[Math.floor(pts.length * 0.8)] ?? null, a.label ?? "Slope", "start", 22);
+      if (follow < 0.5)
+        label(pts[Math.floor(pts.length * 0.8)] ?? null, a.label ?? "Slope", "start", 22);
     }
   }
 
@@ -481,7 +523,8 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
       2.5,
       [6, 4],
     );
-    label(pts[pts.length - 1] ?? null, shoulders.label ?? "Shoulders", "start", -6);
+    if (follow < 0.5)
+      label(pts[pts.length - 1] ?? null, shoulders.label ?? "Shoulders", "start", -6);
   }
   for (const a of scene.annotations) {
     if (a.type !== "arrow") continue;
