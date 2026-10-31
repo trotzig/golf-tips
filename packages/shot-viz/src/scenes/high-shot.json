@@ -1,0 +1,10 @@
+{
+  "id": "high-shot",
+  "title": "High shot",
+  "description": "Ball forward and a full finish to launch it high and land it softly.",
+  "swing": { "club": "7-iron", "attackAngle": -2 },
+  "golfer": { "ballPosition": 0.45, "weightLead": 0.45 },
+  "flight": { "trajectory": "high" },
+  "annotations": [{ "type": "ball-flight", "label": "High, soft landing" }],
+  "camera": "behind"
+}

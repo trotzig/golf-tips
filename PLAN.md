@@ -44,9 +44,9 @@ Each step is its own session and PR. PRs are merged only after the owner approve
 
 | # | Step | Depends on | Delivers |
 |---|------|-----------|----------|
-| 1 | ✅ **Web foundation & deploy** | — | pnpm monorepo, `packages/content` (schema, validation, JSON export), Astro site with home, category and situation pages, CI (lint, typecheck, test, content validation), auto-deploy to GitHub Pages |
-| 2 | **Initial content library** | schema in AGENTS.md | ~30 situations across all categories, reviewed for tone and accuracy |
-| 3 | **Shot visualisation v1** | — | `packages/shot-viz`: ShotScene types, 2D SVG renderer (face-on & down-the-line), 3D prototype with simple mannequin golfer, slope, ball flight and orbit controls; standalone demo page |
+| 1 | **Web foundation & deploy** ✅ | — | pnpm monorepo, `packages/content` (schema, validation, JSON export), Astro site with home, category and situation pages, CI (lint, typecheck, test, content validation), auto-deploy to GitHub Pages |
+| 2 | **Initial content library** ✅ | schema in AGENTS.md | ~30 situations across all categories, reviewed for tone and accuracy — done: 34 situations, every category covered |
+| 3 | **Shot visualisation v1** ✅ | — | `packages/shot-viz` (done; see its README): ShotScene types, 2D SVG renderer (face-on & down-the-line), 3D prototype with simple mannequin golfer, slope, ball flight and orbit controls; standalone demo page |
 | 4 | **Search, browse & viz integration** | 1, 2, 3 | MiniSearch search with synonyms and instant results, category/tag browsing, related situations, viz embedded on situation pages, scenes for the top situations |
 | 5 | **Polish & reach** | 4 | PWA/offline, SEO and share images, print-friendly "leaflet" view, accessibility pass, performance budget |
 | 6 | **Animated golfer** | 3 | Rigged, animated golfer (glTF) driven by ShotScene (setup → swing → impact → flight), scrubbable timeline |

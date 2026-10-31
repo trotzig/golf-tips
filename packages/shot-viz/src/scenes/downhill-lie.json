@@ -1,0 +1,12 @@
+{
+  "id": "downhill-lie",
+  "title": "Downhill lie",
+  "description": "The slope delofts the club: expect a lower flight, more roll and a miss to the right.",
+  "terrain": { "slopeAlong": -10 },
+  "swing": { "club": "7-iron", "attackAngle": -5 },
+  "annotations": [
+    { "type": "slope-line", "label": "Slope" },
+    { "type": "shoulder-line", "label": "Shoulders match the slope" }
+  ],
+  "camera": "face-on"
+}
