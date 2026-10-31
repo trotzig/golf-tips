@@ -5,9 +5,10 @@
   "main": "expo-router/entry",
   "scripts": {
     "content": "node scripts/bundle-content.mts",
-    "start": "pnpm content && expo start",
-    "ios": "pnpm content && expo start --ios",
-    "android": "pnpm content && expo start --android",
+    "start": "pnpm content && expo start --go",
+    "start:dev-client": "pnpm content && expo start --dev-client",
+    "ios": "pnpm content && expo start --go --ios",
+    "android": "pnpm content && expo start --go --android",
     "typecheck": "pnpm content && tsc --noEmit && tsc --noEmit -p scripts",
     "eas-build-post-install": "pnpm content"
   },

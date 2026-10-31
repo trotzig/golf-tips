@@ -40,7 +40,7 @@ pnpm lint         # eslint + prettier check (Markdown is not formatted)
 pnpm format       # prettier --write
 pnpm typecheck    # tsc / astro check in every package that has a typecheck script
 pnpm validate     # content schema + cross-reference validation only
-pnpm --filter @shotbook/mobile start   # bundle content, start Metro for Expo Go / dev builds
+pnpm --filter @shotbook/mobile start   # bundle content, start Metro for Expo Go (scan the QR code)
 pnpm --filter @shotbook/mobile ios     # same, and open it in the iOS Simulator (Expo Go)
 ```
 
@@ -268,6 +268,5 @@ and Settings, plus category, tag and situation screens that mirror the site.
   production profiles. **Ask the owner** before running cloud builds or adding store credentials.
   Day to day, run the app in Expo Go (`pnpm --filter @shotbook/mobile ios`). A development build
   (`eas build --profile development --platform ios`, a simulator `.app`; content is bundled on
-  EAS by the `eas-build-post-install` hook) loads JS from `pnpm --filter @shotbook/mobile start
-  --dev-client`. Bundle id
+  EAS by the `eas-build-post-install` hook) loads JS from `pnpm --filter @shotbook/mobile start:dev-client`. Bundle id
   `app.shotbook.mobile` is a placeholder until the product name is final.
