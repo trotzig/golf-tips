@@ -23,7 +23,7 @@ function useReduceMotion(): boolean {
 /** Shot diagram for the reader's hand, with Play swing, a step-through slider and the tips. */
 export function ShotViz({ scene: input }: { scene: ShotScene }) {
   const c = useColors();
-  const { hand } = usePrefs();
+  const { hand, wind } = usePrefs();
   const scene = useMemo(() => handedScene(input, hand), [input, hand]);
   const player = useShotPlayer(scene);
   const reduceMotion = useReduceMotion();
@@ -31,7 +31,7 @@ export function ShotViz({ scene: input }: { scene: ShotScene }) {
 
   return (
     <View style={[ui.card, cardStyle(c), styles.figure]}>
-      <ShotDiagram scene={scene} {...SIZE} {...player.frame} />
+      <ShotDiagram scene={scene} wind={wind} {...SIZE} {...player.frame} />
       <View style={[styles.controls, { backgroundColor: c.surface, borderColor: c.line }]}>
         {!reduceMotion && (
           <Pressable

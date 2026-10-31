@@ -15,6 +15,21 @@ describe("SVG markup", () => {
     expect(text).toContain('x="1"');
   });
 
+  it("writes wind labels in both units for the page CSS to pick", () => {
+    const text = shapeMarkup({
+      kind: "text",
+      at: { x: 0, y: 0 },
+      text: "Wind 20 mph",
+      size: 12,
+      fill: "#000",
+      anchor: "start",
+      wind: { mph: "Wind 20 mph", "m/s": "Wind 9 m/s" },
+    });
+    expect(text).toContain(
+      '<tspan class="wind-mph">Wind 20 mph</tspan><tspan class="wind-ms" display="none">Wind 9 m/s</tspan>',
+    );
+  });
+
   it("draws an arrowhead for arrowed lines", () => {
     const line = shapeMarkup({
       kind: "polyline",
