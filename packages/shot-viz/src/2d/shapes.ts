@@ -670,12 +670,15 @@ function headShapes(
     { shape: { kind: "circle", c: { x: c.x, y: c.y }, r: rho, fill: theme.skin }, nudge: 0 },
   ];
 
-  const hair = sphereCap(normalize(sub(up, scale(fwd, 0.8))), 0.1);
-  if (hair.length > 2)
-    out.push({
-      shape: { kind: "polygon", points: hair.map(at), fill: theme.hair },
-      nudge: -0.0005,
-    });
+  // Hair over the back of the head, and over the crown down to just under the visor band, so
+  // no skin shows between the two.
+  for (const hair of [sphereCap(normalize(sub(up, scale(fwd, 0.8))), 0.1), sphereCap(up, 0.38)]) {
+    if (hair.length > 2)
+      out.push({
+        shape: { kind: "polygon", points: hair.map(at), fill: theme.hair },
+        nudge: -0.0005,
+      });
+  }
 
   // Visor band: round the front and sides of the head, a little above its middle.
   const ring = (u: number, r: number): Vec3 =>
