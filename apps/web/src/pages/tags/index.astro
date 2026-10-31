@@ -7,20 +7,20 @@ const tags = getTags();
 
 <Base title="Tags" description="Browse golf situations by topic.">
   <nav aria-label="Breadcrumb" class="mb-3">
-    <a href={href("/")} class="inline-block py-2 font-medium text-fairway-700 underline">
+    <a href={href("/")} class="inline-block py-2 font-medium text-accent underline">
       ← Home
     </a>
   </nav>
-  <h1 class="mb-6 text-3xl font-extrabold tracking-tight text-fairway-900">Browse by tag</h1>
+  <h1 class="mb-6 text-3xl font-serif font-bold tracking-tight text-ink-strong">Browse by tag</h1>
   <ul class="flex flex-wrap gap-2">
     {tags.map(({ tag, situations }) => (
       <li>
         <a
           href={href(`tags/${tag}/`)}
-          class="inline-flex min-h-11 items-center gap-2 rounded-full border border-fairway-600 bg-white px-4 font-medium text-fairway-800 hover:bg-fairway-50"
+          class="inline-flex min-h-11 items-center gap-2 rounded-full bg-accent-soft px-4 font-medium text-accent-strong transition-colors hover:bg-accent hover:text-on-accent"
         >
           {tagLabel(tag)}
-          <span class="text-sm text-stone-600">{situations.length}</span>
+          <span class="text-sm text-ink-muted">{situations.length}</span>
         </a>
       </li>
     ))}

@@ -104,7 +104,12 @@ function readSite(): { pages: PageExample[]; css: string } {
   const css = [...stylesheets]
     .sort()
     .map((href) => readFileSync(join(siteDir, href.replace(base, "")), "utf8"))
-    .join("\n");
+    .join("\n")
+    // The bundle is served from elsewhere, so files the CSS loads (the web font) go in inline.
+    .replace(/url\(\/golf-tips\/([^)]+\.woff2)\)/g, (_, path: string) => {
+      const data = readFileSync(join(siteDir, path)).toString("base64");
+      return `url(data:font/woff2;base64,${data})`;
+    });
   return { pages, css };
 }
 

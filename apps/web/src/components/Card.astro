@@ -5,16 +5,21 @@ interface Props {
 }
 
 const { title, tone = "default" } = Astro.props;
-const accent = {
-  default: "border-l-fairway-600",
-  warning: "border-l-amber-500",
-  muted: "border-l-stone-400",
+// Tone colours the heading's dot and the bullet markers.
+const toneClass = {
+  default: "[--tone:var(--color-accent)]",
+  warning: "[--tone:var(--color-highlight)]",
+  muted: "[--tone:var(--color-line-strong)]",
 }[tone];
 ---
 
-<section class={`rounded-2xl border border-stone-300 border-l-8 bg-white p-4 shadow-sm ${accent}`}>
-  <h2 class="mb-2 text-sm font-bold uppercase tracking-wider text-stone-700">{title}</h2>
-  <div class="text-lg leading-snug">
+<section class={`rounded-card border border-line bg-card p-4 shadow-card ${toneClass}`}>
+  <h2
+    class={`mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest before:size-2 before:rounded-full before:bg-(--tone) ${tone === "muted" ? "text-ink-muted" : "text-(--tone)"}`}
+  >
+    {title}
+  </h2>
+  <div class="text-lg leading-snug marker:text-(--tone)">
     <slot />
   </div>
 </section>

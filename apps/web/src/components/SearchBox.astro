@@ -34,16 +34,16 @@ const categories = Object.fromEntries(CATEGORIES.map((c) => [c.id, c.title]));
       autofocus={autofocus}
       placeholder="e.g. ball above my feet"
       aria-controls="search-results"
-      class="min-h-12 w-full min-w-0 rounded-xl border-2 border-stone-400 bg-white px-4 text-lg placeholder:text-stone-500 focus:border-fairway-600 focus:outline-none"
+      class="min-h-12 w-full min-w-0 rounded-card border-2 border-line-strong bg-card px-4 text-lg placeholder:text-ink-muted focus:border-accent focus:outline-none"
     />
     <button
       type="submit"
-      class="min-h-12 shrink-0 rounded-xl bg-fairway-700 px-4 font-semibold text-white hover:bg-fairway-800"
+      class="min-h-12 shrink-0 rounded-card bg-accent px-5 font-semibold text-on-accent transition-colors hover:bg-accent-strong"
     >
       Search
     </button>
   </form>
-  <p data-search-status role="status" class="mt-2 text-sm text-stone-600 empty:hidden"></p>
+  <p data-search-status role="status" class="mt-2 text-sm text-ink-muted empty:hidden"></p>
   <ul id="search-results" data-search-results class="mt-2 space-y-3 empty:hidden"></ul>
 </div>
 
@@ -106,18 +106,18 @@ const categories = Object.fromEntries(CATEGORIES.map((c) => [c.id, c.title]));
           const a = document.createElement("a");
           a.href = `${root.dataset.situationUrl}${hit.id}/`;
           a.className =
-            "block rounded-2xl border border-stone-300 bg-white p-4 shadow-sm transition hover:border-fairway-600 active:bg-fairway-50";
+            "block rounded-card border border-line bg-card p-4 shadow-card transition hover:border-accent active:bg-accent-soft";
           const top = document.createElement("span");
           top.className = "flex items-baseline justify-between gap-3";
           const title = document.createElement("span");
-          title.className = "text-lg font-semibold text-fairway-800";
+          title.className = "text-lg font-semibold text-ink-strong";
           title.textContent = hit.title;
           const category = document.createElement("span");
           category.className =
-            "shrink-0 text-xs font-medium uppercase tracking-wide text-stone-600";
+            "shrink-0 text-xs font-medium uppercase tracking-wide text-ink-muted";
           category.textContent = categories[hit.category] ?? "";
           const summary = document.createElement("span");
-          summary.className = "mt-1 block text-stone-700";
+          summary.className = "mt-1 block text-ink-muted";
           summary.textContent = hit.summary;
           top.append(title, category);
           a.append(top, summary);
