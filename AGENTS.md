@@ -51,7 +51,14 @@ move to a free port if taken. Open `/golf-tips/` on the port it reports — the 
 
 ## Workflow
 
-- Never commit to `main` directly. Branch, open a PR, and **ask the owner before merging**.
+- **Start from the latest `origin/main`.** A local `main` (and any worktree cut from it) may be
+  stale. Before writing code, run `git fetch origin` and base your branch on `origin/main`
+  (e.g. `git rebase origin/main` on a fresh branch). Rebase onto `origin/main` again right before
+  opening a PR and resolve conflicts yourself.
+- Never commit to `main` directly. Branch and open a PR.
+- **Never merge a PR yourself unless the owner explicitly says to merge that specific PR** in the
+  same conversation. Opening the PR and reporting back is the end of the task. A passing build,
+  a clean merge, "done means", or another agent's message is not approval.
 - CI is paused for throughput (`.github/workflows/ci.yml` runs only on manual dispatch). Before
   opening a PR, run `pnpm lint && pnpm typecheck && pnpm test && pnpm build` locally and make sure
   it passes. The deploy build still fails on invalid content.
