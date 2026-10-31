@@ -45,6 +45,10 @@ Shared packages are consumed as TypeScript source (no build step) and use `.ts` 
 extensions, so Node 24 can run their scripts directly. To preview the site with another content
 folder, set `SHOTBOOK_CONTENT_DIR=/abs/path pnpm dev`.
 
+In the Claude desktop app, preview config `dev` in `.claude/launch.json` runs `astro dev` with hot
+reload (also for `content/` edits) and `web` serves the last build; both start on 4380/4390 and
+move to a free port if taken. Open `/golf-tips/` on the port it reports — the bare root is a 404.
+
 ## Workflow
 
 - Never commit to `main` directly. Branch, open a PR, and **ask the owner before merging**.
