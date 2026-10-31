@@ -36,12 +36,8 @@ export function createShotPlayer(
   const seek = (t: number) => {
     const at = Math.max(0, Math.min(duration, t));
     const { phase, ballTime } = timelineAt(at);
-    const out = buildShapes2D(scene, {
-      ...options,
-      flight,
-      phase,
-      ballTime: at >= duration ? Infinity : ballTime,
-    });
+    // ballTime stays finite at the end too, so golfer views keep the wide shot of the flight.
+    const out = buildShapes2D(scene, { ...options, flight, phase, ballTime });
     layer.innerHTML = shapesMarkup(out.shapes);
   };
 

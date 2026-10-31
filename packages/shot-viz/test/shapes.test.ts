@@ -2,9 +2,12 @@ import { describe, expect, it } from "vitest";
 import {
   buildShapes2D,
   cameraPresets,
+  computeFlight,
   describeScene,
   exampleScenes,
+  followCamera,
   parseScene,
+  projector,
 } from "../src/index.ts";
 
 describe("2D shapes", () => {
@@ -54,6 +57,36 @@ describe("2D shapes", () => {
       o.shapes.filter((s) => s.kind === "polyline" && s.stroke === "#d9480f");
     expect(flightLines(before)).toHaveLength(0);
     expect(flightLines(after)).toHaveLength(1);
+  });
+
+  it("draws the tracer all the way to the ball in the golfer views", () => {
+    const scene = exampleScenes["ball-below-feet"]!;
+    const flight = computeFlight(scene);
+    for (const view of ["face-on", "down-the-line"] as const) {
+      const out = buildShapes2D(scene, { view, flight, ballTime: flight.flightTime - 0.2 });
+      const tracer = out.shapes.find((s) => s.kind === "polyline" && s.stroke === "#d9480f");
+      const ball = out.shapes.find((s) => s.kind === "circle" && s.fill === "#ffffff");
+      expect(tracer?.kind).toBe("polyline");
+      expect(ball?.kind).toBe("circle");
+      if (tracer?.kind !== "polyline" || ball?.kind !== "circle") return;
+      const end = tracer.points[tracer.points.length - 1]!;
+      expect(Math.hypot(end.x - ball.c.x, end.y - ball.c.y)).toBeLessThan(1);
+    }
+  });
+
+  it("pulls the golfer views back so the whole flight fits once the ball is away", () => {
+    for (const id of ["ball-below-feet", "downhill-lie", "greenside-bunker"]) {
+      const scene = exampleScenes[id]!;
+      const flight = computeFlight(scene);
+      for (const view of ["face-on", "down-the-line"] as const) {
+        const p = projector(followCamera(view, flight, 360 / 300));
+        for (const at of [[0, 0, 0] as const, flight.apex, flight.landing, flight.rest]) {
+          const s = p.project(at)!;
+          expect(Math.abs(s.y)).toBeLessThan(1);
+          expect(Math.abs(s.x)).toBeLessThan(360 / 300);
+        }
+      }
+    }
   });
 
   it("describes the scene in plain language for screen readers", () => {
