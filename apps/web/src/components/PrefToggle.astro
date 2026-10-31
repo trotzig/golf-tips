@@ -1,0 +1,66 @@
+---
+// A segmented switch for one reader setting (hand, distance or wind units). The choice is set on
+// <html> as `data-<pref>`, where global.css shows the matching variants, and saved per device as
+// `shotbook:<pref>`. Without JavaScript the defaults stay, so the switch is hidden until the
+// script runs.
+
+interface Props {
+  pref: "hand" | "distance" | "wind";
+  label: string;
+  options: Array<{ value: string; label: string; srSuffix?: string }>;
+  title?: string;
+  /** Stretch the options to the full width (the settings page). */
+  wide?: boolean;
+}
+
+const { pref, label, options, title, wide = false } = Astro.props;
+---
+
+<div
+  data-pref={pref}
+  hidden
+  role="group"
+  aria-label={label}
+  title={title}
+  class:list={["flex text-sm font-medium", wide && "rounded-tray bg-surface p-1 text-base"]}
+>
+  {options.map((o) => (
+    <button
+      type="button"
+      data-pref-value={o.value}
+      class:list={[
+        "min-h-10 rounded-[10px] px-3 text-ink transition-colors hover:text-ink-strong aria-pressed:bg-raised aria-pressed:text-accent aria-pressed:shadow-sm",
+        wide && "min-h-11 flex-1",
+      ]}
+    >
+      {o.label}
+      {o.srSuffix && <span class="sr-only">{o.srSuffix}</span>}
+    </button>
+  ))}
+</div>
+
+<script>
+  const root = document.documentElement;
+  for (const toggle of document.querySelectorAll<HTMLElement>("[data-pref]")) {
+    const pref = toggle.dataset.pref!;
+    const buttons = [...toggle.querySelectorAll<HTMLButtonElement>("[data-pref-value]")];
+    const sync = () => {
+      for (const b of buttons)
+        b.setAttribute("aria-pressed", String(b.dataset.prefValue === root.dataset[pref]));
+    };
+    for (const b of buttons) {
+      b.addEventListener("click", () => {
+        root.dataset[pref] = b.dataset.prefValue;
+        try {
+          localStorage.setItem(`shotbook:${pref}`, b.dataset.prefValue!);
+        } catch {
+          // Storage can be unavailable (private mode); the choice still applies to this page.
+        }
+      });
+    }
+    // Another switch for the same setting (header and settings page) stays in step.
+    new MutationObserver(sync).observe(root, { attributeFilter: [`data-${pref}`] });
+    sync();
+    toggle.hidden = false;
+  }
+</script>

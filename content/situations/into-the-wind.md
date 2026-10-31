@@ -19,7 +19,7 @@ expect:
 mistakes:
   - Swinging harder, which sends it higher.
   - Under-clubbing and coming up short.
-club_choice: Add one club per 10 mph (15 km/h) of headwind.
+club_choice: Add one club per {10 mph} of headwind.
 drill: On a windy range, compare your normal club with one more swung easy.
 advanced: Tee the driver slightly lower.
 related: [downwind, crosswind, low-shot, bump-and-run]

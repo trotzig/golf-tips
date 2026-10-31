@@ -19,7 +19,7 @@ expect:
 mistakes:
   - Aiming at a back flag and running through.
   - Expecting a wedge to stop quickly.
-club_choice: About one club less per 10–15 mph (15–25 km/h) of tailwind.
+club_choice: About one club less per {10–15 mph} of tailwind.
 advanced: Off the tee, launch it higher to ride the wind.
 related: [into-the-wind, crosswind, choosing-a-target]
 viz: downwind

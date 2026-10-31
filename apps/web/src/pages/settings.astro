@@ -1,0 +1,50 @@
+---
+import HandToggle from "../components/HandToggle.astro";
+import PrefToggle from "../components/PrefToggle.astro";
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="Settings" description="Choose your hand and the units for distance and wind.">
+  <h1 class="mb-2 text-3xl font-serif font-bold tracking-tight text-ink-strong">Settings</h1>
+  <p class="mb-6 text-ink-muted">Saved on this device. Every page follows them.</p>
+  <noscript>
+    <p class="mb-6 rounded-card border border-line bg-card p-4">
+      Settings need JavaScript. Without it, advice is shown for a right-handed golfer, with
+      distances in yards and wind in mph.
+    </p>
+  </noscript>
+  <div class="space-y-4">
+    <section class="rounded-card border border-line bg-card p-4 shadow-card">
+      <h2 class="mb-3 text-lg font-semibold text-ink-strong">Which way do you swing?</h2>
+      <HandToggle wide />
+      <p class="mt-3 text-ink-muted">
+        Every direction in the advice — aim, curve, miss — follows this setting.
+      </p>
+    </section>
+    <section class="rounded-card border border-line bg-card p-4 shadow-card">
+      <h2 class="mb-3 text-lg font-semibold text-ink-strong">Distance</h2>
+      <PrefToggle
+        pref="distance"
+        label="Distance units"
+        wide
+        options={[
+          { value: "yards", label: "Yards" },
+          { value: "meters", label: "Meters" },
+        ]}
+      />
+      <p class="mt-3 text-ink-muted">Shot lengths, and short distances like putts.</p>
+    </section>
+    <section class="rounded-card border border-line bg-card p-4 shadow-card">
+      <h2 class="mb-3 text-lg font-semibold text-ink-strong">Wind speed</h2>
+      <PrefToggle
+        pref="wind"
+        label="Wind speed units"
+        wide
+        options={[
+          { value: "mph", label: "mph" },
+          { value: "m/s", label: "m/s" },
+        ]}
+      />
+    </section>
+  </div>
+</Base>

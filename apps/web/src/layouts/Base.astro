@@ -31,7 +31,7 @@ const imageUrl = new URL(href(image), Astro.site).href;
 ---
 
 <!doctype html>
-<html lang="en" data-hand="right">
+<html lang="en" data-hand="right" data-distance="yards" data-wind="mph">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -55,12 +55,15 @@ const imageUrl = new URL(href(image), Astro.site).href;
     <link rel="apple-touch-icon" href={href("icons/apple-touch-icon.png")} />
     <link rel="manifest" href={href("manifest.webmanifest")} />
     <script is:inline>
-      // Apply the saved handedness before first paint so directions never flicker.
+      // Apply the saved settings before first paint so directions and units never flicker.
       try {
-        if (localStorage.getItem("shotbook:hand") === "left")
-          document.documentElement.dataset.hand = "left";
+        const saved = { hand: ["left"], distance: ["meters"], wind: ["m/s"] };
+        for (const [pref, allowed] of Object.entries(saved)) {
+          const value = localStorage.getItem(`shotbook:${pref}`);
+          if (allowed.includes(value)) document.documentElement.dataset[pref] = value;
+        }
       } catch {
-        // Storage unavailable: stay right-handed.
+        // Storage unavailable: keep the defaults.
       }
     </script>
     {import.meta.env.PROD && <script
@@ -120,6 +123,26 @@ const imageUrl = new URL(href(image), Astro.site).href;
             <span class="sr-only">Search</span>
           </a>
           <HandToggle />
+          <a
+            href={href("settings/")}
+            class="flex size-10 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              class="size-5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M4 7h10M18 7h2M4 17h2M10 17h10"></path>
+              <circle cx="16" cy="7" r="2.5"></circle>
+              <circle cx="8" cy="17" r="2.5"></circle>
+            </svg>
+            <span class="sr-only">Settings</span>
+          </a>
         </div>
       </div>
     </header>

@@ -1,32 +1,55 @@
-import { HANDEDNESS, type Handedness } from "@shotbook/content";
+import { DISTANCE_UNITS, HANDEDNESS, WIND_UNITS, type Reader } from "@shotbook/content";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { usePrefs } from "../prefs";
 import { fonts, radius, useColors } from "../theme";
 
-const LABELS: Record<Handedness, string> = { right: "Right-handed", left: "Left-handed" };
+const OPTIONS: {
+  [K in keyof Reader]: {
+    values: readonly Reader[K][];
+    labels: Record<Reader[K], string>;
+    label: string;
+  };
+} = {
+  hand: {
+    values: HANDEDNESS,
+    labels: { right: "Right-handed", left: "Left-handed" },
+    label: "Which way do you swing?",
+  },
+  distance: {
+    values: DISTANCE_UNITS,
+    labels: { yards: "Yards", meters: "Meters" },
+    label: "Distance units",
+  },
+  wind: { values: WIND_UNITS, labels: { mph: "mph", "m/s": "m/s" }, label: "Wind speed units" },
+};
 
-/** Global right/left-handed switch: every direction in the advice follows it. */
-export function HandToggle() {
+/** Segmented switch for one reader setting; every text in the app follows it. */
+export function PrefToggle({ pref }: { pref: keyof Reader }) {
   const c = useColors();
-  const { hand, setHand } = usePrefs();
+  const prefs = usePrefs();
+  const { values, labels, label } = OPTIONS[pref] as {
+    values: readonly string[];
+    labels: Record<string, string>;
+    label: string;
+  };
   return (
     <View
       accessibilityRole="radiogroup"
-      accessibilityLabel="Which way do you swing?"
+      accessibilityLabel={label}
       style={[styles.group, { backgroundColor: c.surface }]}
     >
-      {HANDEDNESS.map((value) => {
-        const selected = value === hand;
+      {values.map((value) => {
+        const selected = value === prefs[pref];
         return (
           <Pressable
             key={value}
             accessibilityRole="radio"
             accessibilityState={{ selected }}
-            onPress={() => setHand(value)}
+            onPress={() => prefs.setPref(pref, value as Reader[typeof pref])}
             style={[styles.option, selected && { backgroundColor: c.raised, ...styles.raised }]}
           >
             <Text style={[styles.label, { color: selected ? c.accent : c.ink }]}>
-              {LABELS[value]}
+              {labels[value]}
             </Text>
           </Pressable>
         );

@@ -88,8 +88,13 @@ const categories = Object.fromEntries(CATEGORIES.map((c) => [c.id, c.title]));
       }
       let hits;
       try {
-        const hand = document.documentElement.dataset.hand === "left" ? "left" : "right";
-        hits = searchSituations(await getIndex(), query, hand, 12);
+        const { hand, distance, wind } = document.documentElement.dataset;
+        const reader = {
+          hand: hand === "left" ? "left" : "right",
+          distance: distance === "meters" ? "meters" : "yards",
+          wind: wind === "m/s" ? "m/s" : "mph",
+        } as const;
+        hits = searchSituations(await getIndex(), query, reader, 12);
       } catch {
         index = undefined;
         status.textContent = "Search isn't available right now. Try browsing by category.";
@@ -137,9 +142,9 @@ const categories = Object.fromEntries(CATEGORIES.map((c) => [c.id, c.title]));
         location.href = first.href;
       }
     });
-    // Directions in results follow the global handedness switch.
+    // Directions and units in results follow the reader's settings.
     new MutationObserver(() => void render()).observe(document.documentElement, {
-      attributeFilter: ["data-hand"],
+      attributeFilter: ["data-hand", "data-distance", "data-wind"],
     });
 
     if (onSearchPage) {

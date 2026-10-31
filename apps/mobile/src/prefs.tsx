@@ -1,17 +1,29 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { forHand, type Handedness } from "@shotbook/content";
+import {
+  DEFAULT_READER,
+  DISTANCE_UNITS,
+  forReader,
+  HANDEDNESS,
+  WIND_UNITS,
+  type Reader,
+} from "@shotbook/content";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { toggleFavourite } from "./lib/text";
 
-// Reader preferences, stored on the device: which hand they play with, and favourite situations.
+// Reader preferences, stored on the device: which hand they play with, the units they measure
+// distance and wind in, and favourite situations. Keys match the site's localStorage.
 
-const HAND_KEY = "shotbook:hand";
+const READER_KEYS = { hand: "shotbook:hand", distance: "shotbook:distance", wind: "shotbook:wind" };
+const ALLOWED: { [K in keyof Reader]: readonly Reader[K][] } = {
+  hand: HANDEDNESS,
+  distance: DISTANCE_UNITS,
+  wind: WIND_UNITS,
+};
 const FAVOURITES_KEY = "shotbook:favourites";
 
-interface Prefs {
-  hand: Handedness;
-  setHand(hand: Handedness): void;
+interface Prefs extends Reader {
+  setPref<K extends keyof Reader>(pref: K, value: Reader[K]): void;
   favourites: string[];
   isFavourite(id: string): boolean;
   toggleFavourite(id: string): void;
@@ -22,13 +34,22 @@ const PrefsContext = createContext<Prefs | null>(null);
 /** Renders nothing until stored preferences are read, so directions never flip after showing. */
 export function PrefsProvider({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
-  const [hand, setHandState] = useState<Handedness>("right");
+  const [reader, setReader] = useState<Reader>(DEFAULT_READER);
   const [favourites, setFavourites] = useState<string[]>([]);
 
   useEffect(() => {
-    Promise.all([AsyncStorage.getItem(HAND_KEY), AsyncStorage.getItem(FAVOURITES_KEY)])
-      .then(([storedHand, storedFavourites]) => {
-        if (storedHand === "left" || storedHand === "right") setHandState(storedHand);
+    const prefs = Object.keys(READER_KEYS) as Array<keyof Reader>;
+    Promise.all([
+      AsyncStorage.multiGet(prefs.map((pref) => READER_KEYS[pref])),
+      AsyncStorage.getItem(FAVOURITES_KEY),
+    ])
+      .then(([stored, storedFavourites]) => {
+        const saved: Partial<Record<keyof Reader, string>> = {};
+        prefs.forEach((pref, i) => {
+          const value = stored[i]?.[1];
+          if (value && (ALLOWED[pref] as readonly string[]).includes(value)) saved[pref] = value;
+        });
+        setReader({ ...DEFAULT_READER, ...(saved as Partial<Reader>) });
         if (storedFavourites) {
           const parsed: unknown = JSON.parse(storedFavourites);
           if (Array.isArray(parsed)) setFavourites(parsed.filter((f) => typeof f === "string"));
@@ -40,9 +61,9 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
       .finally(() => setLoaded(true));
   }, []);
 
-  const setHand = useCallback((next: Handedness) => {
-    setHandState(next);
-    void AsyncStorage.setItem(HAND_KEY, next);
+  const setPref = useCallback(<K extends keyof Reader>(pref: K, value: Reader[K]) => {
+    setReader((current) => ({ ...current, [pref]: value }));
+    void AsyncStorage.setItem(READER_KEYS[pref], value);
   }, []);
 
   const toggle = useCallback((id: string) => {
@@ -55,13 +76,13 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<Prefs>(
     () => ({
-      hand,
-      setHand,
+      ...reader,
+      setPref,
       favourites,
       isFavourite: (id) => favourites.includes(id),
       toggleFavourite: toggle,
     }),
-    [hand, setHand, favourites, toggle],
+    [reader, setPref, favourites, toggle],
   );
 
   if (!loaded) return null;
@@ -74,8 +95,11 @@ export function usePrefs(): Prefs {
   return prefs;
 }
 
-/** Resolves `{left}`/`{right}` tokens for the reader's hand. */
+/** Resolves direction (`{left}`) and measurement (`{15 yd}`) tokens for the reader. */
 export function useHanded(): (text: string) => string {
-  const { hand } = usePrefs();
-  return useCallback((text: string) => forHand(text, hand), [hand]);
+  const { hand, distance, wind } = usePrefs();
+  return useCallback(
+    (text: string) => forReader(text, { hand, distance, wind }),
+    [hand, distance, wind],
+  );
 }

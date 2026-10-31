@@ -1,6 +1,7 @@
 import MiniSearch, { type Options, type SearchOptions, type SearchResult } from "minisearch";
 import type { CategoryId } from "./categories.ts";
-import { forHand, splitHanded, type Handedness } from "./handedness.ts";
+import { splitHanded, type Handedness } from "./handedness.ts";
+import { forReader, splitText, type Reader } from "./reader.ts";
 import type { Situation } from "./schema.ts";
 
 /**
@@ -9,9 +10,11 @@ import type { Situation } from "./schema.ts";
  * the same options, so this module stays free of DOM and Node APIs.
  *
  * Text with direction tokens is indexed once per hand, so a left-hander searching "curving the
- * ball right" finds the draw, and a right-hander finds the fade.
+ * ball right" finds the draw, and a right-hander finds the fade. Measurements (`{15 yd}`) stay
+ * tokens in the stored title and summary, resolved for the reader's units on the way out, and
+ * both units are indexed so "meters" and "yards" find the same text.
  */
-export const SEARCH_INDEX_VERSION = 1;
+export const SEARCH_INDEX_VERSION = 2;
 
 /** Which reader a document is for: text without direction tokens is indexed once, as "both". */
 export type SearchHand = Handedness | "both";
@@ -31,7 +34,7 @@ export interface SearchDoc {
 export interface SearchHit {
   id: string;
   category: CategoryId;
-  /** Title and summary with directions resolved for the reader's hand. */
+  /** Title and summary with directions and measurements resolved for the reader. */
   title: string;
   summary: string;
   score: number;
@@ -116,6 +119,14 @@ function fieldsOf(s: Situation): Record<(typeof FIELDS)[number], string> {
 
 const hasTokens = (text: string) => splitHanded(text).some((part) => typeof part !== "string");
 
+/** Every measurement in the text, in both units, so either finds it. */
+const measurementWords = (text: string) =>
+  splitText(text).flatMap((part) =>
+    typeof part !== "string" && part.pref !== "hand"
+      ? Object.values(part).filter((v) => v !== part.pref)
+      : [],
+  );
+
 export function buildSearchDocs(situations: readonly Situation[]): SearchDoc[] {
   return situations.flatMap((s) => {
     const fields = fieldsOf(s);
@@ -123,7 +134,13 @@ export function buildSearchDocs(situations: readonly Situation[]): SearchDoc[] {
       ? ["right", "left"]
       : ["both"];
     return hands.map((hand) => {
-      const resolve = (text: string) => (hand === "both" ? text : forHand(text, hand));
+      // Directions only: measurement tokens are resolved per reader in `searchSituations`.
+      const resolve = (text: string) =>
+        hand === "both"
+          ? text
+          : splitHanded(text)
+              .map((part) => (typeof part === "string" ? part : part[hand]))
+              .join("");
       return {
         key: `${s.id}:${hand}`,
         id: s.id,
@@ -133,7 +150,9 @@ export function buildSearchDocs(situations: readonly Situation[]): SearchDoc[] {
         aliases: resolve(fields.aliases),
         summary: resolve(fields.summary),
         tags: fields.tags,
-        text: resolve(fields.text),
+        text: [resolve(fields.text), ...measurementWords(Object.values(fields).join("\n"))].join(
+          "\n",
+        ),
       };
     });
   });
@@ -157,15 +176,16 @@ export function loadSearchIndex(json: SearchIndexJson): MiniSearch<SearchDoc> {
 }
 
 /**
- * Ranked situations for a query, as seen by a golfer of the given hand. Every word must match
+ * Ranked situations for a query, as seen by a reader (or just their hand). Every word must match
  * (allowing for prefixes and typos); if nothing does, any word may.
  */
 export function searchSituations(
   index: MiniSearch<SearchDoc>,
   query: string,
-  hand: Handedness,
+  reader: Handedness | Partial<Reader>,
   limit = 20,
 ): SearchHit[] {
+  const { hand = "right", ...units } = typeof reader === "string" ? { hand: reader } : reader;
   const filter = (r: SearchResult) => r.hand === hand || r.hand === "both";
   let results = index.search(query, { ...QUERY_OPTIONS, combineWith: "AND", filter });
   if (results.length === 0) {
@@ -187,8 +207,8 @@ export function searchSituations(
     // The MiniSearch id is the doc key, `<situation id>:<hand>`.
     id: String(r.id).split(":")[0]!,
     category: r.category as CategoryId,
-    title: r.title as string,
-    summary: r.summary as string,
+    title: forReader(r.title as string, { hand, ...units }),
+    summary: forReader(r.summary as string, { hand, ...units }),
     score: r.score,
   }));
 }
