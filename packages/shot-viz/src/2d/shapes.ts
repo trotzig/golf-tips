@@ -566,6 +566,7 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
     px(pose.headRadius, j.head),
     toScreen,
     theme,
+    scene.golfer.gender === "female",
   );
   for (const { shape, nudge } of headParts) pushAt(j.head, nudge, () => shape);
   push([j.leadHand, j.trailHand], (pts) => ({
@@ -879,8 +880,9 @@ function convexHull(points: Pt[]): Pt[] {
 const HEAD_SHAPE = { up: 1.1, side: 0.84, fwd: 1 };
 
 /**
- * The head, seen from the camera: skin, hair at the back, and a baseball cap (a crown over the
- * top of the head with a bill over the eyes). The head is an ellipsoid, narrower than it is deep
+ * The head, seen from the camera: skin, hair at the back (longer, with a ponytail through the back
+ * of the cap, when `longHair`), and a baseball cap (a crown over the top of the head with a bill
+ * over the eyes). The head is an ellipsoid, narrower than it is deep
  * and a little taller, drawn orthographically around its centre (close enough at head size).
  * The parts are worked out on a unit sphere in "view" space, a rotation of camera space (x right,
  * y down, z toward the camera) in which the sphere's z ≥ 0 half maps to the ellipsoid's visible
@@ -895,6 +897,7 @@ function headShapes(
   rho: number,
   toScreen: (p: Vec3) => (Pt & { depth: number }) | null,
   theme: Theme,
+  longHair = false,
 ): { shape: Shape; nudge: number }[] {
   const c = toScreen(head);
   if (!c || rho <= 0) return [];
@@ -951,12 +954,66 @@ function headShapes(
   const vUp = toView(up);
 
   // Hair at the back of the head, showing below the cap.
-  const hair = sphereCap(normalize(sub(vUp, scale(fwd, 0.8))), 0.1);
+  // Long hair also covers the ears and comes down to the jaw.
+  const hair = longHair
+    ? sphereCap(normalize(sub(vUp, scale(fwd, 0.6))), -0.25)
+    : sphereCap(normalize(sub(vUp, scale(fwd, 0.8))), 0.1);
   if (hair.length > 2)
     out.push({
       shape: { kind: "polygon", points: hair.map(at), fill: theme.hair },
       nudge: -0.0005,
     });
+
+  // Ponytail: out through the back of the cap, then hanging down about a hand's length. Over the
+  // head when its middle is nearer the camera than the head's centre; otherwise sorted at its own
+  // depth, so the neck and shirt cover it as it hangs down the back.
+  const down = camDir([0, -1, 0]);
+  if (longHair && down) {
+    const g = toView(down);
+    const root = normalize(add(scale(fwd, -1), scale(vUp, 0.1)));
+    const out1 = scale(root, 1.35);
+    const ctrl = [
+      scale(root, 0.9),
+      out1,
+      add(out1, scale(g, 1)),
+      add(out1, add(scale(g, 2.3), scale(root, -0.15))),
+    ];
+    const N = 8;
+    const spine = Array.from({ length: N + 1 }, (_, i) => {
+      const t = i / N;
+      const [a, b, c2, d] = ctrl as [Vec3, Vec3, Vec3, Vec3];
+      const u = 1 - t;
+      return add(
+        add(scale(a, u * u * u), scale(b, 3 * u * u * t)),
+        add(scale(c2, 3 * u * t * t), scale(d, t * t * t)),
+      );
+    });
+    const pts = spine.map(at);
+    const side: Pt[] = [];
+    const other: Pt[] = [];
+    pts.forEach((p, i) => {
+      const a = pts[Math.max(0, i - 1)]!;
+      const b = pts[Math.min(N, i + 1)]!;
+      const len = Math.hypot(b.x - a.x, b.y - a.y);
+      const [nx, ny] = len > 1e-6 ? [-(b.y - a.y) / len, (b.x - a.x) / len] : [1, 0];
+      const t = i / N;
+      // Full at the tie, fuller below it, tapering to the tip.
+      const half = rho * (0.24 + 0.16 * Math.sin(Math.PI * Math.min(1, t * 1.4)) - 0.2 * t);
+      side.push({ x: p.x + nx * half, y: p.y + ny * half });
+      other.push({ x: p.x - nx * half, y: p.y - ny * half });
+    });
+    const towardCamera = toCam(spine[N / 2]!)[2];
+    out.push({
+      shape: {
+        kind: "polygon",
+        points: [...side, ...other.reverse()],
+        fill: theme.hair,
+        stroke: theme.hair,
+        strokeWidth: rho * 0.08,
+      },
+      nudge: towardCamera >= 0 ? -0.0006 : Math.max(0.0003, -towardCamera * radius),
+    });
+  }
 
   // Crown: the top of the head, a little proud of it, its rim tipped down at the back and just
   // above the eyes at the front.

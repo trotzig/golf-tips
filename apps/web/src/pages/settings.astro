@@ -4,13 +4,16 @@ import PrefToggle from "../components/PrefToggle.astro";
 import Base from "../layouts/Base.astro";
 ---
 
-<Base title="Settings" description="Choose your hand and the units for distance and wind.">
+<Base
+  title="Settings"
+  description="Choose your hand, the units for distance and wind, and the golfer in the diagrams."
+>
   <h1 class="mb-2 text-3xl font-serif font-bold tracking-tight text-ink-strong">Settings</h1>
   <p class="mb-6 text-ink-muted">Saved on this device. Every page follows them.</p>
   <noscript>
     <p class="mb-6 rounded-card border border-line bg-card p-4">
       Settings need JavaScript. Without it, advice is shown for a right-handed golfer, with
-      distances in yards and wind in mph.
+      distances in yards and wind in mph, and diagrams show a man.
     </p>
   </noscript>
   <div class="space-y-4">
@@ -45,6 +48,19 @@ import Base from "../layouts/Base.astro";
           { value: "m/s", label: "m/s" },
         ]}
       />
+    </section>
+    <section class="rounded-card border border-line bg-card p-4 shadow-card">
+      <h2 class="mb-3 text-lg font-semibold text-ink-strong">Golfer in the diagrams</h2>
+      <PrefToggle
+        pref="golfer"
+        label="Golfer in the diagrams"
+        wide
+        options={[
+          { value: "male", label: "Man" },
+          { value: "female", label: "Woman" },
+        ]}
+      />
+      <p class="mt-3 text-ink-muted">The figure that plays each shot. The advice is the same.</p>
     </section>
   </div>
 </Base>

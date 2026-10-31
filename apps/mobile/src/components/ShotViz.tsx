@@ -20,11 +20,11 @@ function useReduceMotion(): boolean {
   return reduce;
 }
 
-/** Shot diagram for the reader's hand, with Play swing, a step-through slider and the tips. */
+/** Shot diagram for the reader's hand and golfer, with Play swing, a step-through slider and the tips. */
 export function ShotViz({ scene: input }: { scene: ShotScene }) {
   const c = useColors();
-  const { hand, wind } = usePrefs();
-  const scene = useMemo(() => handedScene(input, hand), [input, hand]);
+  const { hand, wind, golfer } = usePrefs();
+  const scene = useMemo(() => handedScene(input, hand, golfer), [input, hand, golfer]);
   const player = useShotPlayer(scene);
   const reduceMotion = useReduceMotion();
   const dragging = useRef(false);

@@ -31,7 +31,7 @@ const imageUrl = new URL(href(image), Astro.site).href;
 ---
 
 <!doctype html>
-<html lang="en" data-hand="right" data-distance="yards" data-wind="mph">
+<html lang="en" data-hand="right" data-distance="yards" data-wind="mph" data-golfer="male">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -55,9 +55,14 @@ const imageUrl = new URL(href(image), Astro.site).href;
     <link rel="apple-touch-icon" href={href("icons/apple-touch-icon.png")} />
     <link rel="manifest" href={href("manifest.webmanifest")} />
     <script is:inline>
-      // Apply the saved settings before first paint so directions and units never flicker.
+      // Apply the saved settings before first paint so directions, units and diagrams never flicker.
       try {
-        const saved = { hand: ["left"], distance: ["meters"], wind: ["m/s"] };
+        const saved = {
+          hand: ["left"],
+          distance: ["meters"],
+          wind: ["m/s"],
+          golfer: ["female"],
+        };
         for (const [pref, allowed] of Object.entries(saved)) {
           const value = localStorage.getItem(`shotbook:${pref}`);
           if (allowed.includes(value)) document.documentElement.dataset[pref] = value;

@@ -13,6 +13,7 @@ import {
   animatedVariant,
   DIAGRAM_COMPONENT,
   HANDS,
+  femaleVariant,
   handedVariant,
   type Manifest,
   type ManifestEntry,
@@ -158,6 +159,11 @@ function buildManifest(pages: PageExample[], css: string): Manifest {
         fingerprint: sha(harness, cssHash, renderer, scene, hand),
       });
     }
+    examples.push({
+      component: DIAGRAM_COMPONENT,
+      variant: femaleVariant(id),
+      fingerprint: sha(harness, cssHash, renderer, scene, "female"),
+    });
   }
   // Played diagrams: the same sources, with the player and timeline among the renderer's.
   for (const id of ANIMATED_DIAGRAMS) {

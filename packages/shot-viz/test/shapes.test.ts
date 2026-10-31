@@ -7,23 +7,42 @@ import {
   describeScene,
   exampleScenes,
   followCamera,
+  handedScene,
   parseScene,
   projector,
 } from "../src/index.ts";
 
 describe("2D shapes", () => {
+  it("draws a woman with the same outfit colours, plus a ponytail", () => {
+    const scene = exampleScenes["flat-lie"]!;
+    const colours = (gender: "male" | "female") =>
+      new Set(
+        buildShapes2D(handedScene(scene, "right", gender), { phase: 1 }).shapes.flatMap((s) =>
+          s.kind === "text" ? [] : [("fill" in s && s.fill) || s.stroke],
+        ),
+      );
+    expect(colours("female")).toEqual(colours("male"));
+    const count = (gender: "male" | "female") =>
+      buildShapes2D(handedScene(scene, "right", gender), { phase: 1 }).shapes.length;
+    expect(count("female")).toBe(count("male") + 1);
+  });
+
   it("builds finite shapes for every example scene and view", () => {
-    for (const scene of Object.values(exampleScenes)) {
+    for (const input of Object.values(exampleScenes)) {
       for (const view of cameraPresets) {
-        const out = buildShapes2D(scene, { view });
-        expect(out.shapes.length).toBeGreaterThan(20);
-        // Size budget: diagrams are inlined in every situation page, twice (both hands).
-        expect(out.shapes.length).toBeLessThan(400);
-        for (const s of out.shapes) {
-          const pts = s.kind === "circle" ? [s.c] : s.kind === "text" ? [s.at] : s.points;
-          for (const p of pts) {
-            expect(Number.isFinite(p.x)).toBe(true);
-            expect(Number.isFinite(p.y)).toBe(true);
+        for (const gender of ["male", "female"] as const) {
+          const scene = handedScene(input, "right", gender);
+          const out = buildShapes2D(scene, { view });
+          expect(out.shapes.length).toBeGreaterThan(20);
+          // Size budget: diagrams are inlined in every situation page, four times (both hands, both
+          // golfers).
+          expect(out.shapes.length).toBeLessThan(400);
+          for (const s of out.shapes) {
+            const pts = s.kind === "circle" ? [s.c] : s.kind === "text" ? [s.at] : s.points;
+            for (const p of pts) {
+              expect(Number.isFinite(p.x)).toBe(true);
+              expect(Number.isFinite(p.y)).toBe(true);
+            }
           }
         }
       }

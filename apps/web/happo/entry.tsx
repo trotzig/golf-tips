@@ -22,6 +22,7 @@ import {
   DIAGRAM_COMPONENT,
   DIAGRAM_SIZE,
   HANDS,
+  femaleVariant,
   handedVariant,
 } from "./examples.ts";
 
@@ -85,6 +86,14 @@ for (const scene of Object.values(exampleScenes)) {
       },
     });
   }
+  happoStatic.registerExample({
+    component: DIAGRAM_COMPONENT,
+    variant: femaleVariant(scene.id),
+    render: () => {
+      reset({ lang: "en", "data-hand": "right" }, { class: "bg-canvas font-sans" });
+      renderDiagram(handedScene(scene, "right", "female"));
+    },
+  });
 }
 
 // Played diagrams: Happo steps the same player "Play swing" uses through fixed times, through an

@@ -80,8 +80,11 @@ const THIGH = 0.45;
 const UPPER_ARM = 0.3;
 const FOREARM = 0.3;
 const TORSO = 0.52;
-const SHOULDER_HALF = 0.19;
-const HIP_HALF = 0.1;
+/** Half the shoulder and hip widths: narrower shoulders and wider hips for a woman. */
+const BUILD: Record<ShotScene["golfer"]["gender"], { shoulderHalf: number; hipHalf: number }> = {
+  male: { shoulderHalf: 0.19, hipHalf: 0.1 },
+  female: { shoulderHalf: 0.16, hipHalf: 0.12 },
+};
 const HEAD_RADIUS = 0.11;
 const ANKLE_HEIGHT = 0.08;
 const HEAD_LENGTH = 0.1;
@@ -266,6 +269,7 @@ function buildBody(
   tuning: SwingTuning,
 ): Body {
   const { terrain, golfer } = scene;
+  const { shoulderHalf, hipHalf } = BUILD[golfer.gender];
   const w = setup.stanceWidth;
   const centreX = -setup.ballPosition * w * 0.42;
   const centre: Vec3 = [centreX, 0, -depth];
@@ -326,14 +330,14 @@ function buildBody(
     [1, lead.ankle],
     [-1, trail.ankle],
   ] as const) {
-    const hip = add(pelvis, scale(hipAxis, side * HIP_HALF));
+    const hip = add(pelvis, scale(hipAxis, side * hipHalf));
     const flat = Math.hypot(hip[0] - ankle[0], hip[2] - ankle[2]);
     const high = Math.sqrt(Math.max(0, legReach * legReach - flat * flat));
     sink = Math.max(sink, hip[1] - ankle[1] - high);
   }
   pelvis = [pelvis[0], pelvis[1] - sink, pelvis[2]];
-  const leadHip = add(pelvis, scale(hipAxis, HIP_HALF));
-  const trailHip = add(pelvis, scale(hipAxis, -HIP_HALF));
+  const leadHip = add(pelvis, scale(hipAxis, hipHalf));
+  const trailHip = add(pelvis, scale(hipAxis, -hipHalf));
 
   // Spine bends forward toward the ball and tilts away from the target with the shoulders.
   // As the hips open, the bend turns with them, so the chest faces the target at the finish.
@@ -349,8 +353,8 @@ function buildBody(
   shoulderAxis = normalize(sub(shoulderAxis, scale(spineDir, dot(shoulderAxis, spineDir))));
   shoulderAxis = rotate(shoulderAxis, spineDir, -key.turn * turnMax * DEG - yaw);
   const shoulderDrop = scale(spineDir, -0.04);
-  const leadShoulder = add(add(neck, scale(shoulderAxis, SHOULDER_HALF)), shoulderDrop);
-  const trailShoulder = add(add(neck, scale(shoulderAxis, -SHOULDER_HALF)), shoulderDrop);
+  const leadShoulder = add(add(neck, scale(shoulderAxis, shoulderHalf)), shoulderDrop);
+  const trailShoulder = add(add(neck, scale(shoulderAxis, -shoulderHalf)), shoulderDrop);
 
   // Head looks down at the ball until the finish, when it rises with the body.
   const headDir = normalize(add(spineDir, scale(Z, 0.35 * (1 - key.rise))));

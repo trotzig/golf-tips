@@ -31,6 +31,8 @@ export const swingLengths = ["quarter", "half", "three-quarter", "full"] as cons
 export const trajectories = ["low", "normal", "high"] as const;
 export const cameraPresets = ["face-on", "down-the-line", "behind", "overhead"] as const;
 export const stanceWidths = ["narrow", "normal", "wide"] as const;
+/** Changes the golfer's figure only (build and hair); the outfit is the same for both. */
+export const genders = ["male", "female"] as const;
 
 const degrees = (min: number, max: number) => z.number().min(min).max(max);
 const vec3 = z.tuple([z.number(), z.number(), z.number()]);
@@ -51,6 +53,7 @@ export const terrainSchema = z.object({
 
 export const golferSchema = z.object({
   handedness: z.enum(["right", "left"]).default("right"),
+  gender: z.enum(genders).default("male"),
   stanceWidth: z.enum(stanceWidths).default("normal"),
   /** Aim of the whole body and club, degrees right (+) or left (−) of the target line. */
   aim: degrees(-45, 45).default(0),

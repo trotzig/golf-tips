@@ -7,6 +7,7 @@ import {
   groundNormal,
   handed,
   parseScene,
+  boneLength,
   poseGolfer,
   projector,
   rotate,
@@ -151,6 +152,15 @@ describe("golfer pose", () => {
     const straight = poseGolfer(flat);
     // Aiming right swings the golfer (who stands at −z) toward the target side.
     expect(aimed.joints.pelvis[0]).toBeGreaterThan(straight.joints.pelvis[0]);
+  });
+
+  it("gives a woman narrower shoulders and wider hips", () => {
+    const woman = poseGolfer(parseScene({ id: "w", title: "w", golfer: { gender: "female" } }));
+    const man = poseGolfer(flat);
+    const shoulders = (pose: typeof man) => boneLength(pose, "leadShoulder", "trailShoulder");
+    const hips = (pose: typeof man) => boneLength(pose, "leadHip", "trailHip");
+    expect(shoulders(woman)).toBeLessThan(shoulders(man));
+    expect(hips(woman)).toBeGreaterThan(hips(man));
   });
 });
 

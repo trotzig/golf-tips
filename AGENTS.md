@@ -184,8 +184,9 @@ renderer can draw. Owned by `packages/shot-viz`; the types there are the contrac
 
 - **terrain**: slope along and across the target line (degrees), lie type (fairway, rough,
   bunker, fringe, green), grass length
-- **golfer**: handedness, stance width, alignment, weight distribution, shoulder tilt, ball
-  position
+- **golfer**: handedness, gender (`male`/`female`: the build and hair, never the outfit — both
+  wear the same neutral colours), stance width, alignment, weight distribution, shoulder tilt,
+  ball position
 - **club & swing**: club, swing length, path, face, attack angle
 - **ball flight**: launch, curve, apex, landing and roll; wind vector
 - **annotations**: labelled arrows/lines (aim line, slope line, ball flight)
@@ -212,11 +213,11 @@ in the desktop app), which compares against the classic swing and copies the res
   green for structure, red only for highlights. Light and dark follow the system setting. Use the
   colour tokens in `apps/web/src/styles/global.css` (`bg-card`, `text-ink-muted`, `text-accent`…),
   never raw palette colours or `dark:` variants: each token has a light and a dark value.
-- Reader settings (hand, distance and wind units) live on `/settings/`; the header keeps a quick
-  hand switch. Each is a `data-hand` / `data-distance` / `data-wind` attribute on `<html>`, set
-  from localStorage (`shotbook:<pref>`) before first paint. Text renders every variant and
-  `global.css` shows the matching one, so pages stay static and work without JavaScript
-  (right-handed, yards, mph).
+- Reader settings (hand, distance and wind units, golfer in the diagrams) live on `/settings/`;
+  the header keeps a quick hand switch. Each is a `data-hand` / `data-distance` / `data-wind` /
+  `data-golfer` attribute on `<html>`, set from localStorage (`shotbook:<pref>`) before first
+  paint. Text and diagrams render every variant and `global.css` shows the matching one, so pages
+  stay static and work without JavaScript (right-handed, yards, mph, a man).
 - Accessibility: semantic HTML, alt text / `aria` descriptions for diagrams, keyboard support.
 - The build emits `/data/situations.json` for the native app; treat its shape as a public API
   (additive changes only, version field bumps on breaking changes). The same goes for
@@ -235,9 +236,9 @@ in the desktop app), which compares against the classic swing and copies the res
   for a page's own share image. Share images and app icons are PNGs drawn at build time in
   `src/lib/images.tsx` (satori + sharp, bundled Jost font). `@astrojs/sitemap` writes the sitemap.
 - Shot diagrams are rendered to static SVG at build time (React via `@astrojs/react`, with no
-  `client:` directive, so no React ships to the browser). Both hands are rendered and the
-  `data-hand` CSS shows one. Diagrams are inlined twice per page; keep scenes under the shape
-  budget tested in `packages/shot-viz`. "Play swing" and the step-through slider use
+  `client:` directive, so no React ships to the browser). Both hands and both golfers are
+  rendered and the `data-hand` / `data-golfer` CSS shows one. Diagrams are inlined four times
+  per page; keep scenes under the shape budget tested in `packages/shot-viz`. "Play swing" and the step-through slider use
   `@shotbook/shot-viz/player` (plain DOM, no React or zod) to redraw the visible diagram.
 
 ## Visual regression
@@ -246,7 +247,8 @@ in the desktop app), which compares against the classic swing and copies the res
 (`.github/workflows/happo.yml`; project `default`, Chrome desktop and phone, the phone again in dark
 mode, plus an accessibility check). It uses Happo's custom integration: `apps/web/happo/build.ts` turns every page of the built
 site (static HTML, scripts stripped, CSS inlined) and every shot-viz scene (rendered with React)
-into an example. Pages with handed text, and every diagram, get a left-handed variant too.
+into an example. Pages with handed text, and every diagram, get a left-handed variant too; every diagram also
+gets a right-handed `<id>, woman` variant.
 Diagrams are captured at address, except three that are also captured playing (`ANIMATED_DIAGRAMS`
 in `examples.ts`: `flat-lie`, `basic-chip`, `high-shot`, as variant `<id>, played`): Happo's
 experimental `animate` option steps the "Play swing" player through fixed times (key swing
@@ -274,8 +276,9 @@ and Settings, plus category, tag and situation screens that mirror the site.
   `src/generated/situations.json` and `search-index.json` (gitignored) with the same exporters as
   the site's `/data/` files. `start`, `ios`, `android` and `typecheck` run it first. Search uses
   `searchSituations` from `@shotbook/content/search` on that prebuilt index.
-- **Preferences stay on the device** (AsyncStorage): hand and units (`shotbook:hand`,
-  `shotbook:distance`, `shotbook:wind`, the same keys as the site's localStorage) and
+- **Preferences stay on the device** (AsyncStorage): hand, units and golfer (`shotbook:hand`,
+  `shotbook:distance`, `shotbook:wind`, `shotbook:golfer`, the same keys as the site's
+  localStorage) and
   favourites (`shotbook:favourites`, saved with the button under a situation's title). Every text
   goes through `useHanded()`, which resolves directions and units.
 - **Diagrams** come from `@shotbook/shot-viz/native`: `ShotDiagram` (react-native-svg, drawn from

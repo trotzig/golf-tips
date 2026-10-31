@@ -10,21 +10,35 @@ import {
   WIND_UNITS,
   type Reader,
 } from "@shotbook/content";
+import { genders, type Gender } from "@shotbook/shot-viz";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
 // Reader preferences, stored on the device: which hand they play with, the units they measure
-// distance and wind in, and favourite situations. Keys match the site's localStorage.
+// distance and wind in, the golfer drawn in diagrams, and favourite situations. Keys match the
+// site's localStorage.
 
-const READER_KEYS = { hand: "shotbook:hand", distance: "shotbook:distance", wind: "shotbook:wind" };
-const ALLOWED: { [K in keyof Reader]: readonly Reader[K][] } = {
+/** The reader's settings: text follows `Reader`, diagrams also follow `golfer`. */
+export interface Settings extends Reader {
+  golfer: Gender;
+}
+
+const DEFAULT_SETTINGS: Settings = { ...DEFAULT_READER, golfer: "male" };
+const SETTING_KEYS = {
+  hand: "shotbook:hand",
+  distance: "shotbook:distance",
+  wind: "shotbook:wind",
+  golfer: "shotbook:golfer",
+};
+const ALLOWED: { [K in keyof Settings]: readonly Settings[K][] } = {
   hand: HANDEDNESS,
   distance: DISTANCE_UNITS,
   wind: WIND_UNITS,
+  golfer: genders,
 };
 
-interface Prefs extends Reader {
-  setPref<K extends keyof Reader>(pref: K, value: Reader[K]): void;
+interface Prefs extends Settings {
+  setPref<K extends keyof Settings>(pref: K, value: Settings[K]): void;
   favourites: string[];
   isFavourite(id: string): boolean;
   toggleFavourite(id: string): void;
@@ -35,22 +49,22 @@ const PrefsContext = createContext<Prefs | null>(null);
 /** Renders nothing until stored preferences are read, so directions never flip after showing. */
 export function PrefsProvider({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
-  const [reader, setReader] = useState<Reader>(DEFAULT_READER);
+  const [reader, setReader] = useState<Settings>(DEFAULT_SETTINGS);
   const [favourites, setFavourites] = useState<string[]>([]);
 
   useEffect(() => {
-    const prefs = Object.keys(READER_KEYS) as Array<keyof Reader>;
+    const prefs = Object.keys(SETTING_KEYS) as Array<keyof Settings>;
     Promise.all([
-      AsyncStorage.multiGet(prefs.map((pref) => READER_KEYS[pref])),
+      AsyncStorage.multiGet(prefs.map((pref) => SETTING_KEYS[pref])),
       AsyncStorage.getItem(FAVOURITES_KEY),
     ])
       .then(([stored, storedFavourites]) => {
-        const saved: Partial<Record<keyof Reader, string>> = {};
+        const saved: Partial<Record<keyof Settings, string>> = {};
         prefs.forEach((pref, i) => {
           const value = stored[i]?.[1];
           if (value && (ALLOWED[pref] as readonly string[]).includes(value)) saved[pref] = value;
         });
-        setReader({ ...DEFAULT_READER, ...(saved as Partial<Reader>) });
+        setReader({ ...DEFAULT_SETTINGS, ...(saved as Partial<Settings>) });
         setFavourites(parseFavourites(storedFavourites));
       })
       .catch(() => {
@@ -59,9 +73,9 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
       .finally(() => setLoaded(true));
   }, []);
 
-  const setPref = useCallback(<K extends keyof Reader>(pref: K, value: Reader[K]) => {
+  const setPref = useCallback(<K extends keyof Settings>(pref: K, value: Settings[K]) => {
     setReader((current) => ({ ...current, [pref]: value }));
-    void AsyncStorage.setItem(READER_KEYS[pref], value);
+    void AsyncStorage.setItem(SETTING_KEYS[pref], value);
   }, []);
 
   const toggle = useCallback((id: string) => {
