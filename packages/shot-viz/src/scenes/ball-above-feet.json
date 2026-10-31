@@ -1,0 +1,30 @@
+{
+  "id": "ball-above-feet",
+  "title": "Ball above your feet",
+  "description": "Stand taller and grip down. The face points left of where the club aims, so aim a little right.",
+  "terrain": {
+    "slopeAcross": 10
+  },
+  "golfer": {
+    "aim": 4
+  },
+  "swing": {
+    "club": "7-iron",
+    "length": "three-quarter"
+  },
+  "annotations": [
+    {
+      "type": "aim-line",
+      "label": "Aim a little right"
+    },
+    {
+      "type": "target-line",
+      "label": "Target"
+    },
+    {
+      "type": "slope-line",
+      "label": "Slope"
+    }
+  ],
+  "camera": "down-the-line"
+}

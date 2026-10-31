@@ -1,0 +1,10 @@
+{
+  "id": "into-the-wind",
+  "title": "Into the wind",
+  "description": "Take more club and swing easier: a lower, less spinny flight holds its line into a 20 mph headwind.",
+  "swing": { "club": "5-iron", "length": "three-quarter" },
+  "golfer": { "ballPosition": -0.1 },
+  "flight": { "trajectory": "low", "wind": { "speed": 9, "from": 0 } },
+  "annotations": [{ "type": "ball-flight", "label": "Low, penetrating flight" }],
+  "camera": "behind"
+}

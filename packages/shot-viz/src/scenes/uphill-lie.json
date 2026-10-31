@@ -1,0 +1,12 @@
+{
+  "id": "uphill-lie",
+  "title": "Uphill lie",
+  "description": "The slope adds loft: the ball flies higher and shorter, and tends to go left.",
+  "terrain": { "slopeAlong": 10 },
+  "swing": { "club": "7-iron" },
+  "annotations": [
+    { "type": "slope-line", "label": "Slope" },
+    { "type": "shoulder-line", "label": "Shoulders match the slope" }
+  ],
+  "camera": "face-on"
+}

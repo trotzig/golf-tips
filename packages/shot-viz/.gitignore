@@ -1,0 +1,3 @@
+dist-demo/
+# Local installs use --ignore-workspace until the workspace root lands; the root lockfile is canonical.
+pnpm-lock.yaml

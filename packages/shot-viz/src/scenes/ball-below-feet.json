@@ -1,0 +1,31 @@
+{
+  "id": "ball-below-feet",
+  "title": "Ball below your feet",
+  "description": "Widen the stance and flex the knees more to get down to the ball. The ball tends to go right, so aim a little left.",
+  "terrain": {
+    "slopeAcross": -10
+  },
+  "golfer": {
+    "aim": -3,
+    "stanceWidth": "wide"
+  },
+  "swing": {
+    "club": "7-iron",
+    "length": "three-quarter"
+  },
+  "annotations": [
+    {
+      "type": "aim-line",
+      "label": "Aim a little left"
+    },
+    {
+      "type": "target-line",
+      "label": "Target"
+    },
+    {
+      "type": "slope-line",
+      "label": "Slope"
+    }
+  ],
+  "camera": "down-the-line"
+}

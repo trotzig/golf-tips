@@ -1,0 +1,64 @@
+{
+  "name": "@shotbook/shot-viz",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ShotScene format and renderers (2D SVG, 3D three.js) for Shotbook shot visualisations.",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts",
+    "./web": "./src/web/index.ts",
+    "./three": "./src/three/index.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.build.json",
+    "build:demo": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "peerDependencies": {
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.0.0",
+    "react": "^19.0.0",
+    "three": ">=0.160.0"
+  },
+  "peerDependenciesMeta": {
+    "@react-three/drei": {
+      "optional": true
+    },
+    "@react-three/fiber": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "three": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@react-three/drei": "^10.7.0",
+    "@react-three/fiber": "^9.4.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.187.0",
+    "@vitejs/plugin-react": "^6.1.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.187.0",
+    "typescript": "~6.0.3",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.0"
+  }
+}
