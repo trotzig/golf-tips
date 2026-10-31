@@ -8,6 +8,7 @@ import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { build } from "vite";
+import { classesInHtml, cssFor, parseCss } from "./css.ts";
 import {
   ANIMATED_DIAGRAMS,
   animatedVariant,
@@ -134,35 +135,50 @@ function buildManifest(pages: PageExample[], css: string): Manifest {
     join(here, "examples.ts"),
     join(repoRoot, "happo.config.ts"),
   ]);
-  const cssHash = sha(css);
-  const examples: ManifestEntry[] = pages.flatMap((p) =>
-    p.hands.map((hand) => ({
+  // Each example hashes only the CSS that can reach its markup, so a style used elsewhere
+  // doesn't re-run it.
+  const parsed = parseCss(css);
+  const examples: ManifestEntry[] = pages.flatMap((p) => {
+    const attrs = JSON.stringify([p.htmlAttrs, p.bodyAttrs]);
+    const classes = classesInHtml(p.html);
+    for (const attr of [p.htmlAttrs.class, p.bodyAttrs.class]) {
+      for (const name of attr?.split(/\s+/) ?? []) if (name) classes.add(name);
+    }
+    const pageCss = sha(cssFor(parsed, classes, `${attrs}${p.html}`));
+    return p.hands.map((hand) => ({
       component: p.component,
       variant: handedVariant(p.variant, hand),
-      fingerprint: sha(harness, cssHash, JSON.stringify([p.htmlAttrs, p.bodyAttrs]), p.html, hand),
-    })),
-  );
+      fingerprint: sha(harness, pageCss, attrs, p.html, hand),
+    }));
+  });
   // Diagrams render in the browser, so fingerprint their sources: the renderer, its React, and
   // the scene itself.
+  const rendererFiles = filesIn(join(shotVizDir, "src"), (f) => !f.includes(`${sep}scenes${sep}`));
   const renderer = hashFiles([
     join(shotVizDir, "package.json"),
-    ...filesIn(join(shotVizDir, "src"), (f) => !f.includes(`${sep}scenes${sep}`)),
+    ...rendererFiles,
     join(here, "../node_modules/react/package.json"),
     join(here, "../node_modules/react-dom/package.json"),
   ]);
+  // Diagram markup is only known in the browser, so every word in the renderer and the bundle
+  // counts as a class it might use. Generous, but it only ever keeps rules, never drops one.
+  const diagramSource = [...rendererFiles, join(here, "entry.tsx")]
+    .map((file) => readFileSync(file, "utf8"))
+    .join("\n");
+  const diagramCss = sha(cssFor(parsed, new Set(diagramSource.match(/[\w-]+/g)), diagramSource));
   for (const id of sceneIds()) {
     const scene = readFileSync(join(shotVizDir, `src/scenes/${id}.json`), "utf8");
     for (const hand of HANDS) {
       examples.push({
         component: DIAGRAM_COMPONENT,
         variant: handedVariant(id, hand),
-        fingerprint: sha(harness, cssHash, renderer, scene, hand),
+        fingerprint: sha(harness, diagramCss, renderer, scene, hand),
       });
     }
     examples.push({
       component: DIAGRAM_COMPONENT,
       variant: femaleVariant(id),
-      fingerprint: sha(harness, cssHash, renderer, scene, "female"),
+      fingerprint: sha(harness, diagramCss, renderer, scene, "female"),
     });
   }
   // Played diagrams: the same sources, with the player and timeline among the renderer's.
@@ -171,7 +187,7 @@ function buildManifest(pages: PageExample[], css: string): Manifest {
     examples.push({
       component: DIAGRAM_COMPONENT,
       variant: animatedVariant(id),
-      fingerprint: sha(harness, cssHash, renderer, scene, "played"),
+      fingerprint: sha(harness, diagramCss, renderer, scene, "played"),
     });
   }
   return { version: 1, examples };
