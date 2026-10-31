@@ -1,0 +1,15 @@
+---
+interface Props {
+  items: string[];
+  ordered?: boolean;
+}
+
+const { items, ordered = false } = Astro.props;
+const Tag = ordered ? "ol" : "ul";
+---
+
+<Tag class={`space-y-2 pl-6 ${ordered ? "list-decimal" : "list-disc"} marker:text-fairway-600`}>
+  {items.map((item) => (
+    <li class="pl-1">{item}</li>
+  ))}
+</Tag>

@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.claude/
+pnpm-lock.yaml
+content/
+# Markdown is hand-written prose (and content/); keep it out of the formatter.
+*.md

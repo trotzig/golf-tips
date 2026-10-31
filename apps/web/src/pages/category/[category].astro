@@ -1,0 +1,32 @@
+---
+import { CATEGORIES, type Category } from "@shotbook/content";
+import SituationList from "../../components/SituationList.astro";
+import Base from "../../layouts/Base.astro";
+import { href, situationsIn } from "../../lib/content";
+
+export function getStaticPaths() {
+  return CATEGORIES.map((category) => ({ params: { category: category.id }, props: { category } }));
+}
+
+interface Props {
+  category: Category;
+}
+
+const { category } = Astro.props;
+const situations = situationsIn(category.id);
+---
+
+<Base title={category.title} description={category.description}>
+  <nav aria-label="Breadcrumb" class="mb-3">
+    <a href={href("/")} class="inline-block py-2 font-medium text-fairway-700 underline">
+      ← All categories
+    </a>
+  </nav>
+  <h1 class="text-3xl font-extrabold tracking-tight text-fairway-900">{category.title}</h1>
+  <p class="mt-2 mb-6 text-lg text-stone-700">{category.description}</p>
+  {situations.length > 0 ? (
+    <SituationList situations={situations} showCategory={false} />
+  ) : (
+    <p class="rounded-2xl bg-white p-4 text-stone-700">Nothing in this category yet.</p>
+  )}
+</Base>

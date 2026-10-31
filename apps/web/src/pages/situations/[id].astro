@@ -1,0 +1,111 @@
+---
+import { getCategory, type Situation } from "@shotbook/content";
+import { marked } from "marked";
+import Bullets from "../../components/Bullets.astro";
+import Card from "../../components/Card.astro";
+import VizSlot from "../../components/VizSlot.astro";
+import Base from "../../layouts/Base.astro";
+import { getSituations, href } from "../../lib/content";
+
+export function getStaticPaths() {
+  return getSituations().map((situation) => ({
+    params: { id: situation.id },
+    props: { situation },
+  }));
+}
+
+interface Props {
+  situation: Situation;
+}
+
+const { situation: s } = Astro.props;
+const category = getCategory(s.category);
+const byId = new Map(getSituations().map((x) => [x.id, x]));
+const related = s.related.flatMap((id) => byId.get(id) ?? []);
+// Body is trusted Markdown from the repo.
+const bodyHtml = s.body ? await marked.parse(s.body) : "";
+const levelLabel = { all: "All levels", beginner: "Beginner", advanced: "Advanced" }[s.level];
+---
+
+<Base title={s.title} description={s.summary}>
+  <nav aria-label="Breadcrumb" class="mb-3">
+    <a
+      href={href(`category/${category.id}/`)}
+      class="inline-block py-2 font-medium text-fairway-700 underline"
+    >
+      ← {category.title}
+    </a>
+  </nav>
+
+  <article class="space-y-4">
+    <header>
+      <h1 class="text-3xl font-extrabold tracking-tight text-fairway-900">{s.title}</h1>
+      <p class="mt-2 text-xl text-stone-800">{s.summary}</p>
+      <ul class="mt-3 flex flex-wrap gap-2 text-sm font-medium" aria-label="Applies to">
+        <li class="rounded-full bg-fairway-100 px-3 py-1 text-fairway-900">{levelLabel}</li>
+        {s.clubs?.map((club) => (
+          <li class="rounded-full bg-stone-200 px-3 py-1 capitalize text-stone-800">{club}</li>
+        ))}
+      </ul>
+    </header>
+
+    <VizSlot viz={s.viz} />
+
+    {s.setup && (
+      <Card title="Setup">
+        <Bullets items={s.setup} />
+      </Card>
+    )}
+    {s.swing && (
+      <Card title="Swing">
+        <Bullets items={s.swing} />
+      </Card>
+    )}
+    <Card title="What to expect">
+      <Bullets items={s.expect} />
+    </Card>
+    {s.club_choice && (
+      <Card title="Club choice">
+        <p>{s.club_choice}</p>
+      </Card>
+    )}
+    {s.mistakes && (
+      <Card title="Common mistakes" tone="warning">
+        <Bullets items={s.mistakes} />
+      </Card>
+    )}
+    {s.drill && (
+      <Card title="Practice drill" tone="muted">
+        <p>{s.drill}</p>
+      </Card>
+    )}
+    {s.advanced && (
+      <Card title="For better players" tone="muted">
+        <p>{s.advanced}</p>
+      </Card>
+    )}
+    {bodyHtml && <section class="space-y-3 px-1 text-lg text-stone-800" set:html={bodyHtml} />}
+
+    {related.length > 0 && (
+      <section>
+        <h2 class="mb-2 text-sm font-bold uppercase tracking-wider text-stone-700">Related</h2>
+        <ul class="flex flex-wrap gap-2">
+          {related.map((r) => (
+            <li>
+              <a
+                href={href(`situations/${r.id}/`)}
+                class="inline-block rounded-full border border-fairway-600 bg-white px-4 py-2 font-medium text-fairway-800 hover:bg-fairway-50"
+              >
+                {r.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <footer class="text-sm text-stone-600">
+      Updated <time datetime={s.updated}>{s.updated}</time>
+    </footer>
+  </article>
+</Base>

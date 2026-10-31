@@ -1,0 +1,50 @@
+---
+import "../styles/global.css";
+import { href } from "../lib/content";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = "How to play every golf shot and situation, on one card." } =
+  Astro.props;
+const fullTitle = title ? `${title} · Shotbook` : "Shotbook — how do I play this shot?";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#124b24" />
+    <link rel="icon" type="image/svg+xml" href={href("favicon.svg")} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <title>{fullTitle}</title>
+  </head>
+  <body class="min-h-dvh bg-stone-100 font-sans text-stone-950 antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:rounded focus:bg-white focus:p-3"
+    >
+      Skip to content
+    </a>
+    <header class="bg-fairway-800 text-white">
+      <div class="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
+        <a href={href("/")} class="flex items-center gap-2 py-1 text-xl font-bold tracking-tight">
+          <span aria-hidden="true" class="text-2xl">
+            ⛳
+          </span>{" "}
+          Shotbook
+        </a>
+      </div>
+    </header>
+    <main id="main" class="mx-auto max-w-2xl px-4 pb-16 pt-6">
+      <slot />
+    </main>
+    <footer class="mx-auto max-w-2xl px-4 pb-10 text-sm text-stone-600">
+      Mainstream advice for every level. Practice it on the range before trusting it on the course.
+    </footer>
+  </body>
+</html>

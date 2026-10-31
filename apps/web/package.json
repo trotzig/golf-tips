@@ -1,0 +1,23 @@
+{
+  "name": "@shotbook/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check"
+  },
+  "dependencies": {
+    "@shotbook/content": "workspace:*",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.4.4",
+    "marked": "^18.1.2",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "typescript": "~6.0.3"
+  }
+}

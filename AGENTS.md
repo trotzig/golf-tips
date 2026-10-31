@@ -33,12 +33,17 @@ Run from the repo root (defined in step 1 of the plan; keep this list current):
 ```
 pnpm install
 pnpm dev          # web dev server
-pnpm build        # validate content, build packages and site
-pnpm test         # unit tests (vitest)
-pnpm lint         # eslint + prettier check
-pnpm typecheck
-pnpm validate     # content schema validation only
+pnpm build        # validate content, then build the site to apps/web/dist
+pnpm test         # unit tests (vitest; each packages/* dir is a vitest project)
+pnpm lint         # eslint + prettier check (Markdown is not formatted)
+pnpm format       # prettier --write
+pnpm typecheck    # tsc / astro check in every package that has a typecheck script
+pnpm validate     # content schema + cross-reference validation only
 ```
+
+Shared packages are consumed as TypeScript source (no build step) and use `.ts` import
+extensions, so Node 24 can run their scripts directly. To preview the site with another content
+folder, set `SHOTBOOK_CONTENT_DIR=/abs/path pnpm dev`.
 
 ## Workflow
 
