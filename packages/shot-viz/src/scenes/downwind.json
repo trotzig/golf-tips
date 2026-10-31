@@ -1,0 +1,26 @@
+{
+  "id": "downwind",
+  "title": "Downwind",
+  "description": "A tailwind carries the ball farther and takes spin off, so it lands hotter and rolls out.",
+  "swing": {
+    "club": "7-iron"
+  },
+  "flight": {
+    "wind": {
+      "speed": 8,
+      "from": 180
+    }
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Carries farther, rolls out"
+    }
+  ],
+  "camera": "behind",
+  "tips": [
+    "Take less club and make your normal swing; the wind adds the distance.",
+    "Ball lands with less spin and keeps rolling, so land it short of the flag.",
+    "Curves less than usual, so it tends to fly straighter."
+  ]
+}

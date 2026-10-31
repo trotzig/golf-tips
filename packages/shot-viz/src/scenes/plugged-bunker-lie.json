@@ -1,0 +1,35 @@
+{
+  "id": "plugged-bunker-lie",
+  "title": "Plugged bunker lie",
+  "description": "Square face, ball in the middle and a steep, hard dig: the ball comes out low and runs.",
+  "terrain": {
+    "lie": "bunker"
+  },
+  "golfer": {
+    "ballPosition": 0,
+    "weightLead": 0.65
+  },
+  "swing": {
+    "club": "sand-wedge",
+    "length": "three-quarter",
+    "attackAngle": -9
+  },
+  "flight": {
+    "trajectory": "low",
+    "launchAngle": 24,
+    "ballSpeed": 14,
+    "spinRpm": 800
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Comes out low and runs"
+    }
+  ],
+  "camera": "face-on",
+  "tips": [
+    "Keep the face square so the leading edge can dig.",
+    "Hit down hard just behind the ball; a short finish is fine.",
+    "Ball comes out low with little spin and runs a long way."
+  ]
+}

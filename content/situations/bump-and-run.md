@@ -22,6 +22,7 @@ mistakes:
 club_choice: Choose the least lofted club that will clear the fringe, then let it roll.
 advanced: A hybrid can be used the same way from the fringe; the wide sole helps it glide through grass.
 related: [basic-chip, chip-or-putt, putting-from-the-fringe, tight-lie, into-the-wind]
+viz: bump-and-run
 updated: 2026-10-31
 ---
 

@@ -1,6 +1,7 @@
 ---
 // Shot diagram for a situation, drawn to static SVG at build time. Both hands are rendered and
 // the global `data-hand` CSS shows the reader's, so switching never waits on JavaScript.
+// With JavaScript, a small player (no React) can play the swing and ball flight or scrub through it.
 import { exampleScenes, handedScene } from "@shotbook/shot-viz";
 import { ShotDiagram } from "@shotbook/shot-viz/web";
 import Bullets from "./Bullets.astro";
@@ -13,6 +14,8 @@ const { viz } = Astro.props;
 const scene = viz ? exampleScenes[viz] : undefined;
 // A smaller canvas than the default keeps the labels readable when scaled to a phone's width.
 const size = { width: 360, height: 300 };
+// `<` escaped so the JSON can't close the script element.
+const sceneJson = scene && JSON.stringify(scene).replace(/</g, "\\u003c");
 ---
 
 {scene && (
@@ -20,11 +23,37 @@ const size = { width: 360, height: 300 };
     data-viz={scene.id}
     class="overflow-hidden rounded-2xl border border-stone-300 bg-white shadow-sm"
   >
-    <div class="hand-r">
+    <div class="hand-r" data-viz-hand="right">
       <ShotDiagram scene={handedScene(scene, "right")} {...size} />
     </div>
-    <div class="hand-l">
+    <div class="hand-l" data-viz-hand="left">
       <ShotDiagram scene={handedScene(scene, "left")} {...size} />
+    </div>
+    <script type="application/json" data-viz-scene set:html={sceneJson} />
+    <div
+      data-viz-controls
+      hidden
+      class="flex items-center gap-3 border-t border-stone-200 bg-stone-50 px-4 py-3"
+    >
+      <button
+        type="button"
+        data-viz-play
+        class="min-h-11 shrink-0 rounded-full bg-fairway-700 px-4 font-semibold text-white hover:bg-fairway-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fairway-700"
+      >
+        <span aria-hidden="true">▶</span> Play swing
+      </button>
+      <label class="flex min-w-0 flex-1 items-center gap-2 text-sm font-medium text-stone-700">
+        <span class="shrink-0">Step through</span>
+        <input
+          type="range"
+          data-viz-scrub
+          min="0"
+          max="1"
+          step="0.01"
+          value="0"
+          class="min-h-11 w-full accent-fairway-700"
+        />
+      </label>
     </div>
     {scene.tips.length > 0 && (
       <figcaption class="p-4 text-lg leading-snug">
@@ -33,3 +62,55 @@ const size = { width: 360, height: 300 };
     )}
   </figure>
 )}
+
+<script>
+  import {
+    createShotPlayer,
+    handedScene,
+    type ShotPlayer,
+    type ShotScene,
+  } from "@shotbook/shot-viz/player";
+
+  const size = { width: 360, height: 300 };
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+  for (const figure of document.querySelectorAll<HTMLElement>("figure[data-viz]")) {
+    const json = figure.querySelector("[data-viz-scene]")?.textContent;
+    const controls = figure.querySelector<HTMLElement>("[data-viz-controls]");
+    const playButton = figure.querySelector<HTMLButtonElement>("[data-viz-play]");
+    const scrub = figure.querySelector<HTMLInputElement>("[data-viz-scrub]");
+    if (!json || !controls || !playButton || !scrub) continue;
+    const scene = JSON.parse(json) as ShotScene;
+
+    // One player per hand, made on first use: only the visible diagram is redrawn.
+    const players = new Map<string, ShotPlayer>();
+    const current = (): ShotPlayer | null => {
+      const hand = document.documentElement.dataset.hand === "left" ? "left" : "right";
+      let player = players.get(hand);
+      if (!player) {
+        const svg = figure.querySelector<SVGSVGElement>(`[data-viz-hand="${hand}"] svg`);
+        if (!svg) return null;
+        player = createShotPlayer(svg, handedScene(scene, hand), size);
+        players.set(hand, player);
+      }
+      return player;
+    };
+
+    playButton.addEventListener("click", () => {
+      const player = current();
+      player?.play((t) => (scrub.value = String(t / player.duration)));
+    });
+    scrub.addEventListener("input", () => {
+      const player = current();
+      if (!player) return;
+      player.stop();
+      player.seek(Number(scrub.value) * player.duration);
+    });
+
+    // Reduced motion: no playback, but the reader can still step through the swing.
+    const syncMotion = () => (playButton.hidden = reducedMotion.matches);
+    reducedMotion.addEventListener("change", syncMotion);
+    syncMotion();
+    controls.hidden = false;
+  }
+</script>

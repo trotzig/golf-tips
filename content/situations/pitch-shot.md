@@ -23,5 +23,6 @@ club_choice: Use a pitching, gap or sand wedge; control distance with swing leng
 drill: Learn three backswing lengths (waist, chest, shoulder) and note how far each one flies with each wedge.
 advanced: Control height with ball position — farther forward for higher, back for lower.
 related: [basic-chip, lob-shot, bump-and-run, greenside-bunker]
+viz: pitch-shot
 updated: 2026-10-31
 ---

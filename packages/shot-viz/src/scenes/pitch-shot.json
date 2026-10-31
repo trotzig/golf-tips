@@ -1,0 +1,33 @@
+{
+  "id": "pitch-shot",
+  "title": "Pitch shot",
+  "description": "Slightly narrow stance, ball in the middle and a matched backswing and follow-through.",
+  "golfer": {
+    "stanceWidth": "narrow",
+    "alignment": 4,
+    "ballPosition": 0,
+    "weightLead": 0.6
+  },
+  "swing": {
+    "club": "sand-wedge",
+    "length": "half",
+    "attackAngle": -4
+  },
+  "flight": {
+    "launchAngle": 32,
+    "ballSpeed": 18,
+    "spinRpm": 5500
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Higher than a chip, soft landing"
+    }
+  ],
+  "camera": "behind",
+  "tips": [
+    "Control distance with the length of the swing, not effort.",
+    "Turn your chest through the shot and keep accelerating.",
+    "Ball flies higher than a chip, lands softly and rolls a little."
+  ]
+}

@@ -23,6 +23,7 @@ mistakes:
   - Decelerating out of fear of hitting it too far.
 club_choice: Only choose the lob when you have to; a standard pitch or chip is usually the safer option.
 related: [pitch-shot, high-shot, greenside-bunker, tight-lie]
+viz: lob-shot
 updated: 2026-10-31
 ---
 

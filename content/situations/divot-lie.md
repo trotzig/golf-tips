@@ -22,6 +22,7 @@ mistakes:
 club_choice: Take the same club or one less and allow for extra roll; avoid fairway woods.
 advanced: In a sand-filled divot, treat it like a fairway bunker shot and pick the ball cleanly.
 related: [tight-lie, low-shot, fairway-bunker]
+viz: divot-lie
 updated: 2026-10-31
 ---
 

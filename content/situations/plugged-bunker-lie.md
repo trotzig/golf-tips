@@ -22,6 +22,7 @@ mistakes:
   - Holding back; this shot needs firm commitment.
 club_choice: A sand wedge or a pitching wedge; the sharper leading edge of a pitching wedge digs more easily.
 related: [greenside-bunker, fairway-bunker, after-a-bad-hole]
+viz: plugged-bunker-lie
 updated: 2026-10-31
 ---
 

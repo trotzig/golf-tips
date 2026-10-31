@@ -1,0 +1,29 @@
+{
+  "id": "divot-lie",
+  "title": "Divot lie",
+  "description": "Ball back, hands ahead and a steep, punchy swing to strike the ball before the ground.",
+  "golfer": {
+    "ballPosition": -0.35,
+    "weightLead": 0.6
+  },
+  "swing": {
+    "club": "7-iron",
+    "length": "three-quarter",
+    "attackAngle": -6
+  },
+  "flight": {
+    "trajectory": "low"
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Lower, more roll"
+    }
+  ],
+  "camera": "face-on",
+  "tips": [
+    "Play the ball back and keep your hands ahead of it.",
+    "Hit firmly down on the back of the ball; don't scoop.",
+    "Ball comes out lower and rolls more than normal."
+  ]
+}

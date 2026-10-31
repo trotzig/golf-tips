@@ -204,7 +204,8 @@ Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
 - Shot diagrams are rendered to static SVG at build time (React via `@astrojs/react`, with no
   `client:` directive, so no React ships to the browser). Both hands are rendered and the
   `data-hand` CSS shows one. Diagrams are inlined twice per page; keep scenes under the shape
-  budget tested in `packages/shot-viz`.
+  budget tested in `packages/shot-viz`. "Play swing" and the step-through slider use
+  `@shotbook/shot-viz/player` (plain DOM, no React or zod) to redraw the visible diagram.
 
 ## Visual regression
 

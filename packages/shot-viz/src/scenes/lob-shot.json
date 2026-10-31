@@ -1,0 +1,39 @@
+{
+  "id": "lob-shot",
+  "title": "Lob shot",
+  "description": "Open face, open stance, ball forward and a long, smooth swing that slides under the ball.",
+  "terrain": {
+    "lie": "rough",
+    "grass": "short",
+    "firmness": "soft"
+  },
+  "golfer": {
+    "stanceWidth": "wide",
+    "alignment": 10,
+    "ballPosition": 0.4,
+    "weightLead": 0.55
+  },
+  "swing": {
+    "club": "lob-wedge",
+    "length": "three-quarter",
+    "attackAngle": -2
+  },
+  "flight": {
+    "trajectory": "high",
+    "launchAngle": 45,
+    "ballSpeed": 14,
+    "spinRpm": 5000
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Up steeply, lands softly"
+    }
+  ],
+  "camera": "behind",
+  "tips": [
+    "Only try it from a lie with grass under the ball.",
+    "Swing longer than the distance seems to need and keep accelerating.",
+    "Ball climbs steeply and stops quickly, with little roll."
+  ]
+}

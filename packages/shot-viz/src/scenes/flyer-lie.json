@@ -1,0 +1,28 @@
+{
+  "id": "flyer-lie",
+  "title": "Flyer lie",
+  "description": "Grass trapped between club and ball takes spin off: the ball flies farther and won't stop.",
+  "terrain": {
+    "lie": "rough",
+    "grass": "medium"
+  },
+  "swing": {
+    "club": "7-iron"
+  },
+  "flight": {
+    "ballSpeed": 49,
+    "spinRpm": 3000
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Flies farther, won't stop"
+    }
+  ],
+  "camera": "behind",
+  "tips": [
+    "Take one club less, or the same club with a softer swing.",
+    "Ball flies farther than normal and runs on after landing.",
+    "Land it short of the flag and let it run up."
+  ]
+}

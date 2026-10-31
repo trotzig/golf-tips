@@ -21,5 +21,6 @@ mistakes:
   - Trying to lift the ball; the club needs to come down on it.
 club_choice: Near the green, use the putter or a lower-lofted club and let the ball roll rather than flying it.
 related: [divot-lie, basic-chip, bump-and-run, chip-or-putt]
+viz: tight-lie
 updated: 2026-10-31
 ---
