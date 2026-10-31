@@ -3,7 +3,15 @@
  * with React DOM <svg> on the web and react-native-svg in the app.
  */
 import { handedScene } from "../core/handedness.ts";
-import { cameraPreset, handed, handedCamera, projector, type Camera } from "../core/camera.ts";
+import {
+  blendCameras,
+  cameraPreset,
+  followCamera,
+  handed,
+  handedCamera,
+  projector,
+  type Camera,
+} from "../core/camera.ts";
 import { describeScene } from "../core/describe.ts";
 import { BALL_RADIUS } from "../core/clubs.ts";
 import {
@@ -16,7 +24,17 @@ import {
 import { BONES, poseGolfer, type Joint } from "../core/pose.ts";
 import type { CameraPreset, ShotScene } from "../core/schema.ts";
 import { groundHeight, groundNormal } from "../core/terrain.ts";
-import { add, DEG, dot, normalize, rotate, scale, sub, type Vec3 } from "../core/vec.ts";
+import {
+  add,
+  DEG,
+  dot,
+  normalize,
+  rotate,
+  scale,
+  smoothstep,
+  sub,
+  type Vec3,
+} from "../core/vec.ts";
 
 export interface Pt {
   x: number;
@@ -144,6 +162,9 @@ function samples(min: number, max: number, fine: number): number[] {
   return [...out].sort((a, b) => a - b);
 }
 
+/** Seconds after impact over which the golfer views pull back to show the whole flight. */
+export const FOLLOW_TIME = 1.2;
+
 /** Sideways exaggeration in the overhead view, so draws and fades read at a glance. */
 export const OVERHEAD_SIDEWAYS_STRETCH = 4;
 
@@ -155,7 +176,20 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
   const theme = { ...defaultTheme, ...options.theme };
   const flight = options.flight ?? computeFlight(scene);
   const ballTime = options.ballTime ?? Infinity;
-  const cam: Camera = handedCamera(scene, cameraPreset(view, flight));
+  const golferView = view === "face-on" || view === "down-the-line";
+  // While the ball flies, golfer views ease back to a wide shot of the whole flight. A still
+  // diagram (ballTime Infinity) keeps the close framing of the setup.
+  const follow =
+    golferView && Number.isFinite(ballTime) && ballTime > 0
+      ? smoothstep(ballTime / FOLLOW_TIME)
+      : 0;
+  const preset = cameraPreset(view, flight);
+  const cam: Camera = handedCamera(
+    scene,
+    follow > 0 && golferView
+      ? blendCameras(preset, followCamera(view, flight, width / height), follow)
+      : preset,
+  );
   const proj = projector(cam);
   const half = height / 2;
   // Overhead, a few metres of curve over 150 m is invisible at true scale, so stretch sideways.
@@ -168,20 +202,40 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
   };
   const focalPx = half / Math.tan((cam.fov * Math.PI) / 360);
   const shapes: Shape[] = [{ kind: "polygon", points: rect(width, height), fill: theme.sky }];
-  const golferView = view === "face-on" || view === "down-the-line";
   const reach = Math.max(25, Math.hypot(flight.rest[0], flight.rest[2]));
 
   // Ground: shaded quads, painted far to near. Shading shows the slope.
-  const xs = golferView ? samples(-6, 200, 0.5) : samples(-11, reach * 1.25, 1);
-  const zs = golferView ? samples(-40, 4.2, 0.5) : samples(-reach * 0.6, reach * 0.6, 1);
+  // The wide shot sees more ground: behind the golfer and out to where the ball stops.
+  const xs = golferView
+    ? samples(follow > 0 ? -12 : -6, Math.max(200, reach * 1.25), 0.5)
+    : samples(-11, reach * 1.25, 1);
+  const zs = golferView
+    ? samples(-40, follow > 0 ? 10 : 4.2, 0.5)
+    : samples(-reach * 0.6, reach * 0.6, 1);
   const light = normalize([-0.4, 1, 0.6]);
   const cells: { depth: number; shape: Shape }[] = [];
-  const ground = (x: number, z: number) => toScreen([x, groundHeight(scene.terrain, x, z), z]);
+  const groundAt = (x: number, z: number): Vec3 => [x, groundHeight(scene.terrain, x, z), z];
+  // Cut a ground cell off where it passes behind the camera, rather than dropping it: a camera
+  // pulled back over the ground stands on cells that reach past it.
+  const forward = normalize(sub(cam.target, cam.position));
+  const depthOf = (p: Vec3) => dot(sub(handed(scene, p), cam.position), forward);
+  const NEAR = 0.1;
+  const clipNear = (pts: Vec3[]): Vec3[] =>
+    pts.flatMap((a, i) => {
+      const b = pts[(i + 1) % pts.length]!;
+      const da = depthOf(a) - NEAR;
+      const db = depthOf(b) - NEAR;
+      const out: Vec3[] = da >= 0 ? [a] : [];
+      if (da >= 0 !== db >= 0) out.push(add(a, scale(sub(b, a), da / (da - db))));
+      return out;
+    });
   // A strip across the target line is drawn as few quads as possible: neighbouring cells with
   // the same shade lie in one plane, so they merge into one polygon. Keeps the SVG small.
   const pushQuad = (x0: number, x1: number, z0: number, z1: number, fill: string) => {
-    const corners = [ground(x0, z0), ground(x1, z0), ground(x1, z1), ground(x0, z1)];
-    if (corners.some((c) => c === null)) return;
+    let world = [groundAt(x0, z0), groundAt(x1, z0), groundAt(x1, z1), groundAt(x0, z1)];
+    if (world.some((p) => depthOf(p) < NEAR)) world = clipNear(world);
+    const corners = world.map(toScreen);
+    if (corners.length < 3 || corners.some((c) => c === null)) return;
     const pts = corners as (Pt & { depth: number })[];
     const outside =
       pts.every((p) => p.x < 0) ||
@@ -375,7 +429,8 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
   }));
 
   // Flight path and ball. Face-on the path passes between camera and golfer; in the other views
-  // it heads away from the camera, so it is painted behind the golfer.
+  // (and face-on once the camera has swung round behind) it heads away from the camera, so it is
+  // painted behind the golfer.
   const ball = ballTime < 0 ? flight.air[0]!.p : ballAt(flight, ballTime);
   const ballScreen = toScreen(ball);
   if (ballScreen) {
@@ -391,12 +446,10 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
       },
     });
   }
-  // Golfer views show the launch only (up to the apex); the descent would fold back over it.
-  const apexTime = flight.air.find((pt) => pt.p === flight.apex)?.t ?? flight.flightTime;
-  const pathEnd = golferView ? Math.min(ballTime, apexTime) : ballTime;
+  // The tracer follows the ball all the way, like a TV shot tracer.
   const pathScreen =
     ballTime > 0
-      ? flightPath(flight, pathEnd)
+      ? flightPath(flight, ballTime)
           .map(toScreen)
           .filter((p): p is Pt & { depth: number } => p !== null)
       : [];
@@ -409,13 +462,14 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
           strokeWidth: golferView ? 2.5 : 3,
         }
       : null;
-  if (pathShape && view !== "face-on") shapes.push(pathShape);
+  const pathInFront = view === "face-on" && follow < 0.5;
+  if (pathShape && !pathInFront) shapes.push(pathShape);
   items.sort((a, b) => b.depth - a.depth).forEach((i) => shapes.push(i.shape));
-  if (pathShape && view === "face-on") shapes.push(pathShape);
+  if (pathShape && pathInFront) shapes.push(pathShape);
 
   const flightNote = scene.annotations.find((a) => a.type === "ball-flight");
-  // Golfer views crop the flight at the apex, so the label only fits the ball-flight views.
-  if (flightNote?.label && !golferView && ballTime > flight.flightTime / 2) {
+  // Golfer views show the apex only once they have pulled back to the wide shot.
+  if (flightNote?.label && (!golferView || follow === 1) && ballTime > flight.flightTime / 2) {
     label(toScreen(flight.apex), flightNote.label, "middle", -10);
   }
   const shoulders = scene.annotations.find((a) => a.type === "shoulder-line");

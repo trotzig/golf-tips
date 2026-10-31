@@ -1,6 +1,6 @@
 import type { FlightResult } from "./flight.ts";
 import type { CameraPreset, ShotScene } from "./schema.ts";
-import { cross, dot, normalize, sub, type Vec3 } from "./vec.ts";
+import { add, clamp, cross, dot, lerp, mix, normalize, sub, type Vec3 } from "./vec.ts";
 
 export interface Camera {
   position: Vec3;
@@ -32,6 +32,73 @@ export function cameraPreset(preset: CameraPreset, flight: FlightResult): Camera
       return { position: [mid[0], reach * 1.15, mid[2]], target: mid, up: [1, 0, 0], fov: 50 };
     }
   }
+}
+
+/** Where each golfer view pulls back to once the ball is in the air (right-handed frame). */
+const FOLLOW_POSITION: Record<"face-on" | "down-the-line", Vec3> = {
+  // Behind and to the side of the golfer: a TV-style three-quarter view, so a full shot fits.
+  "face-on": [-7, 2.4, 6.5],
+  "down-the-line": [-9, 2, -0.35],
+};
+
+/**
+ * The wide shot a golfer view moves to during the flight: from a point further back, aimed and
+ * zoomed so the golfer and the whole flight (air and roll) fit the frame. `aspect` is
+ * width / height of the view.
+ */
+export function followCamera(
+  preset: "face-on" | "down-the-line",
+  flight: FlightResult,
+  aspect = 4 / 3,
+): Camera {
+  const position = FOLLOW_POSITION[preset];
+  const points: Vec3[] = [
+    [-0.4, 0, -1.1],
+    [0.4, 0, -1.1],
+    [0, 1.9, -0.8],
+    [0, 0, 0],
+    ...flight.air.filter((_, i) => i % 10 === 0).map((pt) => pt.p),
+    flight.apex,
+    flight.landing,
+    flight.rest,
+  ];
+  // Aim at the middle of the points' spread in yaw and pitch, then widen until they all fit.
+  const angles = points.map((p) => {
+    const d = sub(p, position);
+    return { yaw: Math.atan2(d[2], d[0]), pitch: Math.atan2(d[1], Math.hypot(d[0], d[2])) };
+  });
+  const mid = (k: "yaw" | "pitch") => {
+    const vs = angles.map((a) => a[k]);
+    return (Math.min(...vs) + Math.max(...vs)) / 2;
+  };
+  const yaw = mid("yaw");
+  const pitch = mid("pitch");
+  const dir: Vec3 = [
+    Math.cos(pitch) * Math.cos(yaw),
+    Math.sin(pitch),
+    Math.cos(pitch) * Math.sin(yaw),
+  ];
+  const cam: Camera = { position, target: add(position, dir), up: [0, 1, 0], fov: 90 };
+  const proj = projector(cam);
+  let extent = 0;
+  for (const p of points) {
+    const s = proj.project(p);
+    if (s) extent = Math.max(extent, Math.abs(s.y), Math.abs(s.x) / aspect);
+  }
+  // The projector above has a 90° fov, so screen units are tangents of the half-angle.
+  const fov = (2 * Math.atan(extent * 1.12) * 180) / Math.PI;
+  return { ...cam, fov: clamp(fov, 30, 75) };
+}
+
+/** A camera part-way from `a` to `b` (k from 0 to 1), turning smoothly rather than cutting. */
+export function blendCameras(a: Camera, b: Camera, k: number): Camera {
+  if (k <= 0) return a;
+  if (k >= 1) return b;
+  const position = lerp(a.position, b.position, k);
+  const dir = normalize(
+    lerp(normalize(sub(a.target, a.position)), normalize(sub(b.target, b.position)), k),
+  );
+  return { position, target: add(position, dir), up: a.up, fov: mix(a.fov, b.fov, k) };
 }
 
 /** Mirror a right-handed world point for a left-handed golfer (z → −z). */
