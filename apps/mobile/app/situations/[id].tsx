@@ -1,5 +1,4 @@
-import { getCategory } from "@shotbook/content";
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { HeartIcon } from "../../src/components/icons";
 import { ShotViz } from "../../src/components/ShotViz";
@@ -27,21 +26,12 @@ export default function SituationScreen() {
   const s = getSituation(id);
   if (!s) return <Stack.Screen options={{ title: "Not found" }} />;
 
-  const category = getCategory(s.category);
   const scene = sceneFor(s);
   const related = s.related.flatMap((r) => getSituation(r) ?? []);
   const favourite = isFavourite(s.id);
 
   return (
     <Screen>
-      <Pressable
-        onPress={() => router.push(`/category/${category.id}`)}
-        accessibilityRole="link"
-        style={styles.breadcrumb}
-      >
-        <Text style={[styles.breadcrumbText, { color: c.accent }]}>← {category.title}</Text>
-      </Pressable>
-
       <View style={{ gap: 8 }}>
         <PageTitle>{handed(s.title)}</PageTitle>
         <Body style={{ fontSize: 20, lineHeight: 27 }}>{handed(s.summary)}</Body>
@@ -130,8 +120,6 @@ export default function SituationScreen() {
 }
 
 const styles = StyleSheet.create({
-  breadcrumb: { alignSelf: "flex-start", paddingVertical: 4 },
-  breadcrumbText: { fontFamily: fonts.medium, fontSize: 16, textDecorationLine: "underline" },
   save: {
     alignSelf: "flex-start",
     flexDirection: "row",
