@@ -266,5 +266,8 @@ and Settings, plus category, tag and situation screens that mirror the site.
   The app is linked to the Expo project `@shotbooks-team/shotbook` (`owner` and
   `extra.eas.projectId` in `app.json`); `eas.json` has development (simulator), preview and
   production profiles. **Ask the owner** before running cloud builds or adding store credentials.
-  Day to day, run the app in Expo Go (`pnpm --filter @shotbook/mobile ios`). Bundle id
+  Day to day, run the app in Expo Go (`pnpm --filter @shotbook/mobile ios`). A development build
+  (`eas build --profile development --platform ios`, a simulator `.app`; content is bundled on
+  EAS by the `eas-build-post-install` hook) loads JS from `pnpm --filter @shotbook/mobile start
+  --dev-client`. Bundle id
   `app.shotbook.mobile` is a placeholder until the product name is final.
