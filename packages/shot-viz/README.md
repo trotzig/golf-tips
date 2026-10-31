@@ -80,7 +80,7 @@ Conventions:
   not numbers ("Ball tends to carry shorter but have a longer roll-out"). Shown next to the
   diagram and appended to its description. The flight maths stays internal: it shapes the
   drawing but its numbers are not shown to readers.
-- Annotations: `target-line`, `aim-line`, `shoulder-line`, `slope-line`, `ball-flight`, `arrow`.
+- Annotations: `target-line`, `aim-line`, `start-line` (where the ball starts), `shoulder-line`, `slope-line`, `ball-flight`, `arrow`.
 
 ## The maths (pure TypeScript, tested)
 
