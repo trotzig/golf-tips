@@ -1,6 +1,7 @@
 import { useId, useMemo, type CSSProperties } from "react";
 import { shapesMarkup } from "../2d/markup.ts";
 import { buildShapes2D, type Shapes2DOptions } from "../2d/shapes.ts";
+import { describeScene } from "../core/describe.ts";
 import type { ShotScene } from "../core/schema.ts";
 
 export interface ShotDiagramProps extends Shapes2DOptions {
@@ -30,6 +31,10 @@ export function ShotDiagram({
     [scene, view, phase, ballTime, width, height, theme, flight],
   );
   const markup = useMemo(() => ({ __html: shapesMarkup(out.shapes) }), [out]);
+  // A description that names a wind speed comes in both units for the page's `data-wind` CSS.
+  // `<desc>` is never rendered, so it would read both: an invisible `<text>` reads the shown one.
+  const metric = useMemo(() => describeScene(scene, out.view, "m/s"), [scene, out.view]);
+  const descId = `${id}-desc`;
   return (
     <svg
       viewBox={`0 0 ${out.width} ${out.height}`}
@@ -39,7 +44,14 @@ export function ShotDiagram({
       style={{ display: "block", width: "100%", height: "auto", ...style }}
     >
       <title id={`${id}-title`}>{out.title}</title>
-      <desc id={`${id}-desc`}>{description ?? out.description}</desc>
+      {description !== undefined || metric === out.description ? (
+        <desc id={descId}>{description ?? out.description}</desc>
+      ) : (
+        <text id={descId} opacity={0} fontSize={1}>
+          <tspan className="wind-mph">{out.description}</tspan>
+          <tspan className="wind-ms">{metric}</tspan>
+        </text>
+      )}
       <g data-shapes="" dangerouslySetInnerHTML={markup} />
     </svg>
   );

@@ -24,6 +24,7 @@ import {
 import { BONES, poseGolfer, type Joint } from "../core/pose.ts";
 import type { CameraPreset, ShotScene } from "../core/schema.ts";
 import { groundHeight, groundNormal } from "../core/terrain.ts";
+import { windSpeedText, type WindUnit } from "../core/units.ts";
 import {
   add,
   DEG,
@@ -72,6 +73,8 @@ export type Shape =
       weight?: "normal" | "bold";
       /** Outline colour drawn behind the text for legibility in sunlight. */
       halo?: string;
+      /** The text in each wind unit, when it shows a wind speed (`text` is the mph one). */
+      wind?: Record<WindUnit, string>;
     };
 
 export interface Theme {
@@ -292,10 +295,11 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
     text: string,
     anchor: "start" | "middle" | "end" = "start",
     dy = 0,
+    wind?: Record<WindUnit, string>,
   ) => {
     if (!at) return;
     // Keep labels inside the frame; a rough width estimate is enough to flip the anchor.
-    const w = text.length * 7.2;
+    const w = Math.max(text.length, ...Object.values(wind ?? {}).map((t) => t.length)) * 7.2;
     let x = Math.min(width - 6, Math.max(6, at.x));
     if (anchor === "start" && x + w > width - 6) anchor = "end";
     if (anchor === "end" && x - w < 6) anchor = "start";
@@ -321,6 +325,7 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
       anchor,
       weight: "bold",
       halo: theme.halo,
+      ...(wind && { wind }),
     });
   };
   const line = (pts: Vec3[], stroke: string, w: number, dash?: number[], arrow = false): Pt[] => {
@@ -540,7 +545,7 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
     const origin: Vec3 = golferView ? [0, 0, 0] : [reach * 0.3, 0, 0];
     const a = toScreen(origin);
     const b = toScreen(add(origin, scale(w, golferView ? 1 : reach * 0.05)));
-    const mph = Math.round(wind.speed * 2.237);
+    const speed = windSpeedText(wind.speed);
     let dir = a && b ? normalize([b.x - a.x, b.y - a.y, 0]) : ([0, 0, 0] as Vec3);
     const flat = Math.hypot(dir[0], dir[1]) < 0.5 || !a || !b;
     const anchor: Pt = { x: 54, y: 34 };
@@ -557,7 +562,10 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
         arrow: true,
       });
     }
-    label({ x: anchor.x, y: anchor.y + 30 }, `Wind ${mph} mph`, "middle");
+    label({ x: anchor.x, y: anchor.y + 30 }, `Wind ${speed.mph}`, "middle", 0, {
+      mph: `Wind ${speed.mph}`,
+      "m/s": `Wind ${speed["m/s"]}`,
+    });
   }
 
   shapes.push(...labels);

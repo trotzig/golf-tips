@@ -16,6 +16,20 @@ describe("SVG elements (react-native-svg)", () => {
     });
   });
 
+  it("shows wind speeds in the requested unit", () => {
+    const shape = {
+      kind: "text",
+      at: { x: 0, y: 0 },
+      text: "Wind 20 mph",
+      size: 12,
+      fill: "#000",
+      anchor: "start",
+      wind: { mph: "Wind 20 mph", "m/s": "Wind 9 m/s" },
+    } as const;
+    expect(shapeElements(shape)[0]).toMatchObject({ text: "Wind 20 mph" });
+    expect(shapeElements(shape, "m/s")[0]).toMatchObject({ text: "Wind 9 m/s" });
+  });
+
   it("draws a text halo as a stroked copy underneath", () => {
     const els = shapeElements({
       kind: "text",

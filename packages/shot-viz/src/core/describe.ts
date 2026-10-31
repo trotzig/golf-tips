@@ -2,6 +2,7 @@ import { CLUB_SPECS } from "./clubs.ts";
 import type { CameraPreset, ShotScene } from "./schema.ts";
 import { handedScene } from "./handedness.ts";
 import { deriveSetup } from "./setup.ts";
+import { windSpeedText, type WindUnit } from "./units.ts";
 
 const VIEW_NAMES: Record<CameraPreset, string> = {
   "face-on": "Face-on view",
@@ -26,9 +27,13 @@ function slopeText(scene: ShotScene): string {
 
 /**
  * Plain-language description of a scene for alt text and screen readers: the setup, then the
- * scene's tips. Directions are given for the golfer's handedness.
+ * scene's tips. Directions are given for the golfer's handedness, wind speed in `wind` units.
  */
-export function describeScene(input: ShotScene, view?: CameraPreset): string {
+export function describeScene(
+  input: ShotScene,
+  view?: CameraPreset,
+  wind: WindUnit = "mph",
+): string {
   const scene = handedScene(input);
   const setup = deriveSetup(scene);
   const club = CLUB_SPECS[scene.swing.club].label.toLowerCase();
@@ -55,15 +60,15 @@ export function describeScene(input: ShotScene, view?: CameraPreset): string {
     const side = scene.golfer.aim * mirror > 0 ? "right" : "left";
     sentences.push(`Aim is ${Math.abs(scene.golfer.aim)}° ${side} of the target.`);
   }
-  const wind = scene.flight.wind;
-  if (wind && wind.speed > 0) {
+  const w = scene.flight.wind;
+  if (w && w.speed > 0) {
     const from =
-      wind.from < 45 || wind.from > 315
+      w.from < 45 || w.from > 315
         ? "into the golfer's face"
-        : wind.from > 135 && wind.from < 225
+        : w.from > 135 && w.from < 225
           ? "from behind"
-          : `across from the ${(wind.from < 180 ? 1 : -1) * mirror > 0 ? "right" : "left"}`;
-    sentences.push(`Wind ${Math.round(wind.speed * 2.237)} mph ${from}.`);
+          : `across from the ${(w.from < 180 ? 1 : -1) * mirror > 0 ? "right" : "left"}`;
+    sentences.push(`Wind ${windSpeedText(w.speed)[wind]} ${from}.`);
   }
   return [...sentences, ...scene.tips].join(" ");
 }

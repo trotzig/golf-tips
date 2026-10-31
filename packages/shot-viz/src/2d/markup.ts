@@ -16,6 +16,12 @@ function attrs(values: Record<string, string | number | undefined>): string {
     .join("");
 }
 
+// Text in every wind unit, for the page's `data-wind` CSS to show one (`.wind-mph`, `.wind-ms`).
+const textMarkup = (shape: Extract<Shape, { kind: "text" }>) =>
+  shape.wind
+    ? `<tspan class="wind-mph">${escape(shape.wind.mph)}</tspan><tspan class="wind-ms">${escape(shape.wind["m/s"])}</tspan>`
+    : escape(shape.text);
+
 export function shapeMarkup(shape: Shape): string {
   switch (shape.kind) {
     case "polygon":
@@ -65,7 +71,7 @@ export function shapeMarkup(shape: Shape): string {
         "stroke-width": shape.halo ? 3.5 : undefined,
         "stroke-linejoin": "round",
         "paint-order": "stroke",
-      })}>${escape(shape.text)}</text>`;
+      })}>${textMarkup(shape)}</text>`;
   }
 }
 

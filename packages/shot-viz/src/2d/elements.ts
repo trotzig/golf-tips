@@ -1,3 +1,4 @@
+import type { WindUnit } from "../core/units.ts";
 import { arrowHead, type Pt, type Shape } from "./shapes.ts";
 
 // 2D shapes as a list of SVG elements with camelCase props, for renderers that build an element
@@ -24,7 +25,7 @@ function clean(
   return out;
 }
 
-export function shapeElements(shape: Shape): SvgElement[] {
+export function shapeElements(shape: Shape, wind: WindUnit = "mph"): SvgElement[] {
   switch (shape.kind) {
     case "polygon":
       return [
@@ -80,6 +81,7 @@ export function shapeElements(shape: Shape): SvgElement[] {
         },
       ];
     case "text": {
+      const text = shape.wind?.[wind] ?? shape.text;
       const base = {
         x: shape.at.x,
         y: shape.at.y,
@@ -90,7 +92,7 @@ export function shapeElements(shape: Shape): SvgElement[] {
       const fill: SvgElement = {
         tag: "text",
         props: clean({ ...base, fill: shape.fill }),
-        text: shape.text,
+        text,
       };
       if (!shape.halo) return [fill];
       // No paint-order in react-native-svg: draw the halo as a stroked copy underneath.
@@ -103,14 +105,14 @@ export function shapeElements(shape: Shape): SvgElement[] {
           strokeWidth: 3.5,
           strokeLinejoin: "round",
         }),
-        text: shape.text,
+        text,
       };
       return [halo, fill];
     }
   }
 }
 
-/** All shapes, painted in order, as SVG elements. */
-export function shapesElements(shapes: Shape[]): SvgElement[] {
-  return shapes.flatMap(shapeElements);
+/** All shapes, painted in order, as SVG elements, with wind speeds in `wind` units. */
+export function shapesElements(shapes: Shape[], wind: WindUnit = "mph"): SvgElement[] {
+  return shapes.flatMap((shape) => shapeElements(shape, wind));
 }

@@ -9,6 +9,7 @@ export * from "./core/pose.ts";
 export * from "./core/camera.ts";
 export * from "./core/describe.ts";
 export * from "./core/handedness.ts";
+export * from "./core/units.ts";
 export * from "./core/timeline.ts";
 export * from "./2d/shapes.ts";
 export * from "./2d/markup.ts";

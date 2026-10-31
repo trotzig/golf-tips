@@ -121,5 +121,17 @@ describe("2D shapes", () => {
     expect(text).toContain(scene.tips[0]);
     const wind = describeScene(exampleScenes["into-the-wind"]!);
     expect(wind).toMatch(/Wind 20 mph into the golfer's face/);
+    expect(describeScene(exampleScenes["into-the-wind"]!, undefined, "m/s")).toMatch(
+      /Wind 9 m\/s into the golfer's face/,
+    );
+  });
+
+  it("labels the wind speed in both units", () => {
+    const { shapes } = buildShapes2D(exampleScenes["into-the-wind"]!);
+    const label = shapes.find((s) => s.kind === "text" && s.wind);
+    expect(label).toMatchObject({
+      text: "Wind 20 mph",
+      wind: { mph: "Wind 20 mph", "m/s": "Wind 9 m/s" },
+    });
   });
 });
