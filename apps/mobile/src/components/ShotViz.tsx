@@ -22,7 +22,8 @@ function useReduceMotion(): boolean | null {
 
 /**
  * Shot diagram for the reader's hand and golfer, with the tips. It plays the swing once when it
- * opens (and after a hand or golfer switch); one button pauses, resumes and plays it again.
+ * opens (and after a hand or golfer switch); one button pauses, resumes and plays it again. With
+ * reduced motion it waits for the button.
  */
 export function ShotViz({ scene: input }: { scene: ShotScene }) {
   const c = useColors();
@@ -47,23 +48,21 @@ export function ShotViz({ scene: input }: { scene: ShotScene }) {
   return (
     <View style={[ui.card, cardStyle(c), styles.figure]}>
       <ShotDiagram scene={scene} wind={wind} {...SIZE} {...player.frame} />
-      {reduceMotion === false && (
-        <View style={[styles.controls, { backgroundColor: c.surface, borderColor: c.line }]}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={label}
-            onPress={player.playing ? player.pause : player.play}
-            style={({ pressed }) => [
-              styles.play,
-              { backgroundColor: pressed ? c.accentStrong : c.accent },
-            ]}
-          >
-            <Text style={[styles.playText, { color: c.onAccent }]}>
-              {icon} {label}
-            </Text>
-          </Pressable>
-        </View>
-      )}
+      <View style={[styles.controls, { backgroundColor: c.surface, borderColor: c.line }]}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={label}
+          onPress={player.playing ? player.pause : player.play}
+          style={({ pressed }) => [
+            styles.play,
+            { backgroundColor: pressed ? c.accentStrong : c.accent },
+          ]}
+        >
+          <Text style={[styles.playText, { color: c.onAccent }]}>
+            {icon} {label}
+          </Text>
+        </Pressable>
+      </View>
       {scene.tips.length > 0 && (
         <View style={styles.tips}>
           <Bullets items={scene.tips} />

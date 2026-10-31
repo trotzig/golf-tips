@@ -133,17 +133,9 @@ const variants = (["right", "left"] as const).flatMap((hand) =>
       { threshold: 0.6 },
     );
 
-    // Reduced motion: no playback; the still diagram already shows the whole shot.
-    const syncMotion = () => {
-      controls.hidden = reducedMotion.matches;
-      if (reducedMotion.matches) {
-        autoplay.disconnect();
-        if ([...players.values()].some((player) => player.playing)) show("paused");
-        for (const player of players.values()) player.pause();
-      }
-    };
-    reducedMotion.addEventListener("change", syncMotion);
-    syncMotion();
+    // Reduced motion: no autoplay, but the reader can still play it with the button.
+    reducedMotion.addEventListener("change", () => reducedMotion.matches && autoplay.disconnect());
     if (!reducedMotion.matches) autoplay.observe(figure);
+    controls.hidden = false;
   }
 </script>

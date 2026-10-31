@@ -242,7 +242,7 @@ in the desktop app), which compares against the classic swing and copies the res
   diagram plays once when it scrolls into view, and one button pauses, resumes and plays it again
   (no scrubbing: the clips are short and show outcomes, not swing technique). It uses
   `@shotbook/shot-viz/player` (plain DOM, no React or zod) to redraw the visible diagram. With
-  reduced motion it stays a still diagram, with no button.
+  reduced motion it doesn't play on its own; the reader can still press Play.
 
 ## Visual regression
 
@@ -286,8 +286,8 @@ and Settings, plus category, tag and situation screens that mirror the site.
   goes through `useHanded()`, which resolves directions and units.
 - **Diagrams** come from `@shotbook/shot-viz/native`: `ShotDiagram` (react-native-svg, drawn from
   the same shapes as the web via `shapesElements`) and `useShotPlayer` (plays once on open, then
-  one Pause / Play / Play again button, on the shared timeline). With reduced motion it stays still,
-  with no button.
+  one Pause / Play / Play again button, on the shared timeline). With reduced motion it waits for
+  Play.
 - **Look:** colour tokens in `src/theme.ts` copy `global.css` (light and dark follow the system);
   Jost via `@expo-google-fonts/jost`, Georgia (serif on Android) for page titles.
 - Pure helpers live in `src/lib/` and are unit-tested in `test/` (no React Native in vitest).
