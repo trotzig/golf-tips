@@ -176,36 +176,50 @@ export function buildShapes2D(input: ShotScene, options: Shapes2DOptions = {}): 
   const zs = golferView ? samples(-40, 4.2, 0.5) : samples(-reach * 0.6, reach * 0.6, 1);
   const light = normalize([-0.4, 1, 0.6]);
   const cells: { depth: number; shape: Shape }[] = [];
+  const ground = (x: number, z: number) => toScreen([x, groundHeight(scene.terrain, x, z), z]);
+  // A strip across the target line is drawn as few quads as possible: neighbouring cells with
+  // the same shade lie in one plane, so they merge into one polygon. Keeps the SVG small.
+  const pushQuad = (x0: number, x1: number, z0: number, z1: number, fill: string) => {
+    const corners = [ground(x0, z0), ground(x1, z0), ground(x1, z1), ground(x0, z1)];
+    if (corners.some((c) => c === null)) return;
+    const pts = corners as (Pt & { depth: number })[];
+    const outside =
+      pts.every((p) => p.x < 0) ||
+      pts.every((p) => p.x > width) ||
+      pts.every((p) => p.y < 0) ||
+      pts.every((p) => p.y > height);
+    if (outside || polygonArea(pts) < 0.5) return;
+    cells.push({
+      depth: Math.max(...pts.map((p) => p.depth)),
+      shape: {
+        kind: "polygon",
+        points: pts.map(({ x, y }) => ({ x, y })),
+        fill,
+        stroke: fill,
+        strokeWidth: 0.6,
+      },
+    });
+  };
   for (let i = 0; i < xs.length - 1; i++) {
+    const x0 = xs[i]!,
+      x1 = xs[i + 1]!;
+    let run: { z0: number; z1: number; fill: string } | null = null;
     for (let j = 0; j < zs.length - 1; j++) {
-      const x0 = xs[i]!,
-        x1 = xs[i + 1]!,
-        z0 = zs[j]!,
+      const z0 = zs[j]!,
         z1 = zs[j + 1]!;
-      const corners = [
-        [x0, z0],
-        [x1, z0],
-        [x1, z1],
-        [x0, z1],
-      ].map(([x, z]) => toScreen([x!, groundHeight(scene.terrain, x!, z!), z!]));
-      if (corners.some((c) => c === null)) continue;
       const cx = (x0 + x1) / 2,
         cz = (z0 + z1) / 2;
       const n = groundNormal(scene.terrain, cx, cz);
       const base = lieColour(scene, theme, cx, cz);
       const fill = shade(base, 0.72 + 0.32 * Math.max(0, dot(n, light)));
-      const pts = corners as (Pt & { depth: number })[];
-      cells.push({
-        depth: Math.max(...pts.map((p) => p.depth)),
-        shape: {
-          kind: "polygon",
-          points: pts.map(({ x, y }) => ({ x, y })),
-          fill,
-          stroke: fill,
-          strokeWidth: 0.6,
-        },
-      });
+      if (run && run.fill === fill) {
+        run.z1 = z1;
+        continue;
+      }
+      if (run) pushQuad(x0, x1, run.z0, run.z1, run.fill);
+      run = { z0, z1, fill };
     }
+    if (run) pushQuad(x0, x1, run.z0, run.z1, run.fill);
   }
   cells.sort((a, b) => b.depth - a.depth).forEach((c) => shapes.push(c.shape));
 
@@ -487,4 +501,13 @@ export function arrowHead(points: Pt[], size = 10): Pt[] | null {
     { x: b.x - ux * size * 0.6 - uy * size * 0.45, y: b.y - uy * size * 0.6 + ux * size * 0.45 },
     { x: b.x - ux * size * 0.6 + uy * size * 0.45, y: b.y - uy * size * 0.6 - ux * size * 0.45 },
   ];
+}
+
+function polygonArea(points: Pt[]): number {
+  let sum = 0;
+  points.forEach((p, i) => {
+    const q = points[(i + 1) % points.length]!;
+    sum += p.x * q.y - q.x * p.y;
+  });
+  return Math.abs(sum) / 2;
 }

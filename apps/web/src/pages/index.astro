@@ -1,10 +1,21 @@
 ---
 import { CATEGORIES } from "@shotbook/content";
+import Handed from "../components/Handed.astro";
+import SearchBox from "../components/SearchBox.astro";
 import SituationList from "../components/SituationList.astro";
 import Base from "../layouts/Base.astro";
-import { getSituations, href, situationsIn } from "../lib/content";
+import {
+  commonSituations,
+  getSituations,
+  getTags,
+  href,
+  situationsIn,
+  tagLabel,
+} from "../lib/content";
 
 const situations = getSituations();
+const common = commonSituations();
+const tags = getTags().slice(0, 12);
 ---
 
 <Base>
@@ -13,6 +24,28 @@ const situations = getSituations();
     Short, practical advice for awkward lies, tricky conditions and nervy moments — readable between
     shots.
   </p>
+
+  <div class="mt-6">
+    <SearchBox />
+  </div>
+
+  {common.length > 0 && (
+    <>
+      <h2 class="mt-8 mb-3 text-xl font-bold">Common situations</h2>
+      <ul class="flex flex-wrap gap-2">
+        {common.map((s) => (
+          <li>
+            <a
+              href={href(`situations/${s.id}/`)}
+              class="inline-flex min-h-11 items-center rounded-full border border-fairway-600 bg-white px-4 font-medium text-fairway-800 hover:bg-fairway-50"
+            >
+              <Handed text={s.title} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </>
+  )}
 
   <h2 class="mt-8 mb-3 text-xl font-bold">Browse by category</h2>
   <ul class="grid grid-cols-2 gap-3">
@@ -34,7 +67,31 @@ const situations = getSituations();
     })}
   </ul>
 
-  <h2 class="mt-8 mb-3 text-xl font-bold">All situations</h2>
+  <h2 class="mt-8 mb-3 text-xl font-bold">Browse by tag</h2>
+  <ul class="flex flex-wrap gap-2">
+    {tags.map(({ tag }) => (
+      <li>
+        <a
+          href={href(`tags/${tag}/`)}
+          class="inline-flex min-h-11 items-center rounded-full bg-stone-200 px-4 font-medium text-stone-800 hover:bg-stone-300"
+        >
+          {tagLabel(tag)}
+        </a>
+      </li>
+    ))}
+    <li>
+      <a
+        href={href("tags/")}
+        class="inline-flex min-h-11 items-center px-2 font-medium text-fairway-700 underline"
+      >
+        All tags
+      </a>
+    </li>
+  </ul>
+
+  <h2 id="all" class="mt-8 mb-3 text-xl font-bold">
+    All situations
+  </h2>
   {situations.length > 0 ? (
     <SituationList situations={situations} />
   ) : (

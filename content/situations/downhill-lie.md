@@ -24,6 +24,7 @@ club_choice: Take one club less, or the same club with a softer swing — the sl
 drill: Make practice swings where the club brushes the grass after the ball spot, down the slope.
 advanced: Expect the ball to come out low and hot near greens; land it shorter than usual and let it run.
 related: [uphill-lie, ball-above-feet, ball-below-feet, tight-lie]
+viz: downhill-lie
 updated: 2026-10-31
 ---
 

@@ -22,5 +22,6 @@ mistakes:
   - Swinging hard and toppling forward down the slope.
 club_choice: Take one club more — the shorter, balanced swing loses some distance.
 related: [ball-above-feet, uphill-lie, downhill-lie, intentional-fade]
+viz: ball-below-feet
 updated: 2026-10-31
 ---

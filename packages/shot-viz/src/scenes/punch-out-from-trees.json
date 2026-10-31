@@ -1,0 +1,33 @@
+{
+  "id": "punch-out-from-trees",
+  "title": "Punching out from the trees",
+  "description": "Ball back, hands ahead and a short swing keep the ball low, under the branches and back to the fairway.",
+  "terrain": {
+    "lie": "rough",
+    "grass": "medium"
+  },
+  "golfer": {
+    "ballPosition": -0.5,
+    "weightLead": 0.6
+  },
+  "swing": {
+    "club": "7-iron",
+    "length": "half",
+    "attackAngle": -5
+  },
+  "flight": {
+    "trajectory": "low"
+  },
+  "annotations": [
+    {
+      "type": "ball-flight",
+      "label": "Low, under the branches"
+    }
+  ],
+  "camera": "behind",
+  "tips": [
+    "Pick the widest, lowest gap back to the fairway, even if it's sideways.",
+    "Ball tends to come out low and run a long way after it lands.",
+    "Swing gently: the aim is the fairway, not the green."
+  ]
+}

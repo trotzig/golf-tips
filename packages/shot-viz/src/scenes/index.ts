@@ -1,13 +1,17 @@
 import { parseScene, type ShotScene, type ShotSceneInput } from "../core/schema.ts";
 import ballAboveFeet from "./ball-above-feet.json";
 import ballBelowFeet from "./ball-below-feet.json";
+import basicChip from "./basic-chip.json";
+import crosswind from "./crosswind.json";
 import downhillLie from "./downhill-lie.json";
 import flatLie from "./flat-lie.json";
+import greensideBunker from "./greenside-bunker.json";
 import highShot from "./high-shot.json";
 import intentionalDraw from "./intentional-draw.json";
 import intentionalFade from "./intentional-fade.json";
 import intoTheWind from "./into-the-wind.json";
 import lowShot from "./low-shot.json";
+import punchOutFromTrees from "./punch-out-from-trees.json";
 import uphillLie from "./uphill-lie.json";
 
 /** Example scenes as authored (JSON), in display order. */
@@ -18,10 +22,14 @@ export const exampleSceneInputs: ShotSceneInput[] = [
   ballAboveFeet,
   ballBelowFeet,
   intoTheWind,
+  crosswind,
   highShot,
   lowShot,
   intentionalFade,
   intentionalDraw,
+  punchOutFromTrees,
+  basicChip,
+  greensideBunker,
 ] as ShotSceneInput[];
 
 /** Example scenes parsed with defaults, keyed by id. */

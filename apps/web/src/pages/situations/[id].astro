@@ -4,9 +4,9 @@ import { marked } from "marked";
 import Bullets from "../../components/Bullets.astro";
 import Card from "../../components/Card.astro";
 import Handed from "../../components/Handed.astro";
-import VizSlot from "../../components/VizSlot.astro";
+import ShotViz from "../../components/ShotViz.astro";
 import Base from "../../layouts/Base.astro";
-import { getSituations, href } from "../../lib/content";
+import { getSituations, href, tagLabel } from "../../lib/content";
 import { handedMarkdown } from "../../lib/handed";
 
 export function getStaticPaths() {
@@ -55,7 +55,7 @@ const levelLabel = { all: "All levels", beginner: "Beginner", advanced: "Advance
       </ul>
     </header>
 
-    <VizSlot viz={s.viz} />
+    <ShotViz viz={s.viz} />
 
     {s.setup && (
       <Card title="Setup">
@@ -108,13 +108,29 @@ const levelLabel = { all: "All levels", beginner: "Beginner", advanced: "Advance
                 href={href(`situations/${r.id}/`)}
                 class="inline-block rounded-full border border-fairway-600 bg-white px-4 py-2 font-medium text-fairway-800 hover:bg-fairway-50"
               >
-                {r.title}
+                <Handed text={r.title} />
               </a>
             </li>
           ))}
         </ul>
       </section>
     )}
+
+    <section>
+      <h2 class="mb-2 text-sm font-bold uppercase tracking-wider text-stone-700">Tags</h2>
+      <ul class="flex flex-wrap gap-2">
+        {s.tags.map((tag) => (
+          <li>
+            <a
+              href={href(`tags/${tag}/`)}
+              class="inline-block rounded-full bg-stone-200 px-4 py-2 font-medium text-stone-800 hover:bg-stone-300"
+            >
+              {tagLabel(tag)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
 
     <footer class="text-sm text-stone-600">
       Updated <time datetime={s.updated}>{s.updated}</time>

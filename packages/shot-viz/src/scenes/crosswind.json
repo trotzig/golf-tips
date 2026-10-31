@@ -1,0 +1,37 @@
+{
+  "id": "crosswind",
+  "title": "Crosswind",
+  "description": "Aim upwind and let the wind drift the ball back to the target.",
+  "golfer": {
+    "aim": 6
+  },
+  "swing": {
+    "club": "7-iron"
+  },
+  "flight": {
+    "wind": {
+      "speed": 6,
+      "from": 90
+    }
+  },
+  "annotations": [
+    {
+      "type": "aim-line",
+      "label": "Aim upwind"
+    },
+    {
+      "type": "target-line",
+      "label": "Target"
+    },
+    {
+      "type": "ball-flight",
+      "label": "Drifts back with the wind"
+    }
+  ],
+  "camera": "overhead",
+  "tips": [
+    "A wind from the {right} drifts the ball {left}: aim upwind and let it drift back.",
+    "Expect it to keep running downwind after it lands.",
+    "Higher shots and longer clubs drift more; a lower flight holds its line."
+  ]
+}

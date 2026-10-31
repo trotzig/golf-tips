@@ -24,6 +24,7 @@ club_choice: A fade flies a little shorter and higher; consider one club more.
 drill: Place an alignment stick along your body line and practice starting balls along it.
 advanced: Many good players favor a fade off the tee because it stops quicker and tends to stay in play.
 related: [intentional-draw, crosswind, ball-below-feet, choosing-a-target]
+viz: intentional-fade
 updated: 2026-10-31
 ---
 

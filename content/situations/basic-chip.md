@@ -24,6 +24,7 @@ club_choice: Pick a landing spot a few paces onto the green, then choose the clu
 drill: Place a towel on the green as a landing spot and chip balls to land on it with different clubs.
 advanced: Learn how far each club rolls compared with how far it carries, so you can choose by ratio.
 related: [pitch-shot, bump-and-run, chip-or-putt, tight-lie]
+viz: basic-chip
 updated: 2026-10-31
 ---
 

@@ -23,6 +23,7 @@ mistakes:
 club_choice: Pick the club that keeps the ball under the branches, then swing it gently to control the run.
 advanced: Aim to leave a full-swing distance with your favorite club for the next shot.
 related: [low-shot, thick-rough, laying-up, after-a-bad-hole]
+viz: punch-out-from-trees
 updated: 2026-10-31
 ---
 

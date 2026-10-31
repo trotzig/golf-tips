@@ -26,6 +26,7 @@ club_choice: Take one or two clubs more — the slope adds loft and the shot fli
 drill: Make three practice swings on the slope and note where the club brushes the ground; set the ball there.
 advanced: On a severe upslope, close the face slightly or take even more club and play a three-quarter swing to keep the flight down.
 related: [downhill-lie, ball-above-feet, ball-below-feet]
+viz: uphill-lie
 updated: 2026-10-31
 ---
 

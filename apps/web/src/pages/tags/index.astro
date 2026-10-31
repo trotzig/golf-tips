@@ -1,0 +1,28 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getTags, href, tagLabel } from "../../lib/content";
+
+const tags = getTags();
+---
+
+<Base title="Tags" description="Browse golf situations by topic.">
+  <nav aria-label="Breadcrumb" class="mb-3">
+    <a href={href("/")} class="inline-block py-2 font-medium text-fairway-700 underline">
+      ← Home
+    </a>
+  </nav>
+  <h1 class="mb-6 text-3xl font-extrabold tracking-tight text-fairway-900">Browse by tag</h1>
+  <ul class="flex flex-wrap gap-2">
+    {tags.map(({ tag, situations }) => (
+      <li>
+        <a
+          href={href(`tags/${tag}/`)}
+          class="inline-flex min-h-11 items-center gap-2 rounded-full border border-fairway-600 bg-white px-4 font-medium text-fairway-800 hover:bg-fairway-50"
+        >
+          {tagLabel(tag)}
+          <span class="text-sm text-stone-600">{situations.length}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>

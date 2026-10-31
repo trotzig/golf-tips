@@ -12,7 +12,9 @@ describe("2D shapes", () => {
     for (const scene of Object.values(exampleScenes)) {
       for (const view of cameraPresets) {
         const out = buildShapes2D(scene, { view });
-        expect(out.shapes.length).toBeGreaterThan(50);
+        expect(out.shapes.length).toBeGreaterThan(20);
+        // Size budget: diagrams are inlined in every situation page, twice (both hands).
+        expect(out.shapes.length).toBeLessThan(400);
         for (const s of out.shapes) {
           const pts = s.kind === "circle" ? [s.c] : s.kind === "text" ? [s.at] : s.points;
           for (const p of pts) {

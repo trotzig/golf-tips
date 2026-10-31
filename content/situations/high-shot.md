@@ -22,6 +22,7 @@ mistakes:
 club_choice: Pick the club that clears the obstacle comfortably, then accept the distance it gives you.
 advanced: Open the face slightly and hold it open through impact for extra height; it also adds a touch of fade.
 related: [low-shot, lob-shot, punch-out-from-trees, thick-rough]
+viz: high-shot
 updated: 2026-10-31
 ---
 
