@@ -4,6 +4,8 @@ import ballBelowFeet from "./ball-below-feet.json";
 import downhillLie from "./downhill-lie.json";
 import flatLie from "./flat-lie.json";
 import highShot from "./high-shot.json";
+import intentionalDraw from "./intentional-draw.json";
+import intentionalFade from "./intentional-fade.json";
 import intoTheWind from "./into-the-wind.json";
 import lowShot from "./low-shot.json";
 import uphillLie from "./uphill-lie.json";
@@ -18,6 +20,8 @@ export const exampleSceneInputs: ShotSceneInput[] = [
   intoTheWind,
   highShot,
   lowShot,
+  intentionalFade,
+  intentionalDraw,
 ] as ShotSceneInput[];
 
 /** Example scenes parsed with defaults, keyed by id. */

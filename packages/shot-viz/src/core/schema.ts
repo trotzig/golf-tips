@@ -116,6 +116,11 @@ export const shotSceneSchema = z.object({
   swing: swingSchema.prefault({}),
   flight: flightSchema.prefault({}),
   annotations: z.array(annotationSchema).default([]),
+  /**
+   * What to expect and what to do about it, in plain words (no numbers), shown next to the
+   * diagram. Write directions for a right-hander and add "(left-handers: mirror this)".
+   */
+  tips: z.array(z.string().min(1).max(120)).max(4).default([]),
   camera: z.enum(cameraPresets).default("face-on"),
 });
 

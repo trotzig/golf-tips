@@ -3,7 +3,6 @@ import {
   buildShapes2D,
   cameraPresets,
   describeScene,
-  computeFlight,
   exampleScenes,
   parseScene,
 } from "../src/index.ts";
@@ -30,7 +29,7 @@ describe("2D shapes", () => {
     const firstText = out.shapes.findIndex((s) => s.kind === "text");
     expect(firstText).toBeGreaterThan(0);
     expect(out.shapes.slice(firstText).every((s) => s.kind === "text")).toBe(true);
-    expect(out.shapes.some((s) => s.kind === "text" && s.text.startsWith("Slope 10°"))).toBe(true);
+    expect(out.shapes.some((s) => s.kind === "text" && s.text === "Slope")).toBe(true);
   });
 
   it("mirrors the drawing for a left-handed golfer", () => {
@@ -57,15 +56,13 @@ describe("2D shapes", () => {
 
   it("describes the scene in plain language for screen readers", () => {
     const scene = exampleScenes["uphill-lie"]!;
-    const text = describeScene(scene, computeFlight(scene), "face-on");
+    const text = describeScene(scene, "face-on");
     expect(text).toMatch(
       /^Face-on view: a right-handed golfer with a 7-iron on an uphill lie \(10° up toward the target\)/,
     );
-    expect(text).toMatch(/flies about \d+ m/);
-    const wind = describeScene(
-      exampleScenes["into-the-wind"]!,
-      computeFlight(exampleScenes["into-the-wind"]!),
-    );
+    expect(text).not.toMatch(/\d+ m\b/);
+    expect(text).toContain(scene.tips[0]);
+    const wind = describeScene(exampleScenes["into-the-wind"]!);
     expect(wind).toMatch(/Wind 20 mph into the golfer's face/);
   });
 });

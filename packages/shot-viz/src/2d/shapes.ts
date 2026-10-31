@@ -143,6 +143,9 @@ function samples(min: number, max: number, fine: number): number[] {
   return [...out].sort((a, b) => a - b);
 }
 
+/** Sideways exaggeration in the overhead view, so draws and fades read at a glance. */
+export const OVERHEAD_SIDEWAYS_STRETCH = 4;
+
 export function buildShapes2D(scene: ShotScene, options: Shapes2DOptions = {}): Shapes2D {
   const view = options.view ?? scene.camera;
   const width = options.width ?? 480;
@@ -153,9 +156,13 @@ export function buildShapes2D(scene: ShotScene, options: Shapes2DOptions = {}): 
   const cam: Camera = handedCamera(scene, cameraPreset(view, flight));
   const proj = projector(cam);
   const half = height / 2;
+  // Overhead, a few metres of curve over 150 m is invisible at true scale, so stretch sideways.
+  const stretchX = view === "overhead" ? OVERHEAD_SIDEWAYS_STRETCH : 1;
   const toScreen = (p: Vec3): (Pt & { depth: number }) | null => {
     const s = proj.project(handed(scene, p));
-    return s && { x: width / 2 + s.x * half, y: height / 2 + s.y * half, depth: s.depth };
+    return (
+      s && { x: width / 2 + s.x * half * stretchX, y: height / 2 + s.y * half, depth: s.depth }
+    );
   };
   const focalPx = half / Math.tan((cam.fov * Math.PI) / 360);
   const shapes: Shape[] = [{ kind: "polygon", points: rect(width, height), fill: theme.sky }];
@@ -254,9 +261,8 @@ export function buildShapes2D(scene: ShotScene, options: Shapes2DOptions = {}): 
       const across =
         view === "down-the-line" ||
         (view === "behind" && Math.abs(slopeAcross) > Math.abs(slopeAlong));
-      const deg = Math.round(Math.abs(across ? slopeAcross : slopeAlong));
       // The slope this view shows is level: nothing to point out.
-      if (deg === 0) continue;
+      if (Math.round(Math.abs(across ? slopeAcross : slopeAlong)) === 0) continue;
       const dir: Vec3 = across ? [0, 0, 1] : [1, 0, 0];
       const pts = line(
         groundLine(scale(dir, -2.5), dir, 5, 10),
@@ -265,12 +271,7 @@ export function buildShapes2D(scene: ShotScene, options: Shapes2DOptions = {}): 
         undefined,
         true,
       );
-      label(
-        pts[Math.floor(pts.length * 0.8)] ?? null,
-        `${a.label ?? "Slope"} ${deg}°`,
-        "start",
-        22,
-      );
+      label(pts[Math.floor(pts.length * 0.8)] ?? null, a.label ?? "Slope", "start", 22);
     }
   }
 
@@ -397,9 +398,9 @@ export function buildShapes2D(scene: ShotScene, options: Shapes2DOptions = {}): 
   if (pathShape && view === "face-on") shapes.push(pathShape);
 
   const flightNote = scene.annotations.find((a) => a.type === "ball-flight");
-  if (flightNote && ballTime > flight.flightTime / 2) {
-    const apexScreen = toScreen(flight.apex);
-    label(apexScreen, flightNote.label ?? `Carry ${Math.round(flight.carry)} m`, "middle", -10);
+  // Golfer views crop the flight at the apex, so the label only fits the ball-flight views.
+  if (flightNote?.label && !golferView && ballTime > flight.flightTime / 2) {
+    label(toScreen(flight.apex), flightNote.label, "middle", -10);
   }
   const shoulders = scene.annotations.find((a) => a.type === "shoulder-line");
   if (shoulders && golferView) {
@@ -447,7 +448,7 @@ export function buildShapes2D(scene: ShotScene, options: Shapes2DOptions = {}): 
   }
 
   shapes.push(...labels);
-  const description = describeScene(scene, flight, view);
+  const description = describeScene(scene, view);
   return { width, height, view, shapes, title: scene.title, description };
 }
 

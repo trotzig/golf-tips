@@ -1,12 +1,27 @@
 {
   "id": "downhill-lie",
   "title": "Downhill lie",
-  "description": "The slope delofts the club: expect a lower flight, more roll and a miss to the right.",
-  "terrain": { "slopeAlong": -10 },
-  "swing": { "club": "7-iron", "attackAngle": -5 },
+  "description": "The slope takes loft off: set your shoulders parallel to the slope and chase the ball down the hill.",
+  "terrain": {
+    "slopeAlong": -10
+  },
+  "swing": {
+    "club": "7-iron",
+    "attackAngle": -5
+  },
   "annotations": [
-    { "type": "slope-line", "label": "Slope" },
-    { "type": "shoulder-line", "label": "Shoulders match the slope" }
+    {
+      "type": "slope-line",
+      "label": "Slope"
+    },
+    {
+      "type": "shoulder-line",
+      "label": "Shoulders match the slope"
+    }
   ],
-  "camera": "face-on"
+  "camera": "face-on",
+  "tips": [
+    "Ball tends to carry shorter but have a longer roll-out.",
+    "Expect a lower flight that drifts right: aim a little left (left-handers: mirror this)."
+  ]
 }

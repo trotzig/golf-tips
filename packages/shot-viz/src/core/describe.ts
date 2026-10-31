@@ -1,5 +1,4 @@
 import { CLUB_SPECS } from "./clubs.ts";
-import type { FlightResult } from "./flight.ts";
 import type { CameraPreset, ShotScene } from "./schema.ts";
 import { deriveSetup } from "./setup.ts";
 
@@ -24,18 +23,11 @@ function slopeText(scene: ShotScene): string {
   return parts.length ? parts.join(" and ") : "level ground";
 }
 
-function lateral(m: number): string {
-  const side = m > 0 ? "right" : "left";
-  return Math.abs(m) < 2
-    ? "finishing close to the target line"
-    : `finishing about ${Math.round(Math.abs(m))} m ${side}`;
-}
-
 /**
- * Plain-language description of a scene for alt text and screen readers. Directions are given
- * for the golfer's handedness.
+ * Plain-language description of a scene for alt text and screen readers: the setup, then the
+ * scene's tips. Directions are given for the golfer's handedness.
  */
-export function describeScene(scene: ShotScene, flight: FlightResult, view?: CameraPreset): string {
+export function describeScene(scene: ShotScene, view?: CameraPreset): string {
   const setup = deriveSetup(scene);
   const club = CLUB_SPECS[scene.swing.club].label.toLowerCase();
   const hand = scene.golfer.handedness === "left" ? "left-handed" : "right-handed";
@@ -71,12 +63,5 @@ export function describeScene(scene: ShotScene, flight: FlightResult, view?: Cam
           : `across from the ${(wind.from < 180 ? 1 : -1) * mirror > 0 ? "right" : "left"}`;
     sentences.push(`Wind ${Math.round(wind.speed * 2.237)} mph ${from}.`);
   }
-  if (flight.carry > 0) {
-    sentences.push(
-      `The ball flies about ${Math.round(flight.carry)} m with a peak of ${Math.round(flight.apex[1])} m, lands at ${Math.round(flight.descentAngle)}° and rolls to about ${Math.round(flight.total)} m, ${lateral(flight.rest[2] * mirror)}.`,
-    );
-  } else {
-    sentences.push(`The ball rolls about ${Math.round(flight.total)} m.`);
-  }
-  return sentences.join(" ");
+  return [...sentences, ...scene.tips].join(" ");
 }

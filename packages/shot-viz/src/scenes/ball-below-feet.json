@@ -1,7 +1,7 @@
 {
   "id": "ball-below-feet",
   "title": "Ball below your feet",
-  "description": "Widen the stance and flex the knees more to get down to the ball. The ball tends to go right, so aim a little left.",
+  "description": "Widen the stance and flex the knees more to get down to the ball.",
   "terrain": {
     "slopeAcross": -10
   },
@@ -27,5 +27,9 @@
       "label": "Slope"
     }
   ],
-  "camera": "down-the-line"
+  "camera": "down-the-line",
+  "tips": [
+    "Trust that the ball is going to fade and aim left of the target (left-handers: mirror this).",
+    "Stay down through the shot; expect a little less distance than normal."
+  ]
 }

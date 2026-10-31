@@ -137,3 +137,30 @@ describe("slope adjustments", () => {
     }
   });
 });
+
+describe("example scenes", () => {
+  it("each have plain-language tips without numbers", () => {
+    for (const s of Object.values(exampleScenes)) {
+      expect(s.tips.length, s.id).toBeGreaterThan(0);
+      for (const tip of s.tips) expect(tip, s.id).not.toMatch(/\d/);
+    }
+  });
+
+  it("match the downhill tip: shorter carry, longer roll-out than a flat lie", () => {
+    const flat = computeFlight(exampleScenes["flat-lie"]!);
+    const downhill = computeFlight(exampleScenes["downhill-lie"]!);
+    expect(downhill.carry).toBeLessThan(flat.carry);
+    expect(downhill.total - downhill.carry).toBeGreaterThan(flat.total - flat.carry);
+  });
+
+  it("start a fade left and a draw right, and curve both back to the target", () => {
+    for (const [id, side] of [
+      ["intentional-fade", -1],
+      ["intentional-draw", 1],
+    ] as const) {
+      const s = exampleScenes[id]!;
+      expect(Math.sign(deriveLaunch(s).direction), id).toBe(side);
+      expect(Math.abs(computeFlight(s).rest[2]), id).toBeLessThan(2);
+    }
+  });
+});

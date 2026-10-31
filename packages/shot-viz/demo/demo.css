@@ -65,26 +65,23 @@ main h2 {
   border: 1px solid #b9c2b5;
   background: #fff;
 }
-.stats {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  font-variant-numeric: tabular-nums;
+.tips {
   margin: 0 0 16px;
-  padding: 0;
-  list-style: none;
+  padding: 12px 16px 12px 36px;
+  max-width: 70ch;
+  background: #fff;
+  border: 1px solid #dde3da;
+  border-left: 6px solid #1f7a3a;
+  border-radius: 12px;
+  font-size: 17px;
+  line-height: 1.45;
 }
-.stats strong {
-  display: block;
-  font-size: 20px;
-}
-.grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
+.tips li + li {
+  margin-top: 6px;
 }
 .diagrams {
+  max-width: 1000px;
+  margin-bottom: 16px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
@@ -116,7 +113,7 @@ pre {
 }
 @media (max-width: 900px) {
   .layout,
-  .grid {
+  .diagrams {
     grid-template-columns: 1fr;
   }
   nav {

@@ -1,7 +1,7 @@
 {
   "id": "ball-above-feet",
   "title": "Ball above your feet",
-  "description": "Stand taller and grip down. The face points left of where the club aims, so aim a little right.",
+  "description": "Stand taller and grip down.",
   "terrain": {
     "slopeAcross": 10
   },
@@ -26,5 +26,9 @@
       "label": "Slope"
     }
   ],
-  "camera": "down-the-line"
+  "camera": "down-the-line",
+  "tips": [
+    "Trust that the ball is going to draw and aim right of the target (left-handers: mirror this).",
+    "Gripping down makes it fly a little shorter, so take more club."
+  ]
 }
