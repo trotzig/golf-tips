@@ -2,10 +2,18 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "dev",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@shotbook/web", "dev", "--port", "4380"],
+      "port": 4380,
+      "autoPort": true
+    },
+    {
       "name": "web",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--filter", "@shotbook/web", "preview", "--port", "4321"],
-      "port": 4321
+      "runtimeArgs": ["--filter", "@shotbook/web", "preview", "--port", "4390"],
+      "port": 4390,
+      "autoPort": true
     }
   ]
 }
