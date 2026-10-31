@@ -2,7 +2,8 @@
 // Shot diagram for a situation, drawn to static SVG at build time. Both hands and both golfers
 // are rendered and the global `data-hand` and `data-golfer` CSS shows the reader's, so switching
 // never waits on JavaScript.
-// With JavaScript, a small player (no React) can play the swing and ball flight or scrub through it.
+// With JavaScript, a small player (no React) plays the swing and ball flight once when the diagram
+// comes into view; one button pauses it, resumes it and plays it again.
 import { exampleScenes, handedScene } from "@shotbook/shot-viz";
 import { ShotDiagram } from "@shotbook/shot-viz/web";
 import Bullets from "./Bullets.astro";
@@ -37,30 +38,17 @@ const variants = (["right", "left"] as const).flatMap((hand) =>
       </div>
     ))}
     <script type="application/json" data-viz-scene set:html={sceneJson} />
-    <div
-      data-viz-controls
-      hidden
-      class="flex items-center gap-3 border-t border-line bg-surface px-4 py-3"
-    >
+    <div data-viz-controls hidden class="flex border-t border-line bg-surface px-4 py-3">
       <button
         type="button"
         data-viz-play
-        class="min-h-11 shrink-0 rounded-full bg-accent px-4 font-semibold text-on-accent hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        class="min-h-11 rounded-full bg-accent px-4 font-semibold text-on-accent hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
-        <span aria-hidden="true">▶</span> Play swing
+        <span aria-hidden="true" data-viz-icon>
+          ▶
+        </span>{" "}
+        <span data-viz-label>Play swing</span>
       </button>
-      <label class="flex min-w-0 flex-1 items-center gap-2 text-sm font-medium text-ink-muted">
-        <span class="shrink-0">Step through</span>
-        <input
-          type="range"
-          data-viz-scrub
-          min="0"
-          max="1"
-          step="0.01"
-          value="0"
-          class="min-h-11 w-full accent-accent"
-        />
-      </label>
     </div>
     {scene.tips.length > 0 && (
       <figcaption class="p-4 text-lg leading-snug marker:text-accent">
@@ -81,12 +69,21 @@ const variants = (["right", "left"] as const).flatMap((hand) =>
   const size = { width: 360, height: 300 };
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
+  // Icon (text presentation, so it isn't drawn as an emoji) and label for each button state.
+  const states = {
+    ready: ["\u25B6\uFE0E", "Play swing"],
+    playing: ["\u2759\u200A\u2759", "Pause"],
+    paused: ["\u25B6\uFE0E", "Play"],
+    ended: ["\u21BB", "Play again"],
+  } as const;
+
   for (const figure of document.querySelectorAll<HTMLElement>("figure[data-viz]")) {
     const json = figure.querySelector("[data-viz-scene]")?.textContent;
     const controls = figure.querySelector<HTMLElement>("[data-viz-controls]");
-    const playButton = figure.querySelector<HTMLButtonElement>("[data-viz-play]");
-    const scrub = figure.querySelector<HTMLInputElement>("[data-viz-scrub]");
-    if (!json || !controls || !playButton || !scrub) continue;
+    const button = figure.querySelector<HTMLButtonElement>("[data-viz-play]");
+    const icon = figure.querySelector<HTMLElement>("[data-viz-icon]");
+    const label = figure.querySelector<HTMLElement>("[data-viz-label]");
+    if (!json || !controls || !button || !icon || !label) continue;
     const scene = JSON.parse(json) as ShotScene;
 
     // One player per hand and golfer, made on first use: only the visible diagram is redrawn.
@@ -107,21 +104,38 @@ const variants = (["right", "left"] as const).flatMap((hand) =>
       return player;
     };
 
-    playButton.addEventListener("click", () => {
-      const player = current();
-      player?.play((t) => (scrub.value = String(t / player.duration)));
-    });
-    scrub.addEventListener("input", () => {
+    const show = (state: keyof typeof states) => {
+      [icon.textContent, label.textContent] = states[state];
+    };
+    const play = () => {
       const player = current();
       if (!player) return;
-      player.stop();
-      player.seek(Number(scrub.value) * player.duration);
+      player.play((t) => t >= player.duration && show("ended"));
+      show("playing");
+    };
+
+    button.addEventListener("click", () => {
+      autoplay.disconnect();
+      const player = current();
+      if (player?.playing) {
+        player.pause();
+        show("paused");
+      } else play();
     });
 
-    // Reduced motion: no playback, but the reader can still step through the swing.
-    const syncMotion = () => (playButton.hidden = reducedMotion.matches);
-    reducedMotion.addEventListener("change", syncMotion);
-    syncMotion();
+    // Play once, the first time most of the diagram is on screen.
+    const autoplay = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        autoplay.disconnect();
+        play();
+      },
+      { threshold: 0.6 },
+    );
+
+    // Reduced motion: no autoplay, but the reader can still play it with the button.
+    reducedMotion.addEventListener("change", () => reducedMotion.matches && autoplay.disconnect());
+    if (!reducedMotion.matches) autoplay.observe(figure);
     controls.hidden = false;
   }
 </script>
