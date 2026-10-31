@@ -86,7 +86,7 @@ const imageUrl = new URL(href(image), Astro.site).href;
       Skip to content
     </a>
     <header class="border-b border-line">
-      <div class="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
+      <div class="mx-auto flex max-w-2xl items-center justify-between gap-2 px-4 py-3">
         <a
           href={href("/")}
           class="flex items-center gap-2 py-1 text-lg font-semibold tracking-wide text-ink-strong"
@@ -101,12 +101,13 @@ const imageUrl = new URL(href(image), Astro.site).href;
               <circle cx="18.5" cy="17.5" r="1"></circle>
             </g>
           </svg>
-          Shotbook
+          <!-- Below 375px the icons need the room; the logo still links home. -->
+          <span class="max-[374px]:sr-only">Shotbook</span>
         </a>
-        <div class="flex items-center gap-1 rounded-tray bg-surface p-1">
+        <div class="flex items-center gap-0.5 rounded-tray bg-surface p-1">
           <a
             href={href("search/")}
-            class="flex size-10 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
+            class="flex h-10 w-9 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
           >
             <svg
               aria-hidden="true"
@@ -124,7 +125,7 @@ const imageUrl = new URL(href(image), Astro.site).href;
           </a>
           <a
             href={href("favourites/")}
-            class="flex size-10 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
+            class="flex h-10 w-9 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
           >
             <svg
               aria-hidden="true"
@@ -142,7 +143,7 @@ const imageUrl = new URL(href(image), Astro.site).href;
           <HandToggle />
           <a
             href={href("settings/")}
-            class="flex size-10 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
+            class="flex h-10 w-9 items-center justify-center rounded-[10px] text-ink transition-colors hover:bg-raised hover:text-accent"
           >
             <svg
               aria-hidden="true"
