@@ -7,22 +7,22 @@ aliases: [chipping around the green, chip shot, short shot off the green]
 level: beginner
 clubs: [wedges, irons]
 setup:
-  - Take a narrow stance with your feet slightly open to the target.
-  - Play the ball back of center, nearer your trail foot.
-  - Put about 60% of your weight on your lead foot and keep it there.
-  - Lean the shaft slightly toward the target so your hands are ahead of the ball.
+  - Take a narrow, slightly open stance.
+  - Play the ball back of center.
+  - Keep about 60% of your weight on your lead foot.
+  - Set your hands slightly ahead of the ball.
 swing:
-  - Rock your shoulders back and through with little or no wrist hinge.
-  - Keep the same tempo both ways and finish with the club pointing at the target.
-  - Let the club's loft lift the ball; don't scoop.
+  - Rock your shoulders with little wrist hinge.
+  - Keep the same tempo back and through.
+  - Let the loft lift the ball; don't scoop.
 expect:
-  - A low shot that lands just on the green and rolls out toward the hole.
+  - A low shot that lands on the green and rolls out.
 mistakes:
-  - Flicking the wrists to help the ball up, causing fat or thin chips.
-  - Decelerating, which makes contact unpredictable.
-club_choice: Pick a landing spot a few paces onto the green, then choose the club that rolls the rest of the way.
-drill: Place a towel on the green as a landing spot and chip balls to land on it with different clubs.
-advanced: Learn how far each club rolls compared with how far it carries, so you can choose by ratio.
+  - Flicking the wrists to help the ball up.
+  - Decelerating into the ball.
+club_choice: Pick a landing spot just on the green, then the club that rolls the rest.
+drill: Chip to land on a towel, using different clubs.
+advanced: Learn each club's carry-to-roll ratio.
 related: [pitch-shot, bump-and-run, chip-or-putt, tight-lie]
 viz: basic-chip
 updated: 2026-10-31

@@ -7,21 +7,21 @@ aliases: [flop shot, high soft chip, getting over a bunker to a close pin]
 level: advanced
 clubs: [wedges]
 setup:
-  - Check the lie first — the ball needs a cushion of grass beneath it.
-  - Open the face of your most lofted wedge before taking your grip.
-  - Take a wider stance, open slightly to the target, and play the ball forward.
-  - Keep your hands level with the ball, not ahead of it.
+  - Only play it from a cushioned lie.
+  - Open your most lofted wedge, then grip.
+  - Take a wide, open stance, ball forward.
+  - Keep your hands level with the ball.
 swing:
-  - Make a longer, smooth swing than the distance seems to need.
-  - Slide the clubface under the ball and keep accelerating to a full finish.
-  - Keep your body turning; don't let the hands flip.
+  - Swing longer than the distance seems to need.
+  - Slide under the ball and accelerate to a full finish.
+  - Keep turning; don't flip the hands.
 expect:
-  - A steep, high shot that lands softly with little roll.
-  - Little margin for error; small mistakes produce big misses.
+  - A high shot that lands softly.
+  - Small mistakes produce big misses.
 mistakes:
-  - Trying it from a tight or bare lie, which leads to bladed shots.
-  - Decelerating out of fear of hitting it too far.
-club_choice: Only choose the lob when you have to; a standard pitch or chip is usually the safer option.
+  - Trying it from a tight or bare lie.
+  - Decelerating out of fear.
+club_choice: Lob only when you must; a chip or pitch is safer.
 related: [pitch-shot, high-shot, greenside-bunker, tight-lie]
 viz: lob-shot
 updated: 2026-10-31

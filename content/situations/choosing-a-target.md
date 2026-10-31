@@ -7,19 +7,19 @@ aliases: [aim for the middle of the green, flag hunting, where to aim on approac
 level: all
 clubs: [irons, hybrids, wedges]
 setup:
-  - Check where the trouble is — water, bunkers, steep slopes — and where the big, safe area is.
-  - Aim at the center of the green unless the flag is in an easy position.
-  - Choose the club that reaches the middle, not the flag.
+  - Find the trouble and the big, safe area.
+  - Aim at the middle of the green unless the flag is easy.
+  - Club for the middle, not the flag.
 swing:
-  - Commit to the target once chosen; doubt causes poor swings.
-  - Make your normal swing — no extra effort to reach a tucked flag.
+  - Commit to the target once chosen.
+  - Make your normal swing.
 expect:
-  - More greens hit and fewer big numbers, even if fewer shots finish very close.
+  - More greens hit and fewer big numbers.
 mistakes:
-  - Aiming at a flag tucked behind a bunker or next to water.
-  - Taking the club for a perfect strike; most shots fly a little shorter.
-club_choice: If between clubs and the trouble is short, take the longer club; if it's long, take the shorter one.
-advanced: Learn your usual miss and aim so that miss still finds the green or a safe spot.
+  - Aiming at a flag tucked by trouble.
+  - Clubbing for a perfect strike.
+club_choice: Between clubs, take the one that stays away from the trouble.
+advanced: Aim so your usual miss still finds a safe spot.
 related: [laying-up, flyer-lie, downwind, intentional-draw, intentional-fade]
 updated: 2026-10-31
 ---

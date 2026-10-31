@@ -8,19 +8,19 @@ level: all
 clubs: [driver, woods, hybrids, irons, wedges]
 setup:
   - Take less club than the distance suggests.
-  - Pick a landing spot short of the target to allow for roll.
+  - Land it short of the target to allow for roll.
   - Play the ball in its normal position.
 swing:
-  - Make your normal, smooth swing; let the wind do the extra work.
+  - Make your normal swing; let the wind help.
 expect:
-  - The ball flies farther and lands with less spin, so it rolls out more.
-  - Curve is reduced, so the ball tends to fly straighter.
+  - The ball flies farther and rolls more.
+  - Less curve; the ball flies straighter.
   - Shots into greens are harder to stop.
 mistakes:
-  - Aiming at a flag at the back of the green and running through.
-  - Expecting the ball to stop quickly with a wedge.
-club_choice: Take about one club less for every 10–15 mph (15–25 km/h) of tailwind, and aim at the front half of the green.
-advanced: Off the tee, a slightly higher launch lets the ball ride the wind for extra distance.
+  - Aiming at a back flag and running through.
+  - Expecting a wedge to stop quickly.
+club_choice: About one club less per 10–15 mph (15–25 km/h) of tailwind.
+advanced: Off the tee, launch it higher to ride the wind.
 related: [into-the-wind, crosswind, choosing-a-target]
 viz: downwind
 updated: 2026-10-31

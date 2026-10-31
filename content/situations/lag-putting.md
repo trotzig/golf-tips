@@ -6,21 +6,21 @@ tags: [putting, speed-control, green-reading]
 aliases: [long putts, avoiding three putts, getting long putts close]
 level: all
 setup:
-  - Walk to the side of the putt and look at the slope; uphill or downhill matters most.
-  - Read the last third of the putt carefully — that's where the ball breaks most.
-  - Make practice strokes while looking at the hole to feel the distance.
+  - Check from the side whether it's uphill or downhill.
+  - Read the last third closely; it breaks most there.
+  - Practice-stroke while looking at the hole.
 swing:
-  - Lengthen the backswing for distance rather than hitting harder.
-  - Keep the same smooth rhythm as on short putts.
-  - Let the putter swing through to a finish as long as the backswing.
+  - Lengthen the backswing; don't hit harder.
+  - Keep your short-putt rhythm.
+  - Finish as long as the backswing.
 expect:
-  - On long putts, distance mistakes are usually much bigger than direction mistakes.
+  - Distance errors are far bigger than line errors.
 mistakes:
-  - Focusing on the line and leaving the putt far short or long.
-  - Jabbing at the ball with a short backswing.
-club_choice: Aim to finish within an easy tap-in distance, ideally just past the hole.
-drill: Putt to the fringe from different distances and try to stop the ball as close to the edge as possible.
-advanced: Picture a spot a few feet past the hole and putt to that on uphill putts; picture one short of it on fast downhillers.
+  - Focusing on line over speed.
+  - Jabbing with a short backswing.
+club_choice: Aim for a tap-in, ideally just past the hole.
+drill: Putt from various distances to stop just short of the fringe.
+advanced: Picture a target past the hole uphill, short of it downhill.
 related: [short-putts, putting-from-the-fringe, pre-shot-routine]
 updated: 2026-10-31
 ---

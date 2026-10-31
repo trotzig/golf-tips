@@ -7,20 +7,20 @@ aliases: [fried egg, buried lie in bunker, ball plugged in sand]
 level: all
 clubs: [wedges]
 setup:
-  - Keep the face square or slightly closed, so the leading edge can dig.
+  - Keep the face square or slightly closed.
   - Play the ball in the middle of your stance.
-  - Put more weight on your lead side.
+  - Favor your lead side.
 swing:
-  - Pick the club up more steeply on the way back.
-  - Hit down hard just behind the ball, as if digging it out.
-  - Expect a short follow-through; the sand will stop the club.
+  - Pick the club up steeply.
+  - Hit down hard just behind the ball.
+  - Expect a short follow-through.
 expect:
-  - The ball comes out low with little spin and runs a long way.
-  - You may not be able to stop it close — aim to get it on the green.
+  - The ball comes out low and runs a long way.
+  - Just aim to get it on the green.
 mistakes:
-  - Opening the face as for a normal splash, which bounces off and leaves the ball in.
-  - Holding back; this shot needs firm commitment.
-club_choice: A sand wedge or a pitching wedge; the sharper leading edge of a pitching wedge digs more easily.
+  - Opening the face as for a normal splash.
+  - Holding back.
+club_choice: Sand or pitching wedge; the pitching wedge digs more easily.
 related: [greenside-bunker, fairway-bunker, after-a-bad-hole]
 viz: plugged-bunker-lie
 updated: 2026-10-31

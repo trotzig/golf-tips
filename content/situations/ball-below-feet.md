@@ -7,20 +7,20 @@ aliases: [ball below my feet, sidehill lie below feet, standing above the ball]
 level: all
 clubs: [irons, hybrids]
 setup:
-  - Hold the club at full length — the ball is farther from your hands.
-  - Widen your stance and bend more from the knees to get down to the ball.
-  - Keep your weight toward your heels so you don't fall toward the ball.
-  - Aim {left} of the target to allow for the curve.
+  - Hold the club at full length.
+  - Widen your stance and flex your knees more.
+  - Keep your weight toward your heels.
+  - Aim {left} of the target.
 swing:
-  - Keep your knee flex and height the same all the way through the swing.
-  - Make a controlled, three-quarter swing; balance matters more than power.
+  - Keep your knee flex and height throughout.
+  - Make a controlled three-quarter swing.
 expect:
-  - The ball tends to curve {right} and fly a little shorter.
-  - Thin or topped shots if you stand up during the swing.
+  - The ball curves {right} and flies a little shorter.
+  - Standing up during the swing tops or thins it.
 mistakes:
-  - Standing up through impact, which tops or thins the ball.
-  - Swinging hard and toppling forward down the slope.
-club_choice: Take one club more — the shorter, balanced swing loses some distance.
+  - Standing up through impact.
+  - Swinging hard and toppling forward.
+club_choice: Take one club more.
 related: [ball-above-feet, uphill-lie, downhill-lie, intentional-fade]
 viz: ball-below-feet
 updated: 2026-10-31

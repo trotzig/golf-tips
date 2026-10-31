@@ -7,20 +7,20 @@ aliases: [winter golf, playing in the cold, frosty course]
 level: all
 clubs: [driver, woods, hybrids, irons, wedges]
 setup:
-  - Dress in thin layers so you can still turn freely.
-  - Keep your hands warm between shots with pockets, mitts or hand warmers.
-  - Warm up with some easy swings and stretches before the first tee.
+  - Wear thin layers so you can still turn.
+  - Keep your hands warm between shots.
+  - Warm up with easy swings and stretches.
 swing:
-  - Make a smooth, slightly shorter swing; cold muscles don't stretch as far.
-  - Stay relaxed — tension makes contact worse in the cold.
+  - Make a smooth, slightly shorter swing.
+  - Stay relaxed.
 expect:
-  - Shorter carry distances, as cold air is denser and the ball is less lively.
-  - Firm or frozen ground can make the ball bounce unpredictably.
+  - Shorter carry; cold air is denser.
+  - Unpredictable bounces on frozen ground.
 mistakes:
-  - Wearing so many bulky layers that you can't turn.
-  - Using summer yardages and coming up short.
-club_choice: Take about one more club than in mild weather; more if it's very cold.
-advanced: Keep spare balls in an inside pocket; a warm ball flies a little farther than a cold one.
+  - Bulky layers that stop you turning.
+  - Using summer yardages.
+club_choice: Take about one more club; more if very cold.
+advanced: Keep spare balls in an inside pocket; warm balls fly farther.
 related: [rainy-conditions, into-the-wind, pre-shot-routine]
 updated: 2026-10-31
 ---

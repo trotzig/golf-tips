@@ -7,19 +7,19 @@ aliases: [flier lie, ball flying too far from the rough, jumper from the rough]
 level: all
 clubs: [irons, wedges]
 setup:
-  - Check how the ball sits — a ball perched on top of light rough is the classic flyer.
-  - Set up as for a normal fairway shot.
-  - Plan to land the ball short of the flag, or short of the green, and let it run.
+  - Look for a ball perched up in light rough.
+  - Set up as from the fairway.
+  - Plan to land short and let it run.
 swing:
-  - Make a smooth, normal-tempo swing; there's no need to hit harder.
+  - Make a smooth, normal swing.
 expect:
-  - Less backspin, so the ball flies farther and won't stop quickly.
-  - Distance is less predictable than from the fairway.
+  - Less spin; it flies farther and won't stop.
+  - Less predictable distance.
 mistakes:
   - Taking your normal club and flying the green.
-  - Aiming at a flag tucked behind a bunker, where a shot that won't stop is hard to control.
-club_choice: Take one club less than the distance suggests, or the same club with a softer swing.
-advanced: Flyers are most pronounced with mid and short irons; wedges from flyer lies can also come out with little spin and run.
+  - Attacking a flag tucked behind a bunker.
+club_choice: One club less, or swing softer.
+advanced: Flyers are strongest with mid and short irons.
 related: [thick-rough, choosing-a-target]
 viz: flyer-lie
 updated: 2026-10-31

@@ -6,21 +6,21 @@ tags: [routine, mental, aim, alignment]
 aliases: [shot routine, how to prepare for a shot, staying focused before a shot]
 level: all
 setup:
-  - Stand behind the ball and decide on the shot, club and a precise target.
-  - Pick an intermediate spot a few feet ahead of the ball on your target line.
-  - Make one or two rehearsal swings that match the shot you've chosen.
-  - Walk in, set the clubface to the intermediate spot, then set your feet.
+  - From behind the ball, pick shot, club and target.
+  - Pick a spot a few feet ahead on your line.
+  - Make one or two rehearsal swings.
+  - Set the face to the spot, then your feet.
 swing:
-  - Take one last look at the target, then go — don't freeze over the ball.
-  - Keep the timing roughly the same every shot, about 20–30 seconds from deciding to swinging.
+  - One last look, then go.
+  - Keep the same timing, about 20–30 seconds.
 expect:
-  - More consistent aim and tempo, and a calmer feeling under pressure.
+  - Steadier aim and tempo under pressure.
 mistakes:
-  - Changing the routine when nervous, usually by speeding up or stalling.
-  - Making the routine so long it holds up play.
-club_choice: Commit to the club before you start the routine; if you change your mind, start again.
-drill: Practice your full routine with every ball on the range, not just on the course.
-advanced: Add a simple "decision box" and "play box" — think behind the ball, then only react to the target once you step in.
+  - Speeding up or stalling when nervous.
+  - A routine so long it slows play.
+club_choice: Commit to the club first; if you change it, start over.
+drill: Use your full routine on the range too.
+advanced: Think behind the ball; once you step in, just react to the target.
 related: [first-tee-nerves, short-putts, lag-putting, after-a-bad-hole]
 updated: 2026-10-31
 ---

@@ -7,20 +7,20 @@ aliases: [ball in a divot hole, divot lie, sitting in a divot]
 level: all
 clubs: [irons, hybrids]
 setup:
-  - Play the ball slightly back of normal so you strike it before the ground.
-  - Set a little more weight on your lead side and keep your hands ahead of the ball.
-  - Grip a little firmer so the club doesn't twist in the edges of the divot.
+  - Play the ball slightly back.
+  - Weight on your lead side, hands ahead.
+  - Grip a little firmer.
 swing:
-  - Swing down more steeply and hit firmly down on the back of the ball.
-  - Keep the follow-through short and punchy; don't try to scoop the ball out.
+  - Swing steeply and hit down on the ball.
+  - Keep the follow-through short and punchy.
 expect:
-  - Lower flight and more roll than normal.
-  - Slightly less control over distance; play to the fat part of the green.
+  - Lower flight and more roll.
+  - Less distance control; aim for the fat of the green.
 mistakes:
-  - Trying to lift the ball out, which leads to thin, skulled shots.
-  - Choosing a fairway wood; the flat sole tends to bounce off the divot's edge.
-club_choice: Take the same club or one less and allow for extra roll; avoid fairway woods.
-advanced: In a sand-filled divot, treat it like a fairway bunker shot and pick the ball cleanly.
+  - Trying to lift the ball out.
+  - Choosing a fairway wood.
+club_choice: Same club or one less; allow for roll.
+advanced: From a sand-filled divot, pick it clean like a fairway bunker shot.
 related: [tight-lie, low-shot, fairway-bunker]
 viz: divot-lie
 updated: 2026-10-31

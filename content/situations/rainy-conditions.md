@@ -7,20 +7,20 @@ aliases: [wet weather golf, rainy round, playing on a wet course]
 level: all
 clubs: [driver, woods, hybrids, irons, wedges, putter]
 setup:
-  - Keep a dry towel under your umbrella and dry your grips and hands before each shot.
-  - Wear a rain glove or two if you have them; they grip better when wet.
-  - Take a stance you're sure of — wet grass and mud can be slippery.
+  - Dry your grips and hands before each shot.
+  - Wear rain gloves if you have them.
+  - Make sure of your footing; wet ground is slippery.
 swing:
-  - Make a slightly shorter, controlled swing for balance on wet ground.
-  - Pick the ball cleanly from the fairway; wet turf grabs a heavy strike.
+  - Make a slightly shorter swing for balance.
+  - Pick the ball clean; wet turf grabs heavy strikes.
 expect:
-  - Shots carry slightly shorter and roll much less.
-  - Greens are slower and wet bunker sand is firmer.
+  - Shorter carry, much less roll.
+  - Slower greens, firmer bunker sand.
 mistakes:
-  - Letting grips get wet, which makes the club slip or twist.
-  - Hurrying the swing to get out of the rain.
-club_choice: Take one more club for approach shots, and fly the ball to the target rather than relying on roll.
-advanced: Putts need a firmer stroke on wet greens; the ball breaks less too.
+  - Letting grips get wet.
+  - Hurrying to get out of the rain.
+club_choice: One more club; fly it to the target.
+advanced: Putt firmer on wet greens; expect less break.
 related: [cold-weather, into-the-wind, chip-or-putt]
 updated: 2026-10-31
 ---

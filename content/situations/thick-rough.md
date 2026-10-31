@@ -7,21 +7,21 @@ aliases: [deep rough, ball buried in long grass, heavy rough]
 level: all
 clubs: [irons, wedges, hybrids]
 setup:
-  - Choose a lofted club; it cuts through grass better and gets the ball up.
-  - Play the ball slightly back of center.
-  - Grip a little firmer so the grass doesn't twist the club.
-  - Aim for the safest open area, not necessarily the flag.
+  - Choose a lofted club.
+  - Play the ball slightly back.
+  - Grip a little firmer.
+  - Aim for the safest open area.
 swing:
-  - Make a steeper backswing by setting your wrists earlier.
-  - Hit down firmly behind the ball and keep swinging through the grass.
+  - Set your wrists early for a steeper swing.
+  - Hit down firmly and swing through the grass.
 expect:
-  - Less spin and control; the ball runs out more after landing.
-  - Grass grabs the hosel and can close the face, sending the ball {left}.
+  - Less spin; the ball runs out more.
+  - Grass can close the face, sending it {left}.
 mistakes:
-  - Taking a long club to reach the green, which rarely gets out cleanly.
-  - Decelerating into the grass; commit to the swing.
-club_choice: Take the most lofted club that gets you safely back to the fairway or short of trouble.
-advanced: If the grass is growing toward the target, the ball comes out more easily; if against, take even more loft.
+  - Taking a long club to reach the green.
+  - Decelerating into the grass.
+club_choice: Take the loft that gets you safely out.
+advanced: Grass growing against you needs even more loft.
 related: [flyer-lie, punch-out-from-trees, laying-up, high-shot]
 viz: thick-rough
 updated: 2026-10-31

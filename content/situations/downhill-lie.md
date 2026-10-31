@@ -7,22 +7,22 @@ aliases: [ball on a downslope, hitting down a hill, downhill stance]
 level: all
 clubs: [irons, hybrids, wedges]
 setup:
-  - Tilt your shoulders to match the slope, so they run parallel to the ground.
-  - Play the ball a little back of normal, toward the higher foot.
-  - Put more weight on your lead foot, the lower one, and keep it there.
+  - Tilt your shoulders to match the slope.
+  - Play the ball a little back, toward the higher foot.
+  - Keep more weight on your lead (lower) foot.
 swing:
-  - Swing along the slope — chase the ball down the hill after impact.
-  - Make a controlled, slightly shorter swing to stay balanced.
-  - Stay down through the shot; don't try to lift the ball.
+  - Swing along the slope, chasing the ball downhill.
+  - Make a slightly shorter swing to stay balanced.
+  - Stay down; don't try to lift the ball.
 expect:
-  - Lower flight and more roll than normal; the slope takes loft off the club.
+  - Lower flight and more roll; the slope removes loft.
   - The ball tends to curve {right} — aim a little {left}.
 mistakes:
-  - Leaning back to "help" the ball up, which causes thin or fat shots.
-  - Using a low-lofted wood from a steep downslope; it's very hard to get airborne.
-club_choice: Take one club less, or the same club with a softer swing — the slope reduces loft and adds roll.
-drill: Make practice swings where the club brushes the grass after the ball spot, down the slope.
-advanced: Expect the ball to come out low and hot near greens; land it shorter than usual and let it run.
+  - Leaning back to "help" the ball up.
+  - Using a wood from a steep downslope.
+club_choice: Take one club less, or swing softer.
+drill: Make practice swings that brush the grass after the ball spot.
+advanced: Near greens, land it shorter and let it run.
 related: [uphill-lie, ball-above-feet, ball-below-feet, tight-lie]
 viz: downhill-lie
 updated: 2026-10-31

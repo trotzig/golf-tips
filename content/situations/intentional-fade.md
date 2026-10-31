@@ -7,22 +7,22 @@ aliases: [hitting a fade, "curving the ball {right}", "{left} to {right} shot"]
 level: advanced
 clubs: [driver, woods, hybrids, irons]
 setup:
-  - Set your feet, hips and shoulders aimed {left} of the target.
-  - Point the clubface at the final target — it is open to your body line.
-  - Grip the club after setting the face, not before.
-  - Play the ball in its normal position, or a fraction forward.
+  - Aim your body {left} of the target.
+  - Point the face at the target.
+  - Set the face, then grip.
+  - Ball in normal position or a fraction forward.
 swing:
-  - Swing along your body line, not toward the target.
-  - Keep the face from closing through impact; feel a slightly held-off finish.
+  - Swing along your body line.
+  - Hold the face off through impact.
 expect:
-  - The ball starts {left} of the target and curves back toward it.
-  - A slightly higher flight that lands softer and rolls less.
+  - Starts {left}, curves back to the target.
+  - Slightly higher, landing softer.
 mistakes:
-  - Aiming the face where you aimed your body, which gives a straight pull.
-  - Opening the face too much and turning a fade into a slice.
-club_choice: A fade flies a little shorter and higher; consider one club more.
-drill: Place an alignment stick along your body line and practice starting balls along it.
-advanced: Many good players favor a fade off the tee because it stops quicker and tends to stay in play.
+  - Aiming the face with your body — a pull.
+  - Opening the face too far — a slice.
+club_choice: Consider one club more.
+drill: Start balls along an alignment stick on your body line.
+advanced: A fade off the tee stops quicker and stays in play.
 related: [intentional-draw, crosswind, ball-below-feet, choosing-a-target]
 viz: intentional-fade
 updated: 2026-10-31
