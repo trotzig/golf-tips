@@ -1,12 +1,13 @@
-import { DISTANCE_UNITS, HANDEDNESS, WIND_UNITS, type Reader } from "@shotbook/content";
+import { DISTANCE_UNITS, HANDEDNESS, WIND_UNITS } from "@shotbook/content";
+import { genders } from "@shotbook/shot-viz";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { usePrefs } from "../prefs";
+import { usePrefs, type Settings } from "../prefs";
 import { fonts, radius, useColors } from "../theme";
 
 const OPTIONS: {
-  [K in keyof Reader]: {
-    values: readonly Reader[K][];
-    labels: Record<Reader[K], string>;
+  [K in keyof Settings]: {
+    values: readonly Settings[K][];
+    labels: Record<Settings[K], string>;
     label: string;
   };
 } = {
@@ -21,10 +22,15 @@ const OPTIONS: {
     label: "Distance units",
   },
   wind: { values: WIND_UNITS, labels: { mph: "mph", "m/s": "m/s" }, label: "Wind speed units" },
+  golfer: {
+    values: genders,
+    labels: { male: "Man", female: "Woman" },
+    label: "Golfer in the diagrams",
+  },
 };
 
-/** Segmented switch for one reader setting; every text in the app follows it. */
-export function PrefToggle({ pref }: { pref: keyof Reader }) {
+/** Segmented switch for one reader setting; every text (or diagram) in the app follows it. */
+export function PrefToggle({ pref }: { pref: keyof Settings }) {
   const c = useColors();
   const prefs = usePrefs();
   const { values, labels, label } = OPTIONS[pref] as {
@@ -45,7 +51,7 @@ export function PrefToggle({ pref }: { pref: keyof Reader }) {
             key={value}
             accessibilityRole="radio"
             accessibilityState={{ selected }}
-            onPress={() => prefs.setPref(pref, value as Reader[typeof pref])}
+            onPress={() => prefs.setPref(pref, value as Settings[typeof pref])}
             style={[styles.option, selected && { backgroundColor: c.raised, ...styles.raised }]}
           >
             <Text style={[styles.label, { color: selected ? c.accent : c.ink }]}>

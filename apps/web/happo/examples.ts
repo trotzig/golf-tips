@@ -43,6 +43,11 @@ export function animatedVariant(id: string): string {
   return `${id}, played`;
 }
 
+/** Diagrams are also captured with a woman golfer, right-handed only (the build is what differs). */
+export function femaleVariant(id: string): string {
+  return `${id}, woman`;
+}
+
 export function handedVariant(name: string, hand: Hand): string {
   return hand === "right" ? name : `${name}, left-handed`;
 }

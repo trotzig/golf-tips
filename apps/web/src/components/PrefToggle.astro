@@ -1,11 +1,11 @@
 ---
-// A segmented switch for one reader setting (hand, distance or wind units). The choice is set on
+// A segmented switch for one reader setting (hand, distance or wind units, golfer in diagrams). The choice is set on
 // <html> as `data-<pref>`, where global.css shows the matching variants, and saved per device as
 // `shotbook:<pref>`. Without JavaScript the defaults stay, so the switch is hidden until the
 // script runs.
 
 interface Props {
-  pref: "hand" | "distance" | "wind";
+  pref: "hand" | "distance" | "wind" | "golfer";
   label: string;
   options: Array<{ value: string; label: string; srSuffix?: string }>;
   title?: string;

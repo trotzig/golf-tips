@@ -1,6 +1,7 @@
 ---
-// Shot diagram for a situation, drawn to static SVG at build time. Both hands are rendered and
-// the global `data-hand` CSS shows the reader's, so switching never waits on JavaScript.
+// Shot diagram for a situation, drawn to static SVG at build time. Both hands and both golfers
+// are rendered and the global `data-hand` and `data-golfer` CSS shows the reader's, so switching
+// never waits on JavaScript.
 // With JavaScript, a small player (no React) can play the swing and ball flight or scrub through it.
 import { exampleScenes, handedScene } from "@shotbook/shot-viz";
 import { ShotDiagram } from "@shotbook/shot-viz/web";
@@ -16,6 +17,9 @@ const scene = viz ? exampleScenes[viz] : undefined;
 const size = { width: 360, height: 300 };
 // `<` escaped so the JSON can't close the script element.
 const sceneJson = scene && JSON.stringify(scene).replace(/</g, "\\u003c");
+const variants = (["right", "left"] as const).flatMap((hand) =>
+  (["male", "female"] as const).map((gender) => ({ hand, gender })),
+);
 ---
 
 {scene && (
@@ -23,12 +27,15 @@ const sceneJson = scene && JSON.stringify(scene).replace(/</g, "\\u003c");
     data-viz={scene.id}
     class="overflow-hidden rounded-card border border-line bg-card shadow-card"
   >
-    <div class="hand-r" data-viz-hand="right">
-      <ShotDiagram scene={handedScene(scene, "right")} {...size} />
-    </div>
-    <div class="hand-l" data-viz-hand="left">
-      <ShotDiagram scene={handedScene(scene, "left")} {...size} />
-    </div>
+    {variants.map(({ hand, gender }) => (
+      <div
+        class:list={[hand === "right" ? "hand-r" : "hand-l", `golfer-${gender}`]}
+        data-viz-hand={hand}
+        data-viz-golfer={gender}
+      >
+        <ShotDiagram scene={handedScene(scene, hand, gender)} {...size} />
+      </div>
+    ))}
     <script type="application/json" data-viz-scene set:html={sceneJson} />
     <div
       data-viz-controls
@@ -82,16 +89,20 @@ const sceneJson = scene && JSON.stringify(scene).replace(/</g, "\\u003c");
     if (!json || !controls || !playButton || !scrub) continue;
     const scene = JSON.parse(json) as ShotScene;
 
-    // One player per hand, made on first use: only the visible diagram is redrawn.
+    // One player per hand and golfer, made on first use: only the visible diagram is redrawn.
     const players = new Map<string, ShotPlayer>();
     const current = (): ShotPlayer | null => {
-      const hand = document.documentElement.dataset.hand === "left" ? "left" : "right";
-      let player = players.get(hand);
+      const { dataset } = document.documentElement;
+      const hand = dataset.hand === "left" ? "left" : "right";
+      const gender = dataset.golfer === "female" ? "female" : "male";
+      let player = players.get(`${hand} ${gender}`);
       if (!player) {
-        const svg = figure.querySelector<SVGSVGElement>(`[data-viz-hand="${hand}"] svg`);
+        const svg = figure.querySelector<SVGSVGElement>(
+          `[data-viz-hand="${hand}"][data-viz-golfer="${gender}"] svg`,
+        );
         if (!svg) return null;
-        player = createShotPlayer(svg, handedScene(scene, hand), size);
-        players.set(hand, player);
+        player = createShotPlayer(svg, handedScene(scene, hand, gender), size);
+        players.set(`${hand} ${gender}`, player);
       }
       return player;
     };

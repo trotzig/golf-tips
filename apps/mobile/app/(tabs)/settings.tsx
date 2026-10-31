@@ -23,6 +23,12 @@ export default function Settings() {
       <Card title="Wind speed">
         <PrefToggle pref="wind" />
       </Card>
+      <Card title="Golfer in the diagrams">
+        <PrefToggle pref="golfer" />
+        <Body style={{ color: c.inkMuted, marginTop: 10 }}>
+          The figure that plays each shot. The advice is the same.
+        </Body>
+      </Card>
       <Body style={{ color: c.inkMuted, fontSize: 14 }}>
         Shotbook {Constants.expoConfig?.version} · {situations.length} situations, all available
         offline.

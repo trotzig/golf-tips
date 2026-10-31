@@ -60,9 +60,12 @@
   a {
     text-underline-offset: 3px;
   }
-  /* Directions and measurements render every variant; show the one for the reader's settings. */
+  /* Directions, measurements and diagrams render every variant; show the one for the reader's
+     settings. */
   [data-hand="right"] .hand-l,
   [data-hand="left"] .hand-r,
+  [data-golfer="male"] .golfer-female,
+  [data-golfer="female"] .golfer-male,
   [data-distance="yards"] .dist-m,
   [data-distance="meters"] .dist-yd,
   [data-wind="mph"] .wind-ms,

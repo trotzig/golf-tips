@@ -1,6 +1,7 @@
 import type { ShotScene } from "./schema.ts";
 
 export type Handedness = ShotScene["golfer"]["handedness"];
+export type Gender = ShotScene["golfer"]["gender"];
 
 // Same token convention as `@shotbook/content` (see its handedness.ts): text is written for a
 // right-hander, with `{left}`/`{right}` (or `{Left}`/`{Right}`) marking directions that flip.
@@ -20,18 +21,19 @@ export function forHand(text: string, hand: Handedness): string {
 }
 
 /**
- * The scene for a golfer of the given handedness (default: the scene's own), with every
- * direction token in its text resolved. Idempotent, so renderers can call it freely.
+ * The scene for a golfer of the given handedness and gender (default: the scene's own), with
+ * every direction token in its text resolved. Idempotent, so renderers can call it freely.
  */
 export function handedScene(
   scene: ShotScene,
   hand: Handedness = scene.golfer.handedness,
+  gender: Gender = scene.golfer.gender,
 ): ShotScene {
   return {
     ...scene,
     title: forHand(scene.title, hand),
     description: scene.description && forHand(scene.description, hand),
-    golfer: { ...scene.golfer, handedness: hand },
+    golfer: { ...scene.golfer, handedness: hand, gender },
     annotations: scene.annotations.map((a) =>
       a.label ? { ...a, label: forHand(a.label, hand) } : a,
     ),
