@@ -1,4 +1,6 @@
 ---
+import Handed from "./Handed.astro";
+
 interface Props {
   items: string[];
   ordered?: boolean;
@@ -10,6 +12,8 @@ const Tag = ordered ? "ol" : "ul";
 
 <Tag class={`space-y-2 pl-6 ${ordered ? "list-decimal" : "list-disc"} marker:text-fairway-600`}>
   {items.map((item) => (
-    <li class="pl-1">{item}</li>
+    <li class="pl-1">
+      <Handed text={item} />
+    </li>
   ))}
 </Tag>

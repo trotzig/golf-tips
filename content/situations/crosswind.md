@@ -20,7 +20,7 @@ mistakes:
   - Aiming straight at the flag and watching the ball blow off the green.
   - Under-estimating drift on high-lofted shots.
 club_choice: A crosswind usually costs some distance too — allow about a half club extra in a strong wind.
-advanced: Better players can shape the ball into the wind (a draw into a left-to-right wind for right-handers) to hold the line.
+advanced: Better players can shape the ball into the wind (a draw into a {left}-to-{right} wind) to hold the line.
 related: [into-the-wind, downwind, intentional-draw, intentional-fade]
 updated: 2026-10-31
 ---

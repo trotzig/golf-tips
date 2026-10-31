@@ -1,7 +1,7 @@
 {
   "id": "intentional-fade",
   "title": "Hitting a fade",
-  "description": "Aim your body left and set the clubface a little open to that line, pointing between your body line and the target.",
+  "description": "Aim your body {left} and set the clubface a little open to that line, pointing between your body line and the target.",
   "golfer": {
     "aim": -4
   },
@@ -13,7 +13,7 @@
   "annotations": [
     {
       "type": "aim-line",
-      "label": "Body aims left"
+      "label": "Body aims {left}"
     },
     {
       "type": "target-line",
@@ -21,13 +21,13 @@
     },
     {
       "type": "ball-flight",
-      "label": "Starts left, curves right"
+      "label": "Starts {left}, curves {right}"
     }
   ],
   "tips": [
-    "Aim your feet, hips and shoulders left of the target and swing along that line.",
-    "Set the clubface a little open to your stance, pointing just left of the target.",
-    "Ball starts left and curves gently back to the target (left-handers: mirror this).",
+    "Aim your feet, hips and shoulders {left} of the target and swing along that line.",
+    "Set the clubface a little open to your stance, pointing just {left} of the target.",
+    "Ball starts {left} and curves gently back to the target.",
     "A fade flies a touch higher and lands softer, so it stops quicker."
   ],
   "camera": "overhead"

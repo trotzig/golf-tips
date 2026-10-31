@@ -1,6 +1,6 @@
 ---
 title: Uphill lie
-summary: Ball on a slope rising toward the target — expect a higher, shorter shot that tends to curve left.
+summary: Ball on a slope rising toward the target — expect a higher, shorter shot that tends to curve {left}.
 category: lies
 tags: [slope, ball-position, balance, club-selection]
 aliases: [ball on an upslope, hitting up a hill, uphill stance]
@@ -17,7 +17,7 @@ swing:
   - Let your weight move forward through the shot as far as the slope allows.
 expect:
   - Higher flight and less distance than normal; the slope adds loft.
-  - "The ball tends to curve left (left-handers: mirror this) — aim a little right."
+  - The ball tends to curve {left} — aim a little {right}.
   - Little roll once it lands.
 mistakes:
   - Leaning into the hill, which digs the club into the ground behind the ball.

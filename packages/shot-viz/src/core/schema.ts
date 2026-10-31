@@ -118,7 +118,7 @@ export const shotSceneSchema = z.object({
   annotations: z.array(annotationSchema).default([]),
   /**
    * What to expect and what to do about it, in plain words (no numbers), shown next to the
-   * diagram. Write directions for a right-hander and add "(left-handers: mirror this)".
+   * diagram. Write directions for a right-hander with `{left}`/`{right}` tokens; they flip for left-handers.
    */
   tips: z.array(z.string().min(1).max(120)).max(4).default([]),
   camera: z.enum(cameraPresets).default("face-on"),

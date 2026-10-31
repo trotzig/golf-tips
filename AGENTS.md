@@ -65,8 +65,17 @@ folder, set `SHOTBOOK_CONTENT_DIR=/abs/path pnpm dev`.
   `advanced` notes rather than in the main steps.
 - Short and scannable. Imperative voice ("Play the ball slightly back"). Each bullet ≤ ~20 words.
   It should fit on a card you could read between shots.
-- Handedness-neutral: say **lead/trail** (lead foot, trail shoulder) instead of left/right. When
-  direction matters, state it for right-handers and add "(left-handers: mirror this)" once.
+- Handedness: readers set right- or left-handed once (a global switch in the site header, stored
+  per device), and every direction is shown for *their* hand. Never write "left-handers: mirror
+  this" or "for right-handers" — the validator rejects it.
+  - Body parts: say **lead/trail** (lead foot, trail shoulder); these read correctly for both.
+  - Directions on the course (aim, curve, miss): write them for a right-hander using tokens
+    `{left}` / `{right}` (`{Left}` / `{Right}` at the start of a sentence). They're swapped for
+    left-handers: "aim a little {left}" → "aim a little right".
+  - Absolute directions that don't depend on the golfer ("wind from the left") stay plain words.
+  - In YAML flow lists (`aliases: [...]`) quote any item containing a token.
+  - Tokens work in every text field and the body. `/data/situations.json` keeps the raw tokens;
+    consumers resolve them with `forHand(text, hand)` from `@shotbook/content`.
 - Explain the *why* in one line where it helps ("the slope delofts the club, so the ball comes
   out lower").
 - Include safety where relevant (e.g. lightning in storms, slippery stances).
@@ -96,7 +105,7 @@ swing:
   - Make a controlled, slightly shorter swing to stay balanced.
 expect:
   - Lower flight and more roll than normal.
-  - Tendency to miss toward the trail side — aim a little to compensate.
+  - Tendency to curve {right} — aim a little {left} to compensate.
 mistakes:
   - Leaning back to "help" the ball up, which causes thin or fat shots.
 club_choice: Take one club less; the slope adds loft-reducing effect and roll.

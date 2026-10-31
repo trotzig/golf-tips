@@ -42,7 +42,7 @@ is derived from the slope. See [`src/core/schema.ts`](src/core/schema.ts) for th
   "swing": { "club": "7-iron", "length": "three-quarter", "path": 0, "face": 0 },
   "flight": { "trajectory": "normal", "wind": { "speed": 5, "from": 90 } },
   "annotations": [{ "type": "aim-line", "label": "Aim a little right" }],
-  "tips": ["Trust that the ball is going to draw and aim right of the target (left-handers: mirror this)."],
+  "tips": ["Trust that the ball is going to draw and aim {right} of the target."],
   "camera": "down-the-line"
 }
 ```
@@ -52,8 +52,10 @@ Conventions:
 - Units: metres, seconds, degrees, m/s (5 m/s ≈ 11 mph).
 - `slopeAlong` > 0 is uphill toward the target. `slopeAcross` > 0 is ball above the feet.
 - Left and right are written **for a right-handed golfer**. `"handedness": "left"` draws the mirror
-  image, so the same numbers work for both. This matches the content rule "state it for
-  right-handers and add (left-handers: mirror this)".
+  image, so the same numbers work for both. Text (title, description, labels, tips) marks
+  directions with `{left}`/`{right}` tokens, the same convention as the content; renderers resolve
+  them for the scene's handedness. Use `handedScene(scene, hand)` to render a scene for the
+  reader's global setting.
 - Wind `from`: 0 = into your face, 90 = from the right, 180 = from behind.
 - Golfer fields `weightLead`, `shoulderTilt`, `ballPosition` and `gripDown` are derived from the
   slope and club when omitted (`deriveSetup`). Explicit values always win.

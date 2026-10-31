@@ -1,0 +1,52 @@
+---
+// Global right/left-handed switch. Without JavaScript the page stays right-handed, so the switch
+// is hidden until the script runs.
+---
+
+<div
+  data-hand-toggle
+  hidden
+  role="group"
+  aria-label="Which way do you swing?"
+  title="Directions in the advice follow this setting"
+  class="flex rounded-full bg-fairway-900 p-1 text-sm font-semibold"
+>
+  <button
+    type="button"
+    data-hand-value="right"
+    class="rounded-full px-3 py-1.5 aria-pressed:bg-white aria-pressed:text-fairway-900"
+  >
+    Right<span class="sr-only">-handed</span>
+  </button>
+  <button
+    type="button"
+    data-hand-value="left"
+    class="rounded-full px-3 py-1.5 aria-pressed:bg-white aria-pressed:text-fairway-900"
+  >
+    Left<span class="sr-only">-handed</span>
+  </button>
+</div>
+
+<script>
+  const root = document.documentElement;
+  for (const toggle of document.querySelectorAll<HTMLElement>("[data-hand-toggle]")) {
+    const buttons = [...toggle.querySelectorAll<HTMLButtonElement>("[data-hand-value]")];
+    const sync = () => {
+      for (const b of buttons)
+        b.setAttribute("aria-pressed", String(b.dataset.handValue === root.dataset.hand));
+    };
+    for (const b of buttons) {
+      b.addEventListener("click", () => {
+        root.dataset.hand = b.dataset.handValue;
+        try {
+          localStorage.setItem("shotbook:hand", b.dataset.handValue!);
+        } catch {
+          // Storage can be unavailable (private mode); the choice still applies to this page.
+        }
+        sync();
+      });
+    }
+    sync();
+    toggle.hidden = false;
+  }
+</script>
