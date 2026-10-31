@@ -1,0 +1,14 @@
+---
+import Base from "../layouts/Base.astro";
+import { href } from "../lib/content";
+---
+
+<Base title="Not found">
+  <h1 class="text-3xl font-extrabold text-fairway-900">Lost ball</h1>
+  <p class="mt-2 text-lg">We couldn't find that page.</p>
+  <p class="mt-4">
+    <a href={href("/")} class="font-medium text-fairway-700 underline">
+      Back to all situations
+    </a>
+  </p>
+</Base>

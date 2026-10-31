@@ -1,0 +1,43 @@
+---
+import { CATEGORIES } from "@shotbook/content";
+import SituationList from "../components/SituationList.astro";
+import Base from "../layouts/Base.astro";
+import { getSituations, href, situationsIn } from "../lib/content";
+
+const situations = getSituations();
+---
+
+<Base>
+  <h1 class="text-3xl font-extrabold tracking-tight text-fairway-900">How do I play this shot?</h1>
+  <p class="mt-2 text-lg text-stone-700">
+    Short, practical advice for awkward lies, tricky conditions and nervy moments — readable between
+    shots.
+  </p>
+
+  <h2 class="mt-8 mb-3 text-xl font-bold">Browse by category</h2>
+  <ul class="grid grid-cols-2 gap-3">
+    {CATEGORIES.map((c) => {
+      const count = situationsIn(c.id).length;
+      return (
+        <li>
+          <a
+            href={href(`category/${c.id}/`)}
+            class="flex h-full min-h-20 flex-col justify-between rounded-2xl border border-stone-300 bg-white p-3 shadow-sm transition hover:border-fairway-600 active:bg-fairway-50"
+          >
+            <span class="font-semibold text-fairway-800">{c.title}</span>
+            <span class="text-sm text-stone-600">
+              {count === 1 ? "1 situation" : `${count} situations`}
+            </span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+
+  <h2 class="mt-8 mb-3 text-xl font-bold">All situations</h2>
+  {situations.length > 0 ? (
+    <SituationList situations={situations} />
+  ) : (
+    <p class="rounded-2xl bg-white p-4 text-stone-700">No situations yet — they're on the way.</p>
+  )}
+</Base>

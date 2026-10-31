@@ -1,0 +1,20 @@
+{
+  "name": "@shotbook/content",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Situation schema, parsing, validation and JSON export. Core is platform-neutral; ./node adds filesystem loading.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./node": "./src/node.ts"
+  },
+  "scripts": {
+    "validate": "node src/cli.ts validate",
+    "export": "node src/cli.ts export",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  }
+}
