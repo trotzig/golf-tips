@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bodyParagraphs, tagLabel, toggleFavourite } from "../src/lib/text.ts";
+import { bodyParagraphs, tagLabel } from "../src/lib/text.ts";
 
 describe("bodyParagraphs", () => {
   it("splits on blank lines and joins wrapped lines", () => {
@@ -17,14 +17,6 @@ describe("bodyParagraphs", () => {
 
   it("returns nothing for an empty body", () => {
     expect(bodyParagraphs("")).toEqual([]);
-  });
-});
-
-describe("toggleFavourite", () => {
-  it("adds new favourites first and removes existing ones", () => {
-    const added = toggleFavourite(["a"], "b");
-    expect(added).toEqual(["b", "a"]);
-    expect(toggleFavourite(added, "a")).toEqual(["b"]);
   });
 });
 

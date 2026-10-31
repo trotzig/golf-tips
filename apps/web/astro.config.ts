@@ -15,7 +15,8 @@ export default defineConfig({
   integrations: [
     // React renders shot diagrams to static SVG at build time; no React ships to the browser.
     react(),
-    sitemap({ filter: (page) => !page.endsWith("/404/") }),
+    // The 404 and favourites pages have nothing of their own for search engines.
+    sitemap({ filter: (page) => !page.endsWith("/404/") && !page.endsWith("/favourites/") }),
     serviceWorker(),
   ],
   vite: {

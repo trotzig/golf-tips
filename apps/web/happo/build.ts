@@ -63,6 +63,7 @@ function pageName(file: string): { component: string; variant: string } {
   if (path === "index.html") return { component: "Home page", variant: "default" };
   if (path === "404.html") return { component: "Not found page", variant: "default" };
   if (path === "search/index.html") return { component: "Search page", variant: "default" };
+  if (path === "favourites/index.html") return { component: "Favourites page", variant: "default" };
   if (path === "tags/index.html") return { component: "Tags page", variant: "default" };
   if (path === "settings/index.html") return { component: "Settings page", variant: "default" };
   if (parts.length === 2 && parts[1]) {

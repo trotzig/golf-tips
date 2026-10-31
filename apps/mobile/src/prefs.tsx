@@ -2,14 +2,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   DEFAULT_READER,
   DISTANCE_UNITS,
+  FAVOURITES_KEY,
   forReader,
   HANDEDNESS,
+  parseFavourites,
+  toggleFavourite,
   WIND_UNITS,
   type Reader,
 } from "@shotbook/content";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import { toggleFavourite } from "./lib/text";
 
 // Reader preferences, stored on the device: which hand they play with, the units they measure
 // distance and wind in, and favourite situations. Keys match the site's localStorage.
@@ -20,7 +22,6 @@ const ALLOWED: { [K in keyof Reader]: readonly Reader[K][] } = {
   distance: DISTANCE_UNITS,
   wind: WIND_UNITS,
 };
-const FAVOURITES_KEY = "shotbook:favourites";
 
 interface Prefs extends Reader {
   setPref<K extends keyof Reader>(pref: K, value: Reader[K]): void;
@@ -50,10 +51,7 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
           if (value && (ALLOWED[pref] as readonly string[]).includes(value)) saved[pref] = value;
         });
         setReader({ ...DEFAULT_READER, ...(saved as Partial<Reader>) });
-        if (storedFavourites) {
-          const parsed: unknown = JSON.parse(storedFavourites);
-          if (Array.isArray(parsed)) setFavourites(parsed.filter((f) => typeof f === "string"));
-        }
+        setFavourites(parseFavourites(storedFavourites));
       })
       .catch(() => {
         // Unreadable storage: start with the defaults.

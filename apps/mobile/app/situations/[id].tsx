@@ -36,23 +36,6 @@ export default function SituationScreen() {
 
   return (
     <Screen>
-      <Stack.Screen
-        options={{
-          title: "",
-          headerRight: () => (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel={favourite ? "Remove from favourites" : "Add to favourites"}
-              accessibilityState={{ selected: favourite }}
-              onPress={() => toggleFavourite(s.id)}
-              hitSlop={12}
-            >
-              <HeartIcon color={favourite ? c.highlight : c.accent} filled={favourite} />
-            </Pressable>
-          ),
-        }}
-      />
-
       <Pressable
         onPress={() => router.push(`/category/${category.id}`)}
         accessibilityRole="link"
@@ -74,6 +57,22 @@ export default function SituationScreen() {
             </Text>
           ))}
         </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Save to favourites"
+          accessibilityState={{ selected: favourite }}
+          onPress={() => toggleFavourite(s.id)}
+          style={({ pressed }) => [
+            styles.save,
+            { borderColor: favourite ? c.highlight : c.lineStrong },
+            pressed && { backgroundColor: c.surface },
+          ]}
+        >
+          <HeartIcon color={favourite ? c.highlight : c.accent} filled={favourite} size={20} />
+          <Text style={[styles.saveText, { color: c.ink }]}>
+            {favourite ? "Saved to favourites" : "Save to favourites"}
+          </Text>
+        </Pressable>
       </View>
 
       {scene && <ShotViz scene={scene} />}
@@ -154,5 +153,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 4,
   },
+  save: {
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    minHeight: 44,
+    marginTop: 4,
+    borderWidth: 1,
+    borderRadius: radius.pill,
+    paddingHorizontal: 16,
+  },
+  saveText: { fontFamily: fonts.medium, fontSize: 16 },
   updated: { fontFamily: fonts.regular, fontSize: 14 },
 });
