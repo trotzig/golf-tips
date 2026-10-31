@@ -122,10 +122,15 @@ registerShotPlayerDriver();
  * together early on, while the camera follows the ball, than in the roll-out.
  */
 function frameTimes(duration: number): number[] {
-  const swing = [0, 0.375, 0.75, 0.875, 1].map((f) => f * SWING_TO_IMPACT);
-  const followThrough = [0.25, 0.5, 1].map((f) => SWING_TO_IMPACT + f * FOLLOW_THROUGH);
+  // The backswing takes 75% of the time to impact (see timelineAt), the downswing the rest.
+  const swing = [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.8125, 0.875, 0.9375, 1].map(
+    (f) => f * SWING_TO_IMPACT,
+  );
+  const followThrough = [0.2, 0.4, 0.6, 0.8, 1].map((f) => SWING_TO_IMPACT + f * FOLLOW_THROUGH);
   const finish = SWING_TO_IMPACT + FOLLOW_THROUGH;
-  const flight = [0.15, 0.3, 0.5, 0.75, 1].map((f) => finish + f * (duration - finish));
+  const flight = [0.075, 0.15, 0.225, 0.3, 0.4, 0.5, 0.625, 0.75, 0.875, 1].map(
+    (f) => finish + f * (duration - finish),
+  );
   return [...swing, ...followThrough, ...flight];
 }
 
