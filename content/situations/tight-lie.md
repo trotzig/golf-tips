@@ -7,19 +7,19 @@ aliases: [hardpan, bare lie, ball on hard ground]
 level: all
 clubs: [irons, wedges, putter]
 setup:
-  - Play the ball in the middle of your stance, or slightly back of middle.
-  - Set your weight slightly toward your lead side and keep it there.
-  - Choose a club with less bounce, like a pitching wedge, rather than a sand wedge.
+  - Play the ball middle or slightly back.
+  - Favor your lead side and stay there.
+  - Use a low-bounce club like a pitching wedge.
 swing:
-  - Brush the ground just after the ball — ball first, then turf.
-  - Keep your lower body quiet and your swing smooth; a tight lie punishes lunging.
+  - Ball first, then turf.
+  - Keep your lower body quiet and swing smooth.
 expect:
-  - A lower shot with more run than from grass.
-  - Little room for error — a small miss becomes a thin or bladed shot.
+  - Lower, with more run.
+  - Small misses become thin shots.
 mistakes:
-  - Using a high-bounce wedge, which can bounce off the ground into the ball's middle.
-  - Trying to lift the ball; the club needs to come down on it.
-club_choice: Near the green, use the putter or a lower-lofted club and let the ball roll rather than flying it.
+  - Using a high-bounce wedge.
+  - Trying to lift the ball.
+club_choice: Near the green, putt or bump it along.
 related: [divot-lie, basic-chip, bump-and-run, chip-or-putt]
 viz: tight-lie
 updated: 2026-10-31

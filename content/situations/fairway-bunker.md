@@ -7,22 +7,22 @@ aliases: [fairway trap, long bunker shot, hitting an iron from sand]
 level: all
 clubs: [irons, hybrids, woods]
 setup:
-  - Check the lip first and choose a club with enough loft to clear it.
-  - Wiggle your feet just slightly into the sand for stability.
-  - Grip down about as far as your feet sank in.
-  - Play the ball in the middle of your stance, or slightly back.
+  - Choose enough loft to clear the lip.
+  - Settle your feet only slightly into the sand.
+  - Grip down as far as your feet sank.
+  - Play the ball middle or slightly back.
 swing:
-  - Keep your lower body quiet and swing mostly with your arms and upper body.
-  - Hit the ball first; picking it cleanly is better than taking sand.
-  - Use a smooth, three-quarter swing to stay balanced on the sand.
+  - Keep your lower body quiet.
+  - Hit the ball first; pick it clean.
+  - Make a smooth three-quarter swing.
 expect:
   - Slightly less distance than from the fairway.
-  - A heavy shot loses a lot of distance, so err toward contacting the ball first.
+  - A heavy strike loses a lot of distance.
 mistakes:
   - Taking too little loft and hitting the lip.
-  - Digging the feet in deep, which encourages a heavy, sandy strike.
-club_choice: Take one club more than the distance to allow for gripping down and a controlled swing — but never so little loft that the lip is in play.
-advanced: From a good lie with a low lip, a hybrid or fairway wood can be swept off the sand.
+  - Digging your feet in deep.
+club_choice: One club more, but never too little loft for the lip.
+advanced: From a good lie and low lip, sweep a hybrid or wood.
 related: [greenside-bunker, plugged-bunker-lie, divot-lie, laying-up]
 viz: fairway-bunker
 updated: 2026-10-31

@@ -7,18 +7,18 @@ aliases: [should I putt or chip, putting from off the green, when to chip]
 level: all
 clubs: [putter, wedges, irons]
 setup:
-  - Look at what lies between the ball and the green — smooth, short grass or long grass?
-  - Putt if the grass is short and even all the way to the green.
-  - Chip if there's long grass, a sprinkler head or a rough edge in the way.
+  - Check the grass between the ball and the green.
+  - Putt if it's short and even all the way.
+  - Chip if long grass or a sprinkler head is in the way.
 swing:
-  - If you chip, choose a low, running shot over a high one when possible.
-  - If you putt, use a slightly longer stroke to get through the slower grass.
+  - If you chip, prefer a low, running shot.
+  - If you putt, make a slightly longer stroke.
 expect:
   - A poor putt usually finishes closer than a poor chip.
 mistakes:
-  - Defaulting to a wedge and trying to fly it close.
-  - Putting through long or wet grass, which grabs the ball.
-club_choice: Putt when you can, chip when you must, and pitch only when you have to fly an obstacle.
+  - Always reaching for a wedge.
+  - Putting through long or wet grass.
+club_choice: Putt when you can, chip when you must, pitch only to clear trouble.
 related: [basic-chip, bump-and-run, putting-from-the-fringe, tight-lie, lob-shot]
 updated: 2026-10-31
 ---

@@ -7,24 +7,24 @@ aliases: [ball on an upslope, hitting up a hill, uphill stance]
 level: all
 clubs: [irons, hybrids, woods]
 setup:
-  - Tilt your shoulders to match the slope, so they run parallel to the ground.
-  - Play the ball a little forward of normal, toward the higher foot.
-  - Let more weight rest on your trail foot, the lower one, to stay balanced.
-  - Grip down slightly if the slope is steep.
+  - Tilt your shoulders to match the slope.
+  - Play the ball a little forward, toward the higher foot.
+  - Let more weight rest on your trail (lower) foot.
+  - Grip down on steep slopes.
 swing:
-  - Swing along the slope — up the hill through impact.
-  - Make a smooth, slightly shorter swing so you stay balanced.
-  - Let your weight move forward through the shot as far as the slope allows.
+  - Swing up the slope through impact.
+  - Make a slightly shorter swing to stay balanced.
+  - Move your weight forward as the slope allows.
 expect:
-  - Higher flight and less distance than normal; the slope adds loft.
+  - Higher and shorter; the slope adds loft.
   - The ball tends to curve {left} — aim a little {right}.
   - Little roll once it lands.
 mistakes:
-  - Leaning into the hill, which digs the club into the ground behind the ball.
-  - Swinging too hard and falling back off balance.
-club_choice: Take one or two clubs more — the slope adds loft and the shot flies shorter.
-drill: Make three practice swings on the slope and note where the club brushes the ground; set the ball there.
-advanced: On a severe upslope, close the face slightly or take even more club and play a three-quarter swing to keep the flight down.
+  - Leaning into the hill and hitting it fat.
+  - Swinging hard and falling back.
+club_choice: Take one or two clubs more.
+drill: Find where practice swings brush the ground; set the ball there.
+advanced: On severe upslopes, take more club and swing three-quarter.
 related: [downhill-lie, ball-above-feet, ball-below-feet]
 viz: uphill-lie
 updated: 2026-10-31

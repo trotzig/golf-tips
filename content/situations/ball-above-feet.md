@@ -7,21 +7,21 @@ aliases: [ball above my feet, sidehill lie above feet, standing below the ball]
 level: all
 clubs: [irons, hybrids, woods]
 setup:
-  - Grip down on the club — the ball is closer to your hands than normal.
-  - Stand a little taller and keep your weight toward the balls of your feet.
-  - Play the ball in its normal position, about the middle of your stance for mid-irons.
-  - Aim {right} of the target to allow for the curve.
+  - Grip down — the ball is closer to your hands.
+  - Stand taller, weight toward the balls of your feet.
+  - Play the ball in its normal position.
+  - Aim {right} of the target.
 swing:
-  - Make a flatter, more around-the-body swing that follows the slope.
-  - Use a smooth, three-quarter swing to keep your balance.
+  - Swing flatter, around your body, following the slope.
+  - Make a smooth three-quarter swing.
 expect:
-  - The ball tends to curve {left}; the steeper the slope, the bigger the curve.
-  - Lofted clubs curve more than long clubs on this slope.
+  - The ball curves {left}, more on steeper slopes.
+  - Lofted clubs curve more than long ones.
 mistakes:
-  - Holding the club at full length, which leads to heavy, fat shots.
-  - Aiming straight at the flag and pulling the ball {left} of the green.
-club_choice: Take about one club more to make up for gripping down and swinging easier.
-advanced: Hold the face slightly open through impact to reduce the hook on steep slopes.
+  - Gripping at full length, which hits it fat.
+  - Aiming at the flag and missing {left}.
+club_choice: Take about one club more.
+advanced: Hold the face slightly open to reduce the hook.
 related: [ball-below-feet, uphill-lie, downhill-lie, intentional-draw]
 viz: ball-above-feet
 updated: 2026-10-31

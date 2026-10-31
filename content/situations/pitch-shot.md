@@ -7,21 +7,21 @@ aliases: [pitching, half wedge, short wedge shot]
 level: all
 clubs: [wedges]
 setup:
-  - Take a stance slightly narrower than for a full swing.
+  - Take a slightly narrow stance.
   - Play the ball in the middle of your stance.
-  - Keep your weight slightly toward your lead side.
+  - Favor your lead side slightly.
 swing:
-  - Let your wrists hinge naturally on the backswing.
-  - Turn your chest through the shot; don't let the arms do all the work.
-  - Match the length of the backswing and follow-through, and keep accelerating.
+  - Let your wrists hinge naturally.
+  - Turn your chest through the shot.
+  - Match backswing and follow-through; keep accelerating.
 expect:
-  - Higher flight than a chip, with a soft landing and modest roll.
+  - Higher than a chip, landing soft.
 mistakes:
-  - Taking a long backswing and slowing down into the ball.
-  - Scooping with the hands instead of turning through.
-club_choice: Use a pitching, gap or sand wedge; control distance with swing length more than effort.
-drill: Learn three backswing lengths (waist, chest, shoulder) and note how far each one flies with each wedge.
-advanced: Control height with ball position — farther forward for higher, back for lower.
+  - A long backswing that slows into the ball.
+  - Scooping with the hands.
+club_choice: Use a wedge; control distance with swing length.
+drill: Learn how far waist, chest and shoulder swings fly per wedge.
+advanced: Ball forward for higher, back for lower.
 related: [basic-chip, lob-shot, bump-and-run, greenside-bunker]
 viz: pitch-shot
 updated: 2026-10-31
