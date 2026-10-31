@@ -1,0 +1,10 @@
+{
+  "id": "low-shot",
+  "title": "Low shot",
+  "description": "Ball back, hands ahead and a shorter finish keep the flight down under the wind or branches.",
+  "swing": { "club": "7-iron", "length": "three-quarter", "attackAngle": -5 },
+  "golfer": { "ballPosition": -0.4, "weightLead": 0.6 },
+  "flight": { "trajectory": "low" },
+  "annotations": [{ "type": "ball-flight", "label": "Low, running flight" }],
+  "camera": "behind"
+}

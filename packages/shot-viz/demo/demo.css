@@ -1,0 +1,126 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, sans-serif;
+  color: #1f2933;
+  background: #f4f6f3;
+}
+body {
+  margin: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+nav {
+  background: #fff;
+  border-right: 1px solid #dde3da;
+  padding: 16px 12px;
+}
+nav h1 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+nav button {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  text-align: left;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+nav button[aria-current="true"] {
+  background: #1f5f99;
+  color: #fff;
+}
+main {
+  padding: 20px 24px 40px;
+  max-width: 1600px;
+}
+main h2 {
+  margin: 0 0 4px;
+}
+.lede {
+  margin: 0 0 12px;
+  max-width: 70ch;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.controls button,
+.controls select {
+  min-height: 40px;
+  font: inherit;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #b9c2b5;
+  background: #fff;
+}
+.stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-variant-numeric: tabular-nums;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+.stats strong {
+  display: block;
+  font-size: 20px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.diagrams {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #dde3da;
+}
+.card h3 {
+  font-size: 13px;
+  margin: 0;
+  padding: 8px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #52606d;
+}
+.wide {
+  grid-column: 1 / -1;
+}
+pre {
+  font-size: 12px;
+  background: #fff;
+  border: 1px solid #dde3da;
+  border-radius: 12px;
+  padding: 12px;
+  overflow: auto;
+}
+@media (max-width: 900px) {
+  .layout,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  nav {
+    border-right: 0;
+    border-bottom: 1px solid #dde3da;
+  }
+}
