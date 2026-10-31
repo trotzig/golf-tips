@@ -70,6 +70,8 @@ export interface Pose {
   };
   /** Head radius (m), for drawing. */
   headRadius: number;
+  /** Front of the face, one head radius from `head`: where the eyes (and a visor's brim) point. */
+  face: Vec3;
 }
 
 // Segment lengths (m) for a ~1.78 m golfer.
@@ -135,6 +137,7 @@ interface Body {
   joints: Omit<Record<Joint, Vec3>, "leadElbow" | "trailElbow" | "leadHand" | "trailHand">;
   spineDir: Vec3;
   hands: Vec3;
+  face: Vec3;
 }
 
 /** Build the body (legs, torso, shoulders) for a stance with the feet at z = −depth. */
@@ -201,6 +204,12 @@ function buildBody(
   // Head looks down at the ball until the finish, when it rises with the body.
   const headDir = normalize(add(spineDir, scale(Z, 0.35 * (1 - key.rise))));
   const head = add(neck, scale(headDir, HEAD_LENGTH + HEAD_RADIUS * 0.8));
+  // The face looks at the ball, and toward the target as the head comes up in the finish.
+  const look = normalize(mix3(Z, X, 0.75 * key.rise));
+  const face = add(
+    head,
+    scale(normalize(sub(look, scale(headDir, dot(look, headDir)))), HEAD_RADIUS),
+  );
 
   // Hands hang just in front of the shoulders, slightly toward the target.
   const shoulderMid = scale(add(leadShoulder, trailShoulder), 0.5);
@@ -233,6 +242,7 @@ function buildBody(
     },
     spineDir,
     hands,
+    face,
   };
 }
 
@@ -335,8 +345,11 @@ export function poseGolfer(scene: ShotScene, phase = 0): Pose {
     joints: Object.fromEntries(JOINTS.map((j) => [j, aim(joints[j])])) as Record<Joint, Vec3>,
     club: { grip: aim(grip), hosel: aim(hosel), toe: aim(toe) },
     headRadius: HEAD_RADIUS,
+    face: aim(posed.face),
   };
 }
+
+const mix3 = (a: Vec3, b: Vec3, t: number): Vec3 => add(scale(a, 1 - t), scale(b, t));
 
 /** Distance between joints, handy for tests and debugging. */
 export function boneLength(pose: Pose, a: Joint, b: Joint) {
