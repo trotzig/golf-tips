@@ -14,7 +14,7 @@ both fed from the same Markdown content and shared TypeScript packages.
 ```
 content/situations/*.md   One situation per file — the source of truth
 packages/content          Schema (zod), loader, validator, JSON + search-index export
-packages/shot-viz         ShotScene format and renderers (2D SVG, 3D three.js)
+packages/shot-viz         ShotScene format and 2D SVG renderer
 apps/web                  Astro static site, deployed to GitHub Pages
 apps/mobile               Expo app (not yet created)
 ```
@@ -141,15 +141,17 @@ renderer can draw. Owned by `packages/shot-viz`; the types there are the contrac
 - **club & swing**: club, swing length, path, face, attack angle
 - **ball flight**: launch, curve, apex, landing and roll; wind vector
 - **annotations**: labelled arrows/lines (aim line, slope line, ball flight)
+- **tips**: what to expect and what to do, in plain words — "Ball tends to carry shorter but have
+  a longer roll-out", not "Carry 141 m". Flight numbers shape the drawing but are never shown.
 - **cameras**: named presets — `face-on`, `down-the-line`, `behind`, `overhead`
 
 Rules: scenes are data, not code. Core geometry/flight maths is pure TypeScript with tests.
-Renderers are thin. 2D must work without WebGL; 3D is progressive enhancement and must not block
-page load (lazy-load it). Respect `prefers-reduced-motion`.
+Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
+`prefers-reduced-motion`.
 
 ## Web app
 
-- Astro static output; React islands only for interactive parts (search, 3D viz).
+- Astro static output; React islands only for interactive parts (search, animated viz).
 - Pages must work and be readable without JavaScript.
 - Mobile-first: most readers are on a phone on the course. Large tap targets, high contrast in
   sunlight, works offline once PWA lands.

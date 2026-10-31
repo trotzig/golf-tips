@@ -1,0 +1,34 @@
+{
+  "id": "intentional-draw",
+  "title": "Hitting a draw",
+  "description": "Aim your body right and set the clubface a little closed to that line, pointing between your body line and the target.",
+  "golfer": {
+    "aim": 4
+  },
+  "swing": {
+    "club": "7-iron",
+    "path": 0,
+    "face": -2
+  },
+  "annotations": [
+    {
+      "type": "aim-line",
+      "label": "Body aims right"
+    },
+    {
+      "type": "target-line",
+      "label": "Target"
+    },
+    {
+      "type": "ball-flight",
+      "label": "Starts right, curves left"
+    }
+  ],
+  "tips": [
+    "Aim your feet, hips and shoulders right of the target and swing along that line.",
+    "Set the clubface a little closed to your stance, pointing just right of the target.",
+    "Ball starts right and curves gently back to the target (left-handers: mirror this).",
+    "A draw flies a touch lower and runs out more after landing."
+  ],
+  "camera": "overhead"
+}

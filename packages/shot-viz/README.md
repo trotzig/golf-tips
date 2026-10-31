@@ -1,37 +1,31 @@
 # @shotbook/shot-viz
 
 Shot visualisations for Shotbook. A situation can point to a **ShotScene**: a small JSON
-description of the lie, the golfer's setup, the swing and the ball flight. Renderers draw it in 2D
-(SVG) or 3D (three.js).
-
-![Demo: uphill lie in 2D and 3D](docs/demo-uphill-lie.png)
+description of the lie, the golfer's setup, the swing and the ball flight, plus short
+plain-language tips. The renderer draws it as a 2D SVG diagram. (A three.js 3D prototype was
+dropped for now; it is in the git history if we come back to it.)
 
 ## Entry points
 
 | Import                     | What                                                          | Runs on              |
 | -------------------------- | ------------------------------------------------------------- | -------------------- |
 | `@shotbook/shot-viz`       | Types, zod schema, maths, example scenes, 2D scene → shapes   | Anywhere (no DOM)    |
-| `@shotbook/shot-viz/web`   | `<ShotDiagram>` (React DOM SVG) and `LazyShotScene3D`         | Web                  |
-| `@shotbook/shot-viz/three` | `<ShotScene3D>` (react-three-fiber), the heavy part           | Web (WebGL)          |
+| `@shotbook/shot-viz/web`   | `<ShotDiagram>` (React DOM SVG)                               | Web                  |
 
-The core must stay platform-neutral so the native app can import it. three.js, r3f and drei are
-optional peer dependencies, only needed for `/three`.
+The core must stay platform-neutral so the native app can import it. React is an optional peer
+dependency, only needed for `/web`.
 
 ```tsx
 import { exampleScenes } from "@shotbook/shot-viz";
-import { LazyShotScene3D, ShotDiagram } from "@shotbook/shot-viz/web";
+import { ShotDiagram } from "@shotbook/shot-viz/web";
 
-<ShotDiagram scene={exampleScenes["downhill-lie"]} view="face-on" />
-<Suspense fallback={null}>
-  <LazyShotScene3D scene={exampleScenes["downhill-lie"]} />
-</Suspense>
+const scene = exampleScenes["downhill-lie"];
+<ShotDiagram scene={scene} view="face-on" />
+<ul>{scene.tips.map((tip) => <li key={tip}>{tip}</li>)}</ul>
 ```
 
 `ShotDiagram` is plain SVG: it renders on the server (Astro) and needs no JavaScript or WebGL. It
 is one `role="img"` with a `<title>` and a generated plain-language `<desc>` (`describeScene`).
-`ShotScene3D` is about 1 MB of JavaScript (260 kB gzipped), so it loads only when shown, and it
-does not autoplay when the reader prefers reduced motion. Its camera buttons are real buttons
-with 44 px touch targets.
 
 ## Scene format
 
@@ -48,6 +42,7 @@ is derived from the slope. See [`src/core/schema.ts`](src/core/schema.ts) for th
   "swing": { "club": "7-iron", "length": "three-quarter", "path": 0, "face": 0 },
   "flight": { "trajectory": "normal", "wind": { "speed": 5, "from": 90 } },
   "annotations": [{ "type": "aim-line", "label": "Aim a little right" }],
+  "tips": ["Trust that the ball is going to draw and aim right of the target (left-handers: mirror this)."],
   "camera": "down-the-line"
 }
 ```
@@ -63,12 +58,16 @@ Conventions:
 - Golfer fields `weightLead`, `shoulderTilt`, `ballPosition` and `gripDown` are derived from the
   slope and club when omitted (`deriveSetup`). Explicit values always win.
 - Cameras: `face-on`, `down-the-line` (frame the golfer), `behind`, `overhead` (frame the flight).
+- `tips`: up to four short sentences on what the ball will do and what to do about it, in words,
+  not numbers ("Ball tends to carry shorter but have a longer roll-out"). Shown next to the
+  diagram and appended to its description. The flight maths stays internal: it shapes the
+  drawing but its numbers are not shown to readers.
 - Annotations: `target-line`, `aim-line`, `shoulder-line`, `slope-line`, `ball-flight`, `arrow`.
 
 ## The maths (pure TypeScript, tested)
 
 World frame: ball at the origin, `x` toward the target, `y` up, `z` to the right. A right-hander
-stands at negative `z`. This is three.js's frame, so 3D uses it directly.
+stands at negative `z`.
 
 - **Terrain** (`terrain.ts`): the lie's slope holds for 4 m around the ball, then eases out to
   level ground, like a terrace. So the landing area of an uphill shot sits higher.
@@ -85,19 +84,16 @@ stands at negative `z`. This is three.js's frame, so 3D uses it directly.
 - **Pose** (`pose.ts`): a stylised 17-joint mannequin. Legs and arms use two-bone IK. The golfer
   stands where the club reaches the ball, and the swing is a hub-and-plane model with keyframes
   from address through top and impact to finish. `timeline.ts` maps time to swing phase and ball
-  time with a 3:1 tempo, so 2D and 3D share one clock.
-- **Cameras** (`camera.ts`): the presets and a pinhole projector. 2D uses the same cameras as 3D.
+  time with a 3:1 tempo.
+- **Cameras** (`camera.ts`): the presets and a pinhole projector.
 
 ```
 pnpm test        # vitest: schema, geometry, flight, slope adjustments, 2D shapes
 pnpm typecheck
 pnpm build       # library to dist/
-pnpm dev         # standalone demo at http://localhost:5173 (2D and 3D side by side)
+pnpm dev         # standalone demo at http://localhost:5173
 pnpm build:demo  # static demo in dist-demo/
 ```
-
-Until the workspace root lands, run these inside this folder with
-`pnpm install --ignore-workspace`.
 
 ## Native app (step 7)
 
@@ -105,23 +101,4 @@ Until the workspace root lands, run these inside this folder with
   text in screen coordinates, with no DOM types. `ShotDiagram.tsx` maps them to `<svg>` elements
   in about 60 lines. A `@shotbook/shot-viz/native` entry would do the same with `react-native-svg`
   (`Polygon`, `Polyline`, `Circle`, `Text`; arrowheads come from `arrowHead()`, not SVG markers).
-- **3D:** two options. `@react-three/fiber/native` with `expo-gl` can reuse most of
-  `ShotScene3D`, but `Html` labels, the toolbar and OrbitControls need native replacements (for
-  example drei/native controls with RN buttons). Or embed the web 3D view in a `WebView`: fastest to
-  ship, but heavier. Try r3f native first and keep WebView as the fallback.
 - Scene JSON is bundled with the app content; the core maths runs unchanged in Hermes.
-
-## Next: a rigged, animated golfer (step 6)
-
-The mannequin is posed procedurally from `poseGolfer(scene, phase)`. To move to a realistic
-golfer:
-
-1. Make or license a rigged, low-poly golfer in glTF/GLB (Draco or meshopt compressed, ideally
-   under 1 MB). Use a Mixamo-style humanoid skeleton and animation clips for address, swing and
-   finish. Ask the owner before adding assets from an external source or a CDN.
-2. Keep `ShotScene` as the input. Map the derived setup (stance width, ball position, spine and
-   shoulder tilt, knee flex, weight) onto the rig as additive bone offsets on top of the clips.
-3. Drive the clip time from `timelineAt()` so ball launch stays in sync with impact. Expose a
-   scrubber (address → top → impact → finish).
-4. Keep the procedural mannequin as the fallback for low-end devices and for tests. The joint
-   names in `JOINTS` can double as the retargeting map.

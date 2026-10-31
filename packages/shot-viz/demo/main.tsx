@@ -1,15 +1,14 @@
-import { StrictMode, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { StrictMode, useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   computeFlight,
-  deriveLaunch,
   exampleSceneInputs,
   exampleScenes,
   timelineAt,
   timelineDuration,
   type ShotScene,
 } from "../src/index.ts";
-import { LazyShotScene3D, ShotDiagram } from "../src/web/index.ts";
+import { ShotDiagram } from "../src/web/index.ts";
 
 function useHashScene(): [string, (id: string) => void] {
   const first = exampleSceneInputs[0]!.id;
@@ -32,7 +31,8 @@ function App() {
     [base, leftHanded],
   );
   const flight = useMemo(() => computeFlight(scene), [scene]);
-  const launch = useMemo(() => deriveLaunch(scene), [scene]);
+  // Curve shows best from above; everything else reads best from behind.
+  const flightView = scene.camera === "overhead" ? "overhead" : "behind";
   const [phase, setPhase] = useState(0);
   const [ballTime, setBallTime] = useState(Infinity);
   const raf = useRef(0);
@@ -70,7 +70,7 @@ function App() {
         <h2>{scene.title}</h2>
         <p className="lede">{scene.description}</p>
         <div className="controls">
-          <button onClick={play}>▶ Play swing (2D)</button>
+          <button onClick={play}>▶ Play swing</button>
           <label>
             Swing phase{" "}
             <input
@@ -95,67 +95,46 @@ function App() {
             Left-handed
           </label>
         </div>
-        <ul className="stats">
-          <li>
-            Launch <strong>{launch.launchAngle.toFixed(0)}°</strong>
-          </li>
-          <li>
-            Carry <strong>{flight.carry.toFixed(0)} m</strong>
-          </li>
-          <li>
-            Peak <strong>{flight.apex[1].toFixed(0)} m</strong>
-          </li>
-          <li>
-            Landing <strong>{flight.descentAngle.toFixed(0)}°</strong>
-          </li>
-          <li>
-            Total <strong>{flight.total.toFixed(0)} m</strong>
-          </li>
-          <li>
-            Offline <strong>{(flight.rest[2] * (leftHanded ? -1 : 1)).toFixed(0)} m</strong>
-          </li>
-        </ul>
-        <div className="grid">
-          <div className="diagrams">
-            <figure className="card" style={{ margin: 0 }}>
-              <h3>2D · Face-on</h3>
-              <ShotDiagram
-                scene={scene}
-                flight={flight}
-                view="face-on"
-                phase={phase}
-                ballTime={ballTime}
-              />
-            </figure>
-            <figure className="card" style={{ margin: 0 }}>
-              <h3>2D · Down the line</h3>
-              <ShotDiagram
-                scene={scene}
-                flight={flight}
-                view="down-the-line"
-                phase={phase}
-                ballTime={ballTime}
-              />
-            </figure>
-            <figure className="card wide" style={{ margin: 0 }}>
-              <h3>2D · Behind (ball flight)</h3>
-              <ShotDiagram
-                scene={scene}
-                flight={flight}
-                view="behind"
-                phase={phase}
-                ballTime={ballTime}
-                width={640}
-                height={300}
-              />
-            </figure>
-          </div>
-          <div className="card">
-            <h3>3D · drag to orbit</h3>
-            <Suspense fallback={<p style={{ padding: 16 }}>Loading 3D…</p>}>
-              <LazyShotScene3D scene={scene} />
-            </Suspense>
-          </div>
+        {scene.tips.length > 0 && (
+          <ul className="tips">
+            {scene.tips.map((tip) => (
+              <li key={tip}>{tip}</li>
+            ))}
+          </ul>
+        )}
+        <div className="diagrams">
+          <figure className="card" style={{ margin: 0 }}>
+            <h3>Face-on</h3>
+            <ShotDiagram
+              scene={scene}
+              flight={flight}
+              view="face-on"
+              phase={phase}
+              ballTime={ballTime}
+            />
+          </figure>
+          <figure className="card" style={{ margin: 0 }}>
+            <h3>Down the line</h3>
+            <ShotDiagram
+              scene={scene}
+              flight={flight}
+              view="down-the-line"
+              phase={phase}
+              ballTime={ballTime}
+            />
+          </figure>
+          <figure className="card wide" style={{ margin: 0 }}>
+            <h3>{flightView === "overhead" ? "From above" : "Behind"} (ball flight)</h3>
+            <ShotDiagram
+              scene={scene}
+              flight={flight}
+              view={flightView}
+              phase={phase}
+              ballTime={ballTime}
+              width={640}
+              height={300}
+            />
+          </figure>
         </div>
         <details>
           <summary>Scene JSON</summary>

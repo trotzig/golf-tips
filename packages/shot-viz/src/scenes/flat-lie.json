@@ -2,7 +2,18 @@
   "id": "flat-lie",
   "title": "Flat lie, 7-iron",
   "description": "A stock 7-iron from a level fairway lie, for comparison.",
-  "swing": { "club": "7-iron" },
-  "annotations": [{ "type": "target-line", "label": "Target line" }, { "type": "ball-flight" }],
-  "camera": "face-on"
+  "swing": {
+    "club": "7-iron"
+  },
+  "annotations": [
+    {
+      "type": "target-line",
+      "label": "Target line"
+    },
+    {
+      "type": "ball-flight"
+    }
+  ],
+  "camera": "face-on",
+  "tips": ["A stock shot from a level lie: use it as the baseline for the other shots."]
 }
