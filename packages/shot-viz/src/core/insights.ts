@@ -64,12 +64,21 @@ export interface FlightComparison {
 
 const rollShare = (f: FlightResult) => (f.total > 0 ? (f.total - f.carry) / f.total : 0);
 
+/**
+ * Extra roll (metres) a shot needs before it reads as "more roll". Wedges barely roll after a
+ * full swing, so a bunker shot that runs a metre has many times their share yet still stops
+ * quickly.
+ */
+const MIN_EXTRA_ROLL = 2;
+
 export function compareWithNormal(scene: ShotScene): FlightComparison {
   const flight = computeFlight(scene);
   const normal = computeFlight(normalScene(scene));
   // Height relative to length, so a short chip and a full shot compare by shape.
   const height = flight.apex[1] / flight.carry / (normal.apex[1] / normal.carry);
   const roll = rollShare(flight) / Math.max(rollShare(normal), 0.01);
+  const extraRoll = flight.total - flight.carry - (normal.total - normal.carry);
+  const rollsMore = extraRoll >= MIN_EXTRA_ROLL;
   // How far the landing is from where the start line points: curve and wind drift.
   const straight = flight.carry * Math.tan((flight.launch.direction * Math.PI) / 180);
   const bend = flight.landing[2] - straight;
@@ -78,7 +87,14 @@ export function compareWithNormal(scene: ShotScene): FlightComparison {
     flight,
     normal,
     height: height < 0.85 ? "less" : height > 1.15 ? "more" : "normal",
-    roll: roll > 3 ? "much-more" : roll > 1.3 ? "more" : roll < 0.7 ? "less" : "normal",
+    roll:
+      rollsMore && roll > 3
+        ? "much-more"
+        : rollsMore && roll > 1.3
+          ? "more"
+          : roll < 0.7
+            ? "less"
+            : "normal",
     curve: bend > curveLimit ? "right" : bend < -curveLimit ? "left" : "none",
   };
 }

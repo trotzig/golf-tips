@@ -63,4 +63,14 @@ describe("flight comparison", () => {
     const c = compareWithNormal(exampleScenes["basic-chip"]!);
     expect([c.height, c.roll]).toEqual(["less", "much-more"]);
   });
+
+  it("doesn't call a short wedge that stops quickly a rolling shot", () => {
+    for (const id of ["greenside-bunker", "pitch-shot", "lob-shot"]) {
+      expect(compareWithNormal(exampleScenes[id]!).roll, id).toBe("normal");
+    }
+  });
+
+  it("still sees a plugged lie run out", () => {
+    expect(compareWithNormal(exampleScenes["plugged-bunker-lie"]!).roll).toBe("much-more");
+  });
 });
