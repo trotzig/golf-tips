@@ -157,7 +157,7 @@ one), `expect`, `updated`. Everything else is optional. `related` must reference
 `viz` must name a scene in `packages/shot-viz/src/scenes/` (the site build fails otherwise); by
 convention the scene id equals the situation id.
 
-With a `viz` scene, the page draws Setup (address gauges), Swing (swing-length clock) and What
+With a `viz` scene, the page (on the site and in the app) draws Setup (address gauges), Swing (swing-length clock) and What
 to expect (flight compared with a normal shot with the same club) from it, above the bullets.
 `club_change` draws a club ladder; `club_roll_chart: true` draws each club's air and roll (chips).
 `fixes` turns Common mistakes into Do's and don'ts pairs.
@@ -297,6 +297,9 @@ and Settings, plus category, tag and situation screens that mirror the site.
   the same shapes as the web via `shapesElements`) and `useShotPlayer` (plays once on open, then
   one Pause / Play / Play again button, on the shared timeline). With reduced motion it waits for
   Play.
+- **Illustrated sections** (setup gauges, swing clock, flight compared with normal, club ladder
+  and roll chart) are in `src/components/Illustrations.tsx`, ported from the site's components
+  with their geometry in `src/lib/illustrations.ts`. Change both sides together.
 - **Look:** colour tokens in `src/theme.ts` copy `global.css` (light and dark follow the system);
   Jost via `@expo-google-fonts/jost`, Georgia (serif on Android) for page titles.
 - Pure helpers live in `src/lib/` and are unit-tested in `test/` (no React Native in vitest).
