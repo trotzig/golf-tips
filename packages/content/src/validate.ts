@@ -59,7 +59,7 @@ export function textFields(s: Situation): Array<[string, string]> {
     const value = s[key];
     if (value) fields.push([key, value]);
   }
-  for (const key of ["aliases", "setup", "swing", "expect", "mistakes"] as const) {
+  for (const key of ["aliases", "setup", "swing", "expect", "mistakes", "fixes"] as const) {
     s[key]?.forEach((value, i) => fields.push([`${key}[${i}]`, value]));
   }
   return fields;

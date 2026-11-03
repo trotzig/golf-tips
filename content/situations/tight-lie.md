@@ -19,8 +19,11 @@ expect:
 mistakes:
   - Using a high-bounce wedge.
   - Trying to lift the ball.
+fixes:
+  - Use a low-bounce club like a pitching wedge or 9-iron.
+  - Hit ball first, then turf, and trust the loft.
 club_choice: Near the green, putt or bump it along.
 related: [divot-lie, basic-chip, bump-and-run, chip-or-putt]
 viz: tight-lie
-updated: 2026-10-31
+updated: 2026-11-03
 ---

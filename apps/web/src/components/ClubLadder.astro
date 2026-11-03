@@ -1,0 +1,56 @@
+---
+// Clubs from less to more, each drawn a little longer: the normal club dashed, the ones to take
+// filled. From `club_change` in the situation's frontmatter.
+interface Props {
+  change: number | [number, number];
+}
+
+const { change } = Astro.props;
+const [low, high] = Array.isArray(change) ? change : [change, change];
+const steps: number[] = [];
+for (let n = Math.min(-2, low); n <= Math.max(2, high); n++) steps.push(n);
+
+const label = (n: number) => (n === 0 ? "Normal" : `${Math.abs(n)} ${n > 0 ? "more" : "less"}`);
+const picked = (n: number) => n >= low && n <= high;
+const words = (n: number) =>
+  n === 0
+    ? "your normal club"
+    : `${["one club", "two clubs", "three clubs"][Math.abs(n) - 1]} ${n > 0 ? "more" : "less"}`;
+const spoken = low === high ? words(low) : `${words(low)} or ${words(high)}`;
+---
+
+<p class="sr-only">Take {spoken}.</p>
+<ol
+  class="mb-3 grid gap-1.5"
+  style={`grid-template-columns: repeat(${steps.length}, minmax(0, 1fr))`}
+  aria-hidden="true"
+>
+  {steps.map((n) => {
+    const len = 30 + (n - steps[0]!) * 4;
+    return (
+      <li
+        class:list={[
+          "flex flex-col items-center rounded-lg px-0.5 pt-2 pb-1.5 text-center text-xs leading-tight font-semibold",
+          picked(n) ? "bg-accent text-on-accent" : "bg-surface text-ink-muted",
+          n === 0 &&
+            !picked(n) &&
+            "text-ink-strong outline-[1.5px] -outline-offset-[1.5px] outline-line-strong outline-dashed",
+        ]}
+      >
+        <svg class="mb-1 h-11 w-4" viewBox="0 0 16 44" aria-hidden="true">
+          <line
+            x1="11"
+            y1={42 - len}
+            x2="7"
+            y2="38"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <path d="M7 38 L2 40 L3 42.5 L9 42 Z" fill="currentColor" />
+        </svg>
+        {label(n)}
+      </li>
+    );
+  })}
+</ol>

@@ -1,11 +1,17 @@
 ---
 import { getCategory, type Situation } from "@shotbook/content";
+import { exampleScenes } from "@shotbook/shot-viz";
 import { marked } from "marked";
 import Bullets from "../../components/Bullets.astro";
 import Card from "../../components/Card.astro";
+import ClubLadder from "../../components/ClubLadder.astro";
+import ClubRollChart from "../../components/ClubRollChart.astro";
 import FavouriteButton from "../../components/FavouriteButton.astro";
+import FlightComparison from "../../components/FlightComparison.astro";
 import Handed from "../../components/Handed.astro";
+import SetupGauges from "../../components/SetupGauges.astro";
 import ShotViz from "../../components/ShotViz.astro";
+import SwingClock from "../../components/SwingClock.astro";
 import Base from "../../layouts/Base.astro";
 import { getSituations, href, tagLabel } from "../../lib/content";
 import { handedMarkdown } from "../../lib/handed";
@@ -25,6 +31,10 @@ const { situation: s } = Astro.props;
 const category = getCategory(s.category);
 const byId = new Map(getSituations().map((x) => [x.id, x]));
 const related = s.related.flatMap((id) => byId.get(id) ?? []);
+// Setup, swing and what to expect are drawn from the diagram's scene when there is one.
+const scene = s.viz ? exampleScenes[s.viz] : undefined;
+const pairs =
+  s.mistakes && s.fixes ? s.mistakes.map((dont, i) => ({ dont, fix: s.fixes![i]! })) : [];
 // Body is trusted Markdown from the repo.
 const bodyHtml = s.body ? await marked.parse(handedMarkdown(s.body)) : "";
 ---
@@ -54,42 +64,132 @@ const bodyHtml = s.body ? await marked.parse(handedMarkdown(s.body)) : "";
 
     {s.setup && (
       <Card title="Setup">
+        {scene && <SetupGauges scene={scene} />}
         <Bullets items={s.setup} />
       </Card>
     )}
     {s.swing && (
       <Card title="Swing">
+        {scene && <SwingClock scene={scene} />}
         <Bullets items={s.swing} />
       </Card>
     )}
     <Card title="What to expect">
+      {scene && <FlightComparison scene={scene} />}
       <Bullets items={s.expect} />
     </Card>
     {s.club_choice && (
       <Card title="Club choice">
+        {s.club_change !== undefined && <ClubLadder change={s.club_change} />}
+        {s.club_roll_chart && <ClubRollChart />}
         <p>
           <Handed text={s.club_choice} />
         </p>
       </Card>
     )}
-    {s.mistakes && (
-      <Card title="Common mistakes" tone="warning">
-        <Bullets items={s.mistakes} />
+    {pairs.length > 0 ? (
+      <Card title="Do’s and don’ts" tone="warning">
+        <ul class="grid gap-2.5">
+          {pairs.map(({ dont, fix }) => (
+            <li class="overflow-hidden rounded-lg border border-line">
+              <p class="grid grid-cols-[1.5rem_1fr] items-start gap-2.5 bg-highlight-soft px-3 py-2.5">
+                <svg class="mt-0.5 size-6" viewBox="0 0 24 24" role="img" aria-label="Don’t">
+                  <circle cx="12" cy="12" r="12" class="fill-highlight" />
+                  <path
+                    d="M8 8l8 8M16 8l-8 8"
+                    class="stroke-canvas"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <span>
+                  <Handed text={dont} />
+                </span>
+              </p>
+              <p class="grid grid-cols-[1.5rem_1fr] items-start gap-2.5 px-3 py-2.5">
+                <svg class="mt-0.5 size-6" viewBox="0 0 24 24" role="img" aria-label="Do">
+                  <circle cx="12" cy="12" r="12" class="fill-accent" />
+                  <path
+                    d="M7 12.5l3.4 3.4L17 9"
+                    fill="none"
+                    class="stroke-on-accent"
+                    stroke-width="2.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span>
+                  <Handed text={fix} />
+                </span>
+              </p>
+            </li>
+          ))}
+        </ul>
       </Card>
+    ) : (
+      s.mistakes && (
+        <Card title="Common mistakes" tone="warning">
+          <Bullets items={s.mistakes} />
+        </Card>
+      )
     )}
     {s.drill && (
-      <Card title="Practice drill" tone="muted">
-        <p>
-          <Handed text={s.drill} />
-        </p>
-      </Card>
+      <section class="grid grid-cols-[3.5rem_1fr] items-start gap-3 rounded-card border-[1.5px] border-dashed border-line-strong bg-surface p-4">
+        <svg class="size-14" viewBox="0 0 54 54" aria-hidden="true">
+          <rect x="2" y="2" width="50" height="50" rx="12" class="fill-card" />
+          <ellipse
+            cx="27"
+            cy="36"
+            rx="18"
+            ry="7"
+            fill="none"
+            class="stroke-accent"
+            stroke-width="2"
+          />
+          <ellipse
+            cx="27"
+            cy="36"
+            rx="10"
+            ry="4"
+            fill="none"
+            class="stroke-accent"
+            stroke-width="2"
+          />
+          <ellipse cx="27" cy="36" rx="3" ry="1.5" class="fill-accent" />
+          <line x1="27" y1="36" x2="27" y2="10" class="stroke-ink-strong" stroke-width="1.8" />
+          <path d="M27 10 L39 14 L27 18 Z" class="fill-highlight" />
+        </svg>
+        <div>
+          <h2 class="mb-1 text-xs font-semibold tracking-widest text-ink-muted uppercase">
+            Practice drill
+          </h2>
+          <p class="text-lg leading-snug">
+            <Handed text={s.drill} />
+          </p>
+        </div>
+      </section>
     )}
     {s.advanced && (
-      <Card title="For better players" tone="muted">
-        <p>
+      <details class="group rounded-card border border-line bg-card shadow-card">
+        <summary class="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
+          <span>
+            <span class="block font-semibold text-ink-strong">For better players</span>
+            <span class="block text-sm text-ink-muted">A refinement once the basics work</span>
+          </span>
+          <span aria-hidden="true" class="text-2xl leading-none text-accent group-open:hidden">
+            +
+          </span>
+          <span
+            aria-hidden="true"
+            class="hidden text-2xl leading-none text-accent group-open:inline"
+          >
+            −
+          </span>
+        </summary>
+        <p class="px-4 pb-4 text-lg leading-snug">
           <Handed text={s.advanced} />
         </p>
-      </Card>
+      </details>
     )}
     {bodyHtml && <section class="space-y-3 px-1 text-lg text-ink" set:html={bodyHtml} />}
 

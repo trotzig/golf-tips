@@ -23,11 +23,15 @@ mistakes:
   - Making your normal chip and leaving it in the rough or fringe.
   - Decelerating, which lets the grass stop the club.
   - Trying to putt or sweep the ball through it.
+fixes:
+  - Make a bigger, firmer swing than the distance suggests.
+  - Accelerate through the grass to a full finish.
+  - Chip with a lofted club and a slightly steeper swing.
 club_choice: More loft and a bigger swing around the green; from the fairway, one club more.
 drill: Chip from the same spot into and with the grain, and compare how far each one goes.
 advanced: Grain is strongest on Bermuda and other warm-season grass. It often grows toward the setting sun or toward drainage.
 related: [with-the-grain-lie, thick-rough, basic-chip, pitch-shot, putting-from-the-fringe]
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Grain is the direction the grass blades lie. Into the grain, the blades point back at you, so the

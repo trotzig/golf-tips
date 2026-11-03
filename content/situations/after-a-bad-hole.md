@@ -17,8 +17,11 @@ expect:
 mistakes:
   - Risky "revenge" shots to win strokes back.
   - Replaying the bad hole in your head.
+fixes:
+  - Play the percentage shot and let birdies come on their own.
+  - "Focus on this shot: pick a target and commit to it."
 club_choice: Play for a solid par or bogey, not a make-up birdie.
 advanced: Set a small goal for the next three holes, like a full routine every shot.
 related: [first-tee-nerves, pre-shot-routine, laying-up, punch-out-from-trees]
-updated: 2026-10-31
+updated: 2026-11-03
 ---

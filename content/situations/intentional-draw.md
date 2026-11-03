@@ -20,12 +20,16 @@ expect:
 mistakes:
   - Aiming the face with your body — a push.
   - Flipping the hands, which hooks it.
+fixes:
+  - Set the face at the target first, then aim your body {right}.
+  - Swing along your body line and let the setup create the curve.
 club_choice: Consider one club less.
+club_change: -1
 drill: Start balls along an alignment stick on your body line.
 advanced: The face sets start direction; path versus face sets curve.
 related: [intentional-fade, crosswind, ball-above-feet, choosing-a-target]
 viz: intentional-draw
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Only try a shaped shot on the course once you can hit it reliably in practice. If in doubt,

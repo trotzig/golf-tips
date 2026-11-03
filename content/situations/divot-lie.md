@@ -19,11 +19,15 @@ expect:
 mistakes:
   - Trying to lift the ball out.
   - Choosing a fairway wood.
+fixes:
+  - Hit down steeply with your hands ahead; the loft gets it out.
+  - Take an iron and hit down; it digs the ball out cleanly.
 club_choice: Same club or one less; allow for roll.
+club_change: [-1, 0]
 advanced: From a sand-filled divot, pick it clean like a fairway bunker shot.
 related: [tight-lie, low-shot, fairway-bunker]
 viz: divot-lie
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Under the Rules of Golf you must play it as it lies, so knowing this shot saves strokes.

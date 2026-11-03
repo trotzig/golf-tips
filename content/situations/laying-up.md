@@ -19,8 +19,11 @@ expect:
 mistakes:
   - Leaving an awkward half-wedge.
   - Laying up too close to the hazard.
+fixes:
+  - Lay up to your favorite full-swing distance.
+  - Lay up to flat fairway well short of the hazard.
 club_choice: Club for the lay-up target, then swing normally.
 advanced: A full wedge from flat ground beats an awkward short pitch.
 related: [choosing-a-target, thick-rough, punch-out-from-trees, fairway-bunker]
-updated: 2026-10-31
+updated: 2026-11-03
 ---

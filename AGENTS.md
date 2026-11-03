@@ -138,7 +138,10 @@ expect:
   - Tendency to curve {right} — aim a little {left} to compensate.
 mistakes:
   - Leaning back to "help" the ball up, which causes thin or fat shots.
+fixes:                    # optional: one per mistake, shown as Do's and don'ts
+  - Keep your weight forward and stay down through the ball.
 club_choice: Take one club less; the slope adds loft-reducing effect and roll.
+club_change: -1           # optional: clubs vs. normal (+ = more), or a range like [1, 2]
 drill: Optional — one short practice drill.
 advanced: Optional — refinements for better players.
 related: [uphill-lie, ball-above-feet, ball-below-feet]
@@ -153,6 +156,11 @@ Required: `title`, `summary` (≤ 140 chars), `category`, `tags`, `setup` or `sw
 one), `expect`, `updated`. Everything else is optional. `related` must reference existing ids.
 `viz` must name a scene in `packages/shot-viz/src/scenes/` (the site build fails otherwise); by
 convention the scene id equals the situation id.
+
+With a `viz` scene, the page draws Setup (address gauges), Swing (swing-length clock) and What
+to expect (flight compared with a normal shot with the same club) from it, above the bullets.
+`club_change` draws a club ladder; `club_roll_chart: true` draws each club's air and roll (chips).
+`fixes` turns Common mistakes into Do's and don'ts pairs.
 
 Categories (fixed list — add new ones only via a PR that updates this file and the schema):
 

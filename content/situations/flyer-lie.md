@@ -18,9 +18,13 @@ expect:
 mistakes:
   - Taking your normal club and flying the green.
   - Attacking a flag tucked behind a bunker.
+fixes:
+  - Take one club less and plan for the ball to run.
+  - Aim for the middle of the green and let it release.
 club_choice: One club less, or swing softer.
+club_change: -1
 advanced: Flyers are strongest with mid and short irons.
 related: [thick-rough, choosing-a-target]
 viz: flyer-lie
-updated: 2026-10-31
+updated: 2026-11-03
 ---

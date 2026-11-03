@@ -19,11 +19,15 @@ expect:
 mistakes:
   - Landing the ball in long grass.
   - Flicking the wrists.
+fixes:
+  - Land it on the green or firm fringe, where the bounce is predictable.
+  - Keep your wrists quiet and rock your shoulders like a putt.
 club_choice: Use the least loft that clears the fringe.
+club_roll_chart: true
 advanced: A hybrid works the same way from the fringe.
 related: [basic-chip, chip-or-putt, putting-from-the-fringe, tight-lie, into-the-wind]
 viz: bump-and-run
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 A long-standing rule of thumb: get the ball rolling as soon as you can. The lower the shot, the

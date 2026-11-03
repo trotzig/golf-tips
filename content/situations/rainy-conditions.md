@@ -19,10 +19,14 @@ expect:
 mistakes:
   - Letting grips get wet.
   - Hurrying to get out of the rain.
+fixes:
+  - Keep a dry towel handy and wipe the grip before each shot.
+  - Keep your normal routine and make sure of your footing.
 club_choice: One more club; fly it to the target.
+club_change: 1
 advanced: Putt firmer on wet greens; expect less break.
 related: [cold-weather, into-the-wind, chip-or-putt]
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Safety first: if there is thunder or lightning, stop play at once and get to a safe building or

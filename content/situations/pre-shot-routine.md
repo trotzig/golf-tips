@@ -18,9 +18,12 @@ expect:
 mistakes:
   - Speeding up or stalling when nervous.
   - A routine so long it slows play.
+fixes:
+  - Keep the same timing every shot, nervous or not.
+  - "Keep it short: pick, rehearse once or twice, then go."
 club_choice: Commit to the club first; if you change it, start over.
 drill: Use your full routine on the range too.
 advanced: Think behind the ball; once you step in, just react to the target.
 related: [first-tee-nerves, short-putts, lag-putting, after-a-bad-hole]
-updated: 2026-10-31
+updated: 2026-11-03
 ---

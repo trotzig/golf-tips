@@ -18,9 +18,12 @@ expect:
 mistakes:
   - Focusing on line over speed.
   - Jabbing with a short backswing.
+fixes:
+  - Focus on speed first; aim to leave a tap-in.
+  - Lengthen the backswing and keep your short-putt rhythm.
 club_choice: Aim for a tap-in, ideally just past the hole.
 drill: Putt from various distances to stop just short of the fringe.
 advanced: Picture a target past the hole uphill, short of it downhill.
 related: [short-putts, putting-from-the-fringe, pre-shot-routine]
-updated: 2026-10-31
+updated: 2026-11-03
 ---

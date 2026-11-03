@@ -21,10 +21,13 @@ expect:
 mistakes:
   - Trying it from a tight or bare lie.
   - Decelerating out of fear.
+fixes:
+  - Chip or pitch instead when the lie is tight or bare.
+  - Commit to a long swing and accelerate to a full finish.
 club_choice: Lob only when you must; a chip or pitch is safer.
 related: [pitch-shot, high-shot, greenside-bunker, tight-lie]
 viz: lob-shot
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 The lob is a specialty shot. If the lie is tight, or you aren't confident, aim for the middle of

@@ -20,12 +20,16 @@ expect:
 mistakes:
   - Aiming the face with your body — a pull.
   - Opening the face too far — a slice.
+fixes:
+  - Set the face at the target first, then aim your body {left}.
+  - Open the face only enough to point at the target; the stance adds the curve.
 club_choice: Consider one club more.
+club_change: 1
 drill: Start balls along an alignment stick on your body line.
 advanced: A fade off the tee stops quicker and stays in play.
 related: [intentional-draw, crosswind, ball-below-feet, choosing-a-target]
 viz: intentional-fade
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Only try a shaped shot on the course once you can hit it reliably in practice. If in doubt,

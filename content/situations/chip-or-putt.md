@@ -18,7 +18,10 @@ expect:
 mistakes:
   - Always reaching for a wedge.
   - Putting through long or wet grass.
+fixes:
+  - Putt when the ground is short and smooth; chip low when it isn't.
+  - Chip a low runner when long or wet grass is in the way.
 club_choice: Putt when you can, chip when you must, pitch only to clear trouble.
 related: [basic-chip, bump-and-run, putting-from-the-fringe, tight-lie, lob-shot]
-updated: 2026-10-31
+updated: 2026-11-03
 ---

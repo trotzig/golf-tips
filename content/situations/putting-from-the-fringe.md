@@ -18,8 +18,11 @@ expect:
 mistakes:
   - Leaving it short.
   - Putting through wet or into-the-grain grass.
+fixes:
+  - Make a slightly longer stroke to roll it through the fringe.
+  - Chip or bump it when the fringe is wet or into the grain.
 club_choice: Putt if short and dry; otherwise bump-and-run or hybrid.
 drill: Learn how much longer your stroke must be from the fringe.
 related: [chip-or-putt, bump-and-run, lag-putting]
-updated: 2026-10-31
+updated: 2026-11-03
 ---

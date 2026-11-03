@@ -21,11 +21,15 @@ expect:
 mistakes:
   - Taking too little loft and hitting the lip.
   - Digging your feet in deep.
+fixes:
+  - Take enough loft to clear the lip comfortably, even if you come up short.
+  - Wriggle your feet in just enough for a stable stance.
 club_choice: One club more, but never too little loft for the lip.
+club_change: 1
 advanced: From a good lie and low lip, sweep a hybrid or wood.
 related: [greenside-bunker, plugged-bunker-lie, divot-lie, laying-up]
 viz: fairway-bunker
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Under the Rules of Golf, don't touch the sand with your club before the stroke — not at address,
