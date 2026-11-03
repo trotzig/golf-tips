@@ -1,7 +1,7 @@
 ---
 // Address position at a glance, drawn from the situation's scene and compared with a normal shot
 // with the same club (dashed). Every gauge uses the golfer's own view: feet seen from above with
-// the toes pointing up and the ball in front of them, so the lead side and the target are on the
+// the ball in front of them, so the lead side and the target are on the
 // left for a right-hander and on the right for a left-hander. Both hands are drawn and global.css
 // shows the reader's.
 import { setupInsight, type ShotScene } from "@shotbook/shot-viz";
@@ -38,7 +38,7 @@ const hands = [
 ];
 const r = (n: number) => Math.round(n * 10) / 10;
 
-/** A shoe sole seen from above, toes up, centred on (cx, cy), `h` tall. */
+/** A shoe sole seen from above, toe at the top, centred on (cx, cy), `h` tall. */
 const foot = (cx: number, cy: number, h: number) => {
   const w = h * 0.42;
   const top = cy - h / 2;
@@ -73,7 +73,7 @@ const stanceHalf = (w: number) => r(w * 110);
 
 <div class="mb-4">
   <p class="mb-2 text-sm text-ink-muted">
-    From above, toes pointing up, lead side on the <Handed text="{left}" />. Dashed: a normal shot.
+    Lead side on the <Handed text="{left}" />. Dashed: a normal shot.
   </p>
   <div class="grid grid-cols-2 gap-2.5">
     <div class="col-span-2 rounded-lg bg-surface px-3 pt-2.5 pb-2">
