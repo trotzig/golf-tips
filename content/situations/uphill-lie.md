@@ -22,12 +22,16 @@ expect:
 mistakes:
   - Leaning into the hill and hitting it fat.
   - Swinging hard and falling back.
+fixes:
+  - Tilt your shoulders with the slope and swing up it.
+  - Make a shorter, balanced swing and hold your finish.
 club_choice: Take one or two clubs more.
+club_change: [1, 2]
 drill: Find where practice swings brush the ground; set the ball there.
 advanced: On severe upslopes, take more club and swing three-quarter.
 related: [downhill-lie, ball-above-feet, ball-below-feet]
 viz: uphill-lie
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Rule of thumb for uphill and downhill lies: set your shoulders with the slope, play the ball toward the higher

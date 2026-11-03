@@ -20,10 +20,13 @@ expect:
 mistakes:
   - Opening the face as for a normal splash.
   - Holding back.
+fixes:
+  - Keep the face square or slightly closed so the edge digs in.
+  - Hit down hard behind the ball and commit to the shot.
 club_choice: Sand or pitching wedge; the pitching wedge digs more easily.
 related: [greenside-bunker, fairway-bunker, after-a-bad-hole]
 viz: plugged-bunker-lie
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Under the Rules of Golf, don't touch the sand with your club before the stroke — not at address,

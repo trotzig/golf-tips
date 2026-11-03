@@ -57,6 +57,9 @@ describe("parseSituation", () => {
     ["bad club", "clubs: [putter, spoon]\n", /clubs/],
     ["bad date", "updated: 31/10/2026\n", /updated/],
     ["empty bullet", "mistakes: ['']\n", /mistakes/],
+    ["fixes without mistakes", "fixes: [Do this.]\n", /fixes/],
+    ["fractional club change", "club_change: 0.5\n", /club_change/],
+    ["backwards club range", "club_change: [2, 1]\n", /club_change/],
   ])("rejects %s", (_name, extra, pattern) => {
     // Drop the base value so the YAML has no duplicate key.
     const key = extra.split(":")[0]!;

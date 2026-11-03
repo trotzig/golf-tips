@@ -19,6 +19,8 @@ const text = z
   .trim()
   .min(1);
 const bullets = z.array(text).min(1);
+/** Whole clubs relative to the normal club for the distance: positive = more club. */
+const clubSteps = z.number().int().min(-3).max(3);
 
 /** Frontmatter of `content/situations/<id>.md`. Mirrors the spec in AGENTS.md. */
 export const frontmatterSchema = z
@@ -34,7 +36,19 @@ export const frontmatterSchema = z
     swing: bullets.optional(),
     expect: bullets,
     mistakes: bullets.optional(),
+    /** One fix per mistake, in the same order; shown as "Do" under each "Don't". */
+    fixes: bullets.optional(),
     club_choice: text.optional(),
+    /**
+     * How many clubs to change from normal, drawn as a club ladder: `-1` for one club less,
+     * `[1, 2]` for one or two more.
+     */
+    club_change: z
+      .union([clubSteps, z.tuple([clubSteps, clubSteps])])
+      .refine((v) => !Array.isArray(v) || v[0] < v[1], "a range must go from fewer to more clubs")
+      .optional(),
+    /** Draw each club's share of air and roll, for chips and bump-and-runs. */
+    club_roll_chart: z.boolean().optional(),
     drill: text.optional(),
     advanced: text.optional(),
     related: z.array(idSchema).default([]),
@@ -47,6 +61,10 @@ export const frontmatterSchema = z
   .refine((fm) => fm.setup !== undefined || fm.swing !== undefined, {
     message: "at least one of `setup` or `swing` is required",
     path: ["setup"],
+  })
+  .refine((fm) => !fm.fixes || fm.fixes.length === fm.mistakes?.length, {
+    message: "`fixes` needs exactly one entry per item in `mistakes`",
+    path: ["fixes"],
   });
 
 export type Frontmatter = z.output<typeof frontmatterSchema>;

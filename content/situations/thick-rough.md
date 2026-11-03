@@ -20,11 +20,14 @@ expect:
 mistakes:
   - Taking a long club to reach the green.
   - Decelerating into the grass.
+fixes:
+  - Take a lofted club and get back to the fairway.
+  - Grip firmer and accelerate through the grass to a finish.
 club_choice: Take the loft that gets you safely out.
 advanced: Grass growing against you needs even more loft.
 related: [flyer-lie, punch-out-from-trees, laying-up, high-shot]
 viz: thick-rough
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 The goal is the next shot. One clean escape to the fairway beats two attempts to reach the green.

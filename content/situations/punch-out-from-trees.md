@@ -20,11 +20,14 @@ expect:
 mistakes:
   - Threading a narrow gap toward the green.
   - Hitting so hard it runs into more trouble.
+fixes:
+  - Take the widest, lowest gap back to the fairway, even sideways.
+  - Make a short backswing with a club that stops short of trouble.
 club_choice: Take the club that stays under the branches; swing gently.
 advanced: Leave a full swing with your favorite club.
 related: [low-shot, thick-rough, laying-up, after-a-bad-hole]
 viz: punch-out-from-trees
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Safety first: balls can rebound hard off trunks and branches. Choose a gap well away from the

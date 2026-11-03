@@ -21,12 +21,15 @@ expect:
 mistakes:
   - Picking the ball clean and flying the green.
   - Slowing down into the sand.
+fixes:
+  - Enter the sand behind the ball and splash it out.
+  - Accelerate through the sand to a full finish.
 club_choice: Use a sand wedge; its bounce glides through sand.
 drill: Draw a line in the sand and practice hitting it, no ball.
 advanced: For longer shots, square the face or use less loft.
 related: [plugged-bunker-lie, fairway-bunker, lob-shot, pitch-shot]
 viz: greenside-bunker
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Under the Rules of Golf, don't touch the sand with your club before the stroke — not at address,

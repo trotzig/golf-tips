@@ -19,9 +19,12 @@ expect:
 mistakes:
   - Aiming straight at the flag.
   - Underestimating drift on lofted shots.
+fixes:
+  - Aim upwind of the flag and let the wind bring it back.
+  - Allow extra drift for wedges and high shots; keep the flight lower.
 club_choice: Add about half a club in a strong crosswind.
 advanced: Shape the ball into the wind to hold its line.
 related: [into-the-wind, downwind, intentional-draw, intentional-fade]
 viz: crosswind
-updated: 2026-10-31
+updated: 2026-11-03
 ---

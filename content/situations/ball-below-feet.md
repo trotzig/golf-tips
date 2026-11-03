@@ -20,8 +20,12 @@ expect:
 mistakes:
   - Standing up through impact.
   - Swinging hard and toppling forward.
+fixes:
+  - Keep your knee flex and stay down until the ball is gone.
+  - Make a smooth three-quarter swing with your weight toward your heels.
 club_choice: Take one club more.
+club_change: 1
 related: [ball-above-feet, uphill-lie, downhill-lie, intentional-fade]
 viz: ball-below-feet
-updated: 2026-10-31
+updated: 2026-11-03
 ---

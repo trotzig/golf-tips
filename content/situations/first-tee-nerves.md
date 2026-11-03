@@ -19,10 +19,13 @@ expect:
 mistakes:
   - Swinging harder to impress.
   - Thinking mechanics instead of target.
+fixes:
+  - Swing at about 80% to a full, balanced finish.
+  - Pick a small target and keep your mind on it.
 club_choice: Take the club that keeps it in play.
 drill: End your warm-up by rehearsing the first tee shot.
 related: [pre-shot-routine, after-a-bad-hole, choosing-a-target, short-putts]
-updated: 2026-10-31
+updated: 2026-11-03
 ---
 
 Everyone watching is more worried about their own shot than yours. Focus on what you can control:
