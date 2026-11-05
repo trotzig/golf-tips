@@ -1,25 +1,14 @@
 import type { FlightComparison, FlightResult, SwingLength } from "@shotbook/shot-viz";
 
 // Geometry and wording for the illustrated sections of a situation screen, ported from the site's
-// SetupGauges, SwingClock, FlightComparison and ClubLadder components. `mirror` draws for a
+// SetupGauges, SwingClock, FlightComparison and ClubLadder components (the address figure's
+// geometry is shared through `addressLayout` in @shotbook/shot-viz). `mirror` draws for a
 // left-hander. Pure, so it is tested without React Native.
 
 export const round = (n: number) => Math.round(n * 10) / 10;
 
-/** A shoe sole seen from above, toe at the top, centred on (cx, cy), `h` tall. */
-export function footPath(cx: number, cy: number, h: number): string {
-  const r = round;
-  const w = h * 0.42;
-  const top = cy - h / 2;
-  const bottom = cy + h / 2;
-  return [
-    `M${r(cx)} ${r(top)}`,
-    `C${r(cx + w * 0.62)} ${r(top)} ${r(cx + w * 0.55)} ${r(cy - h * 0.05)} ${r(cx + w * 0.36)} ${r(cy + h * 0.12)}`,
-    `C${r(cx + w * 0.3)} ${r(cy + h * 0.25)} ${r(cx + w * 0.36)} ${r(bottom)} ${r(cx)} ${r(bottom)}`,
-    `C${r(cx - w * 0.36)} ${r(bottom)} ${r(cx - w * 0.3)} ${r(cy + h * 0.25)} ${r(cx - w * 0.36)} ${r(cy + h * 0.12)}`,
-    `C${r(cx - w * 0.55)} ${r(cy - h * 0.05)} ${r(cx - w * 0.62)} ${r(top)} ${r(cx)} ${r(top)}Z`,
-  ].join(" ");
-}
+/** Shared with the site's address figure. */
+export { footPath } from "@shotbook/shot-viz";
 
 /** x for the lead side (−1) … trail side (1) of a box `width` wide, flipped for left-handers. */
 export const side = (t: number, width: number, mirror: boolean) =>
@@ -37,10 +26,6 @@ export function tiltedLine(deg: number, len: number, cy: number, mirror: boolean
     y2: round(cy + dy),
   };
 }
-
-/** Footprint opacity for a share of the weight. */
-export const weightOpacity = (share: number) =>
-  round(Math.min(1, Math.max(0.1, (share - 0.2) * 1.6)));
 
 // Swing clock: where the club points at the top, in clock hours.
 export const SWING_TOP: Record<SwingLength, number> = {

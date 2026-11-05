@@ -1,4 +1,13 @@
-import { CLUB_SPECS, compareWithNormal, setupInsight, type ShotScene } from "@shotbook/shot-viz";
+import {
+  ADDRESS_H,
+  ADDRESS_W,
+  addressLayout,
+  addressSummary,
+  CLUB_SPECS,
+  compareWithNormal,
+  setupInsight,
+  type ShotScene,
+} from "@shotbook/shot-viz";
 import { Fragment, useMemo, type ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Svg, { Circle, Line, Path, Rect, Text as SvgText } from "react-native-svg";
@@ -17,7 +26,6 @@ import {
   SWING_TOP,
   tiltedLine,
   topPath,
-  weightOpacity,
 } from "../lib/illustrations";
 import { useHanded, usePrefs } from "../prefs";
 import { fonts, useColors } from "../theme";
@@ -88,14 +96,8 @@ export function SetupGauges({ scene }: { scene: ShotScene }) {
   const handed = useHanded();
   const mirror = usePrefs().hand === "left";
   const i = useMemo(() => setupInsight(scene), [scene]);
-  const { setup, normal } = i;
+  const { setup } = i;
 
-  const ballText = { less: "Back of normal", normal: "Normal", more: "Forward of normal" }[
-    i.ballPosition
-  ];
-  const weightText = { lead: "More on lead foot", even: "Even", trail: "More on trail foot" }[
-    i.weight
-  ];
   const shoulderText = i.matchesSlope
     ? "Match the slope"
     : setup.shoulderTilt > 7
@@ -103,18 +105,14 @@ export function SetupGauges({ scene }: { scene: ShotScene }) {
       : setup.shoulderTilt >= 2
         ? "Lead side a touch higher"
         : "Level";
-  const stanceText = { narrow: "Narrow", normal: "Normal", wide: "Wide" }[i.stance];
   const aimText =
     Math.abs(i.aim) < 1 ? "At the target" : i.aim < 0 ? "A little {left}" : "A little {right}";
 
-  // Ball position: −1 trail foot … 1 lead heel, in front of the toes.
-  const ballX = (v: number) => side(-v * 0.6, 300, mirror);
-  const lead = side(-0.6, 300, mirror);
-  const trail = side(0.6, 300, mirror);
+  const l = addressLayout(i, mirror);
+  const { y: footY, h: footH } = l.foot;
 
   const ground = tiltedLine(scene.terrain.slopeAlong, 62, 50, mirror);
   const sh = tiltedLine(setup.shoulderTilt, 46, 22, mirror);
-  const stanceHalf = (w: number) => round(w * 110);
 
   // The target line runs toward the lead side; aiming left of it, for a right-hander, points
   // toward the golfer's side of the line (down).
@@ -130,32 +128,63 @@ export function SetupGauges({ scene }: { scene: ShotScene }) {
         {handed("Lead side on the {left}. Dashed: a normal shot.")}
       </Text>
       <View style={styles.grid}>
-        <Tile title="Ball position" value={ballText} wide>
-          <Figure w={300} h={96}>
+        <Tile title="Address" value={addressSummary(i)} wide>
+          <Figure w={ADDRESS_W} h={ADDRESS_H}>
             <Line
-              x1={lead}
-              y1={16}
-              x2={trail}
-              y2={16}
+              x1={l.line.x1}
+              y1={l.ballY}
+              x2={l.line.x2}
+              y2={l.ballY}
               stroke={c.lineStrong}
-              strokeWidth={1.5}
+              strokeWidth={1.4}
               strokeDasharray="2 4"
             />
-            <Path
-              d={footPath(lead, 56, 44)}
-              fill={c.card}
-              stroke={c.lineStrong}
-              strokeWidth={1.5}
-            />
-            <Path
-              d={footPath(trail, 56, 44)}
-              fill={c.card}
-              stroke={c.lineStrong}
-              strokeWidth={1.5}
+            <Label
+              x={l.target.x}
+              y={l.ballY - 9}
+              anchor={l.target.anchor}
+              size={11}
+              bold
+              color={c.accent}
+            >
+              {l.target.text}
+            </Label>
+            {l.normalFeet.map((x) => (
+              <Path
+                key={x}
+                d={footPath(x, footY, footH)}
+                fill="none"
+                stroke={c.lineStrong}
+                strokeWidth={1.4}
+                strokeDasharray="3 2"
+              />
+            ))}
+            {l.feet.map((f) => (
+              <Fragment key={f.label}>
+                <Path
+                  d={footPath(f.x, footY, footH)}
+                  fill={c.card}
+                  stroke={c.inkStrong}
+                  strokeWidth={1.8}
+                />
+                <Path d={footPath(f.x, footY, footH)} fill={c.accent} fillOpacity={f.shade} />
+                <Label x={f.x} y={l.labelY} size={11} color={c.inkMuted}>
+                  {f.label}
+                </Label>
+              </Fragment>
+            ))}
+            <Line
+              x1={l.ball}
+              y1={l.guide.y1}
+              x2={l.ball}
+              y2={l.guide.y2}
+              stroke={c.inkStrong}
+              strokeWidth={1}
+              strokeDasharray="1 3"
             />
             <Circle
-              cx={ballX(normal.ballPosition)}
-              cy={16}
+              cx={l.normalBall}
+              cy={l.ballY}
               r={8}
               fill="none"
               stroke={c.lineStrong}
@@ -163,55 +192,31 @@ export function SetupGauges({ scene }: { scene: ShotScene }) {
               strokeDasharray="3 2"
             />
             <Circle
-              cx={ballX(setup.ballPosition)}
-              cy={16}
+              cx={l.ball}
+              cy={l.ballY}
               r={8}
               fill={c.card}
               stroke={c.inkStrong}
               strokeWidth={2}
             />
-            <Label x={lead} y={93} size={11} color={c.inkMuted}>
-              Lead
-            </Label>
-            <Label x={trail} y={93} size={11} color={c.inkMuted}>
-              Trail
-            </Label>
-            <Label
-              x={mirror ? 298 : 2}
-              y={20}
-              anchor={mirror ? "end" : "start"}
-              size={11}
-              bold
-              color={c.accent}
-            >
-              {mirror ? "Target →" : "← Target"}
-            </Label>
-          </Figure>
-        </Tile>
-
-        <Tile title="Weight" value={weightText}>
-          <Figure w={130} h={64}>
-            {[
-              { t: -0.5, share: setup.weightLead, label: "Lead" },
-              { t: 0.5, share: 1 - setup.weightLead, label: "Trail" },
-            ].map(({ t, share, label }) => (
-              <Fragment key={label}>
-                <Path
-                  d={footPath(side(t, 130, mirror), 26, 44)}
-                  fill={c.card}
-                  stroke={c.lineStrong}
-                  strokeWidth={1.5}
-                />
-                <Path
-                  d={footPath(side(t, 130, mirror), 26, 44)}
-                  fill={c.accent}
-                  fillOpacity={weightOpacity(share)}
-                />
-                <Label x={side(t, 130, mirror)} y={62} color={c.inkMuted}>
-                  {label}
-                </Label>
-              </Fragment>
-            ))}
+            <Line
+              x1={l.balance.x1}
+              y1={l.balance.y}
+              x2={l.balance.x2}
+              y2={l.balance.y}
+              stroke={c.lineStrong}
+              strokeWidth={3}
+              strokeLinecap="round"
+            />
+            <Line
+              x1={l.balance.centre}
+              y1={l.balance.y - 4}
+              x2={l.balance.centre}
+              y2={l.balance.y + 4}
+              stroke={c.lineStrong}
+              strokeWidth={1.4}
+            />
+            <Path d={l.balance.pointer} fill={c.accent} />
           </Figure>
         </Tile>
 
@@ -227,26 +232,6 @@ export function SetupGauges({ scene }: { scene: ShotScene }) {
             <Label x={sh.x2} y={sh.y2 - 8} color={c.inkMuted}>
               Trail
             </Label>
-          </Figure>
-        </Tile>
-
-        <Tile title="Stance" value={stanceText}>
-          <Figure w={130} h={52}>
-            {[-1, 1].map((s) => (
-              <Fragment key={s}>
-                <Path
-                  d={footPath(65 + s * stanceHalf(normal.stanceWidth), 26, 40)}
-                  fill="none"
-                  stroke={c.lineStrong}
-                  strokeWidth={1.4}
-                  strokeDasharray="3 2"
-                />
-                <Path
-                  d={footPath(65 + s * stanceHalf(setup.stanceWidth), 26, 40)}
-                  fill={c.inkStrong}
-                />
-              </Fragment>
-            ))}
           </Figure>
         </Tile>
 
