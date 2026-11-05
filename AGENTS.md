@@ -159,6 +159,8 @@ convention the scene id equals the situation id.
 
 With a `viz` scene, the page (on the site and in the app) draws Setup (address gauges), Swing (swing-length clock) and What
 to expect (flight compared with a normal shot with the same club) from it, above the bullets.
+Ball position, weight and stance share one figure, the feet from above; its geometry and heading
+come from `addressLayout` / `addressSummary` in `packages/shot-viz` (try it in `/address.html`).
 `club_change` draws a club ladder; `club_roll_chart: true` draws each club's air and roll (chips).
 `fixes` turns Common mistakes into Do's and don'ts pairs.
 
@@ -209,7 +211,8 @@ Renderers are thin. 2D SVG only for now (3D was prototyped and dropped). Respect
 The swing motion is data too: `SwingTuning` in `packages/shot-viz/src/core/pose.ts` (keyframes
 plus body-rotation knobs), with `DEFAULT_SWING` the one every diagram uses. Tune it in the swing
 playground (`pnpm --filter @shotbook/shot-viz dev`, then `/swing.html`; preview config `shot-viz`
-in the desktop app), which compares against the classic swing and copies the result as JSON.
+in the desktop app), which compares against the classic swing and copies the result as JSON. `/address.html` in the same dev server is the address figure's
+playground: every scene, both hands, light and dark, with the golfer's values overridable.
 
 ## Web app
 
