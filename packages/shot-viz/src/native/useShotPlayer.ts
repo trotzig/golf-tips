@@ -17,13 +17,18 @@ export interface ShotPlayerState {
   play(): void;
   pause(): void;
   seek(t: number): void;
+  /** Stop and show the still diagram again: the address pose with the whole flight. */
+  reset(): void;
 }
 
 /**
  * Plays a swing and ball flight for the native `ShotDiagram`, on the same clock as the web
  * player (`timelineAt`). Starts at address with the whole flight drawn, like a still diagram.
  */
-export function useShotPlayer(scene: ShotScene): ShotPlayerState {
+export function useShotPlayer(
+  scene: ShotScene,
+  { speed = 1 }: { /** Playback rate: 0.5 plays at half speed. Default 1. */ speed?: number } = {},
+): ShotPlayerState {
   const flight = useMemo(() => computeFlight(scene), [scene]);
   const duration = useMemo(() => timelineDuration(flight), [flight]);
   const [t, setT] = useState<number | null>(null);
@@ -52,14 +57,20 @@ export function useShotPlayer(scene: ShotScene): ShotPlayerState {
     const from = now.current >= duration ? 0 : now.current;
     const start = performance.now();
     const tick = (time: number) => {
-      const at = Math.min(duration, from + (time - start) / 1000);
+      const at = Math.min(duration, from + ((time - start) / 1000) * speed);
       now.current = at;
       setT(at);
       if (at < duration) raf.current = requestAnimationFrame(tick);
       else setPlaying(false);
     };
     raf.current = requestAnimationFrame(tick);
-  }, [duration]);
+  }, [duration, speed]);
+
+  const reset = useCallback(() => {
+    pause();
+    now.current = 0;
+    setT(null);
+  }, [pause]);
 
   // A new scene (another hand, another situation) starts over at the still diagram.
   useEffect(() => {
@@ -76,5 +87,5 @@ export function useShotPlayer(scene: ShotScene): ShotPlayerState {
   }, [t, flight]);
 
   const ended = t !== null && t >= duration;
-  return { duration, t: t ?? 0, playing, ended, frame, play, pause, seek };
+  return { duration, t: t ?? 0, playing, ended, frame, play, pause, seek, reset };
 }

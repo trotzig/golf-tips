@@ -2,8 +2,9 @@
 // Shot diagram for a situation, drawn to static SVG at build time. Both hands and both golfers
 // are rendered and the global `data-hand` and `data-golfer` CSS shows the reader's, so switching
 // never waits on JavaScript.
-// With JavaScript, a small player (no React) plays the swing and ball flight once when the diagram
-// comes into view; one button pauses it, resumes it and plays it again.
+// With JavaScript, a Play button over the diagram plays the swing and ball flight at half speed
+// with a small player (no React). Clicking the diagram while it plays pauses it; at the end it
+// goes back to the still diagram with the Play button showing.
 import { exampleScenes, handedScene } from "@shotbook/shot-viz";
 import { ShotDiagram } from "@shotbook/shot-viz/web";
 import Bullets from "./Bullets.astro";
@@ -28,28 +29,33 @@ const variants = (["right", "left"] as const).flatMap((hand) =>
     data-viz={scene.id}
     class="overflow-hidden rounded-card border border-line bg-card shadow-card"
   >
-    {variants.map(({ hand, gender }) => (
-      <div
-        class:list={[hand === "right" ? "hand-r" : "hand-l", `golfer-${gender}`]}
-        data-viz-hand={hand}
-        data-viz-golfer={gender}
-      >
-        <ShotDiagram scene={handedScene(scene, hand, gender)} {...size} />
-      </div>
-    ))}
-    <script type="application/json" data-viz-scene set:html={sceneJson} />
-    <div data-viz-controls hidden class="flex border-t border-line bg-surface px-4 py-3">
+    <div class="relative">
+      {variants.map(({ hand, gender }) => (
+        <div
+          class:list={[hand === "right" ? "hand-r" : "hand-l", `golfer-${gender}`]}
+          data-viz-hand={hand}
+          data-viz-golfer={gender}
+        >
+          <ShotDiagram scene={handedScene(scene, hand, gender)} {...size} />
+        </div>
+      ))}
       <button
         type="button"
         data-viz-play
-        class="min-h-11 rounded-full bg-accent px-4 font-semibold text-on-accent hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        data-state="ready"
+        aria-label="Play swing"
+        hidden
+        class="group absolute inset-0 flex cursor-pointer items-center justify-center focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-accent"
       >
-        <span aria-hidden="true" data-viz-icon>
-          ▶
-        </span>{" "}
-        <span data-viz-label>Play swing</span>
+        <span
+          aria-hidden="true"
+          class="flex size-16 items-center justify-center rounded-full bg-accent pl-1 text-2xl text-on-accent shadow-card group-hover:bg-accent-strong group-data-[state=playing]:hidden"
+        >
+          {"\u25B6\uFE0E"}
+        </span>
       </button>
     </div>
+    <script type="application/json" data-viz-scene set:html={sceneJson} />
     {scene.tips.length > 0 && (
       <figcaption class="p-4 text-lg leading-snug marker:text-accent">
         <Bullets items={scene.tips} />
@@ -67,23 +73,16 @@ const variants = (["right", "left"] as const).flatMap((hand) =>
   } from "@shotbook/shot-viz/player";
 
   const size = { width: 360, height: 300 };
-  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  // Half speed, so the reader can follow the swing.
+  const speed = 0.5;
 
-  // Icon (text presentation, so it isn't drawn as an emoji) and label for each button state.
-  const states = {
-    ready: ["\u25B6\uFE0E", "Play swing"],
-    playing: ["\u2759\u200A\u2759", "Pause"],
-    paused: ["\u25B6\uFE0E", "Play"],
-    ended: ["\u21BB", "Play again"],
-  } as const;
+  // Accessible name of the button in each state; the icon shows whenever it isn't playing.
+  const labels = { ready: "Play swing", playing: "Pause", paused: "Play" } as const;
 
   for (const figure of document.querySelectorAll<HTMLElement>("figure[data-viz]")) {
     const json = figure.querySelector("[data-viz-scene]")?.textContent;
-    const controls = figure.querySelector<HTMLElement>("[data-viz-controls]");
     const button = figure.querySelector<HTMLButtonElement>("[data-viz-play]");
-    const icon = figure.querySelector<HTMLElement>("[data-viz-icon]");
-    const label = figure.querySelector<HTMLElement>("[data-viz-label]");
-    if (!json || !controls || !button || !icon || !label) continue;
+    if (!json || !button) continue;
     const scene = JSON.parse(json) as ShotScene;
 
     // One player per hand and golfer, made on first use: only the visible diagram is redrawn.
@@ -98,44 +97,34 @@ const variants = (["right", "left"] as const).flatMap((hand) =>
           `[data-viz-hand="${hand}"][data-viz-golfer="${gender}"] svg`,
         );
         if (!svg) return null;
-        player = createShotPlayer(svg, handedScene(scene, hand, gender), size);
+        player = createShotPlayer(svg, handedScene(scene, hand, gender), { ...size, speed });
         players.set(`${hand} ${gender}`, player);
       }
       return player;
     };
 
-    const show = (state: keyof typeof states) => {
-      [icon.textContent, label.textContent] = states[state];
-    };
-    const play = () => {
-      const player = current();
-      if (!player) return;
-      player.play((t) => t >= player.duration && show("ended"));
-      show("playing");
+    const show = (state: keyof typeof labels) => {
+      button.dataset.state = state;
+      button.setAttribute("aria-label", labels[state]);
     };
 
     button.addEventListener("click", () => {
-      autoplay.disconnect();
       const player = current();
-      if (player?.playing) {
+      if (!player) return;
+      if (player.playing) {
         player.pause();
         show("paused");
-      } else play();
+        return;
+      }
+      // At the end, go back to the still diagram with the Play button showing.
+      player.play((t) => {
+        if (t < player.duration) return;
+        player.reset();
+        show("ready");
+      });
+      show("playing");
     });
 
-    // Play once, the first time most of the diagram is on screen.
-    const autoplay = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        autoplay.disconnect();
-        play();
-      },
-      { threshold: 0.6 },
-    );
-
-    // Reduced motion: no autoplay, but the reader can still play it with the button.
-    reducedMotion.addEventListener("change", () => reducedMotion.matches && autoplay.disconnect());
-    if (!reducedMotion.matches) autoplay.observe(figure);
-    controls.hidden = false;
+    button.hidden = false;
   }
 </script>

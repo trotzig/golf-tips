@@ -23,6 +23,16 @@ export interface ShotPlayer {
    */
   play(onFrame?: (t: number) => void): void;
   pause(): void;
+  /** Stop and show the diagram as first drawn: the address pose with the whole flight. */
+  reset(): void;
+}
+
+export interface ShotPlayerOptions extends Pick<
+  Shapes2DOptions,
+  "view" | "width" | "height" | "theme"
+> {
+  /** Playback rate: 0.5 plays at half speed. Default 1. */
+  speed?: number;
 }
 
 /**
@@ -32,9 +42,10 @@ export interface ShotPlayer {
 export function createShotPlayer(
   svg: SVGSVGElement,
   scene: ShotScene,
-  options: Pick<Shapes2DOptions, "view" | "width" | "height" | "theme"> = {},
+  { speed = 1, ...options }: ShotPlayerOptions = {},
 ): ShotPlayer {
   const layer = svg.querySelector("[data-shapes]") ?? svg;
+  const initial = layer.innerHTML;
   const flight = computeFlight(scene);
   const duration = timelineDuration(flight);
   let raf = 0;
@@ -60,7 +71,7 @@ export function createShotPlayer(
     const from = time >= duration ? 0 : time;
     const start = performance.now();
     const tick = (now: number) => {
-      const t = Math.min(duration, from + (now - start) / 1000);
+      const t = Math.min(duration, from + ((now - start) / 1000) * speed);
       seek(t);
       if (t < duration) raf = requestAnimationFrame(tick);
       else playing = false;
@@ -68,6 +79,12 @@ export function createShotPlayer(
     };
     playing = true;
     raf = requestAnimationFrame(tick);
+  };
+
+  const reset = () => {
+    pause();
+    time = 0;
+    layer.innerHTML = initial;
   };
 
   return {
@@ -81,5 +98,6 @@ export function createShotPlayer(
     seek,
     play,
     pause,
+    reset,
   };
 }

@@ -248,11 +248,12 @@ playground: every scene, both hands, light and dark, with the golfer's values ov
 - Shot diagrams are rendered to static SVG at build time (React via `@astrojs/react`, with no
   `client:` directive, so no React ships to the browser). Both hands and both golfers are
   rendered and the `data-hand` / `data-golfer` CSS shows one. Diagrams are inlined four times
-  per page; keep scenes under the shape budget tested in `packages/shot-viz`. With JavaScript, the
-  diagram plays once when it scrolls into view, and one button pauses, resumes and plays it again
-  (no scrubbing: the clips are short and show outcomes, not swing technique). It uses
-  `@shotbook/shot-viz/player` (plain DOM, no React or zod) to redraw the visible diagram. With
-  reduced motion it doesn't play on its own; the reader can still press Play.
+  per page; keep scenes under the shape budget tested in `packages/shot-viz`. With JavaScript, a
+  Play button over the diagram plays it at half speed; clicking the diagram while it plays pauses
+  it, and at the end it goes back to the still diagram with the Play button showing. It never
+  plays on its own (no scrubbing either: the clips are short and show outcomes, not swing
+  technique). It uses `@shotbook/shot-viz/player` (plain DOM, no React or zod) to redraw the
+  visible diagram.
 
 ## Visual regression
 
@@ -297,9 +298,9 @@ and Settings, plus category, tag and situation screens that mirror the site.
   favourites (`shotbook:favourites`, saved with the button under a situation's title). Every text
   goes through `useHanded()`, which resolves directions and units.
 - **Diagrams** come from `@shotbook/shot-viz/native`: `ShotDiagram` (react-native-svg, drawn from
-  the same shapes as the web via `shapesElements`) and `useShotPlayer` (plays once on open, then
-  one Pause / Play / Play again button, on the shared timeline). With reduced motion it waits for
-  Play.
+  the same shapes as the web via `shapesElements`) and `useShotPlayer` (on the shared timeline; like
+  the site, a Play button over the diagram plays it at half speed, a tap pauses it, and the end
+  goes back to the still diagram).
 - **Illustrated sections** (setup gauges, swing clock, flight compared with normal, club ladder
   and roll chart) are in `src/components/Illustrations.tsx`, ported from the site's components
   with their geometry in `src/lib/illustrations.ts`. Change both sides together.
