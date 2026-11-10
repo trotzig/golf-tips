@@ -24,7 +24,6 @@ fixes:
   - Turn your chest through and let the club's loft lift the ball.
 club_choice: Use a wedge; control distance with swing length.
 drill: Learn how far waist, chest and shoulder swings fly per wedge.
-advanced: Ball forward for higher, back for lower.
 related: [basic-chip, lob-shot, bump-and-run, greenside-bunker]
 viz: pitch-shot
 updated: 2026-11-03

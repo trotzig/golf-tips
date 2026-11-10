@@ -25,7 +25,6 @@ fixes:
   - Aim {right} of the flag and let the ball curve back.
 club_choice: Take about one club more.
 club_change: 1
-advanced: Hold the face slightly open to reduce the hook.
 related: [ball-below-feet, uphill-lie, downhill-lie, intentional-draw]
 viz: ball-above-feet
 updated: 2026-11-03

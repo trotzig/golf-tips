@@ -28,7 +28,6 @@ fixes:
 club_choice: Take one or two clubs more.
 club_change: [1, 2]
 drill: Find where practice swings brush the ground; set the ball there.
-advanced: On severe upslopes, take more club and swing three-quarter.
 related: [downhill-lie, ball-above-feet, ball-below-feet]
 viz: uphill-lie
 updated: 2026-11-03

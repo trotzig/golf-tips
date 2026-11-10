@@ -169,28 +169,6 @@ const bodyHtml = s.body ? await marked.parse(handedMarkdown(s.body)) : "";
         </div>
       </section>
     )}
-    {s.advanced && (
-      <details class="group rounded-card border border-line bg-card shadow-card">
-        <summary class="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
-          <span>
-            <span class="block font-semibold text-ink-strong">For better players</span>
-            <span class="block text-sm text-ink-muted">A refinement once the basics work</span>
-          </span>
-          <span aria-hidden="true" class="text-2xl leading-none text-accent group-open:hidden">
-            +
-          </span>
-          <span
-            aria-hidden="true"
-            class="hidden text-2xl leading-none text-accent group-open:inline"
-          >
-            −
-          </span>
-        </summary>
-        <p class="px-4 pb-4 text-lg leading-snug">
-          <Handed text={s.advanced} />
-        </p>
-      </details>
-    )}
     {bodyHtml && <section class="space-y-3 px-1 text-lg text-ink" set:html={bodyHtml} />}
 
     {related.length > 0 && (

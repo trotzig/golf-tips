@@ -23,7 +23,6 @@ fixes:
   - Aim for the front or middle and let the ball roll to the flag.
   - Land wedges short of the flag and allow for release.
 club_choice: About one club less per {10–15 mph} of tailwind.
-advanced: Off the tee, launch it higher to ride the wind.
 related: [into-the-wind, crosswind, choosing-a-target]
 viz: downwind
 updated: 2026-11-03

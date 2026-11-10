@@ -26,7 +26,6 @@ fixes:
 club_choice: Consider one club less.
 club_change: -1
 drill: Start balls along an alignment stick on your body line.
-advanced: The face sets start direction; path versus face sets curve.
 related: [intentional-fade, crosswind, ball-above-feet, choosing-a-target]
 viz: intentional-draw
 updated: 2026-11-03

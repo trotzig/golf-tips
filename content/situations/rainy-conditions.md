@@ -15,7 +15,8 @@ swing:
   - Pick the ball clean; wet turf grabs heavy strikes.
 expect:
   - Shorter carry, much less roll.
-  - Slower greens, firmer bunker sand.
+  - Slower greens with less break; putt firmer.
+  - Firmer bunker sand.
 mistakes:
   - Letting grips get wet.
   - Hurrying to get out of the rain.
@@ -24,9 +25,8 @@ fixes:
   - Keep your normal routine and make sure of your footing.
 club_choice: One more club; fly it to the target.
 club_change: 1
-advanced: Putt firmer on wet greens; expect less break.
 related: [cold-weather, into-the-wind, chip-or-putt]
-updated: 2026-11-03
+updated: 2026-11-10
 ---
 
 Safety first: if there is thunder or lightning, stop play at once and get to a safe building or

@@ -23,7 +23,6 @@ fixes:
   - Stay centered and swing down through; let the loft lift the ball.
   - Choose a club whose loft clearly clears the obstacle.
 club_choice: Take the club that clears it; accept the distance.
-advanced: Hold the face slightly open for extra height.
 related: [low-shot, lob-shot, punch-out-from-trees, thick-rough]
 viz: high-shot
 updated: 2026-11-03

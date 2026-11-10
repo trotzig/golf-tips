@@ -25,7 +25,6 @@ fixes:
   - Brush the grass with a shallow swing and let the club glide.
 club_choice: Less loft is fine for chips; from the rough, take one club less.
 drill: Chip down-grain to a tee and find how short your landing spot needs to be.
-advanced: On the green, putts down-grain roll faster and drift toward the way the grain grows.
 related: [into-the-grain-lie, flyer-lie, basic-chip, bump-and-run, putting-from-the-fringe]
 updated: 2026-11-03
 ---

@@ -26,7 +26,6 @@ fixes:
   - Accelerate through the sand to a full finish.
 club_choice: Use a sand wedge; its bounce glides through sand.
 drill: Draw a line in the sand and practice hitting it, no ball.
-advanced: For longer shots, square the face or use less loft.
 related: [plugged-bunker-lie, fairway-bunker, lob-shot, pitch-shot]
 viz: greenside-bunker
 updated: 2026-11-03

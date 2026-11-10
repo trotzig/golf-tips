@@ -24,7 +24,6 @@ fixes:
   - Take a lofted club and get back to the fairway.
   - Grip firmer and accelerate through the grass to a finish.
 club_choice: Take the loft that gets you safely out.
-advanced: Grass growing against you needs even more loft.
 related: [flyer-lie, punch-out-from-trees, laying-up, high-shot]
 viz: thick-rough
 updated: 2026-11-03

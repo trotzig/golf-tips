@@ -26,7 +26,6 @@ fixes:
   - Wriggle your feet in just enough for a stable stance.
 club_choice: One club more, but never too little loft for the lip.
 club_change: 1
-advanced: From a good lie and low lip, sweep a hybrid or wood.
 related: [greenside-bunker, plugged-bunker-lie, divot-lie, laying-up]
 viz: fairway-bunker
 updated: 2026-11-03

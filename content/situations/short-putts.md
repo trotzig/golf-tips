@@ -23,7 +23,6 @@ fixes:
   - Make a compact stroke that accelerates through the ball.
 club_choice: Commit to one line and speed; don't change over the ball.
 drill: Hole a circle of balls at {3 ft}, then move back.
-advanced: Listen for the ball to drop instead of watching.
 related: [lag-putting, pre-shot-routine, first-tee-nerves]
 updated: 2026-11-03
 ---

@@ -106,7 +106,6 @@ function fieldsOf(s: Situation): Record<(typeof FIELDS)[number], string> {
     ...(s.fixes ?? []),
     s.club_choice ?? "",
     s.drill ?? "",
-    s.advanced ?? "",
     s.body,
   ];
   return {

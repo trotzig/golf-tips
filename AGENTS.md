@@ -85,8 +85,8 @@ move to a free port if taken. Open `/golf-tips/` on the port it reports — the 
 - Mainstream, widely agreed advice — what most good teaching professionals would say. Avoid
   controversial methods, named swing systems, and absolutes ("always", "never") unless truly
   universal.
-- Works for a beginner and a scratch player. Lead with the fundamental; put refinements under
-  `advanced` notes rather than in the main steps.
+- Works for a beginner and a scratch player. Lead with the fundamental; leave out refinements that
+  only matter to better players.
 - Short and scannable. Imperative voice ("Play the ball slightly back"). Each bullet ≤ ~20 words.
   It should fit on a card you could read between shots.
 - Handedness: readers set right- or left-handed once (on the settings page, stored
@@ -143,7 +143,6 @@ fixes:                    # optional: one per mistake, shown as Do's and don'ts
 club_choice: Take one club less; the slope adds loft-reducing effect and roll.
 club_change: -1           # optional: clubs vs. normal (+ = more), or a range like [1, 2]
 drill: Optional — one short practice drill.
-advanced: Optional — refinements for better players.
 related: [uphill-lie, ball-above-feet, ball-below-feet]
 viz: downhill-lie         # optional ShotScene id in packages/shot-viz
 updated: 2026-10-31

@@ -29,7 +29,6 @@ fixes:
   - Chip with a lofted club and a slightly steeper swing.
 club_choice: More loft and a bigger swing around the green; from the fairway, one club more.
 drill: Chip from the same spot into and with the grain, and compare how far each one goes.
-advanced: Grain is strongest on Bermuda and other warm-season grass. It often grows toward the setting sun or toward drainage.
 related: [with-the-grain-lie, thick-rough, basic-chip, pitch-shot, putting-from-the-fringe]
 updated: 2026-11-03
 ---

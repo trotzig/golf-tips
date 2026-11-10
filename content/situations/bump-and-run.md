@@ -24,7 +24,6 @@ fixes:
   - Keep your wrists quiet and rock your shoulders like a putt.
 club_choice: Use the least loft that clears the fringe.
 club_roll_chart: true
-advanced: A hybrid works the same way from the fringe.
 related: [basic-chip, chip-or-putt, putting-from-the-fringe, tight-lie, into-the-wind]
 viz: bump-and-run
 updated: 2026-11-03
