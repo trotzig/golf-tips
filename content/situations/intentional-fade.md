@@ -26,7 +26,6 @@ fixes:
 club_choice: Consider one club more.
 club_change: 1
 drill: Start balls along an alignment stick on your body line.
-advanced: A fade off the tee stops quicker and stays in play.
 related: [intentional-draw, crosswind, ball-below-feet, choosing-a-target]
 viz: intentional-fade
 updated: 2026-11-03

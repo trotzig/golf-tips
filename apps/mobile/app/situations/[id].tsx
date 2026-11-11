@@ -1,5 +1,4 @@
 import { Stack, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Svg, { Circle, Ellipse, Line, Path, Rect } from "react-native-svg";
 import { HeartIcon } from "../../src/components/icons";
@@ -15,7 +14,6 @@ import {
   Body,
   Bullets,
   Card,
-  cardStyle,
   Chip,
   ChipRow,
   Eyebrow,
@@ -32,7 +30,6 @@ export default function SituationScreen() {
   const c = useColors();
   const handed = useHanded();
   const { isFavourite, toggleFavourite } = usePrefs();
-  const [advancedOpen, setAdvancedOpen] = useState(false);
   const { id } = useLocalSearchParams<{ id: string }>();
   const s = getSituation(id);
   if (!s) return <Stack.Screen options={{ title: "Not found" }} />;
@@ -149,31 +146,6 @@ export default function SituationScreen() {
           </View>
         </View>
       )}
-      {s.advanced && (
-        <View style={[ui.card, cardStyle(c), { padding: 0 }]}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityState={{ expanded: advancedOpen }}
-            onPress={() => setAdvancedOpen((open) => !open)}
-            style={styles.advancedToggle}
-          >
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.advancedTitle, { color: c.inkStrong }]}>For better players</Text>
-              <Text style={[styles.advancedHint, { color: c.inkMuted }]}>
-                A refinement once the basics work
-              </Text>
-            </View>
-            <Text style={[styles.advancedSign, { color: c.accent }]}>
-              {advancedOpen ? "−" : "+"}
-            </Text>
-          </Pressable>
-          {advancedOpen && (
-            <Body style={[ui.large, { paddingHorizontal: 16, paddingBottom: 16 }]}>
-              {handed(s.advanced)}
-            </Body>
-          )}
-        </View>
-      )}
       {bodyParagraphs(handed(s.body)).map((p) => (
         <Body key={p} style={[ui.large, { paddingHorizontal: 4 }]}>
           {p}
@@ -230,15 +202,4 @@ const styles = StyleSheet.create({
     borderRadius: radius.card,
     padding: 16,
   },
-  advancedToggle: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    minHeight: 48,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  advancedTitle: { fontFamily: fonts.semibold, fontSize: 16 },
-  advancedHint: { fontFamily: fonts.regular, fontSize: 14 },
-  advancedSign: { fontFamily: fonts.regular, fontSize: 26, lineHeight: 28 },
 });

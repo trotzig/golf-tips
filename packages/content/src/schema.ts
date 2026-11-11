@@ -50,7 +50,6 @@ export const frontmatterSchema = z
     /** Draw each club's share of air and roll, for chips and bump-and-runs. */
     club_roll_chart: z.boolean().optional(),
     drill: text.optional(),
-    advanced: text.optional(),
     related: z.array(idSchema).default([]),
     viz: idSchema.optional(),
     updated: z

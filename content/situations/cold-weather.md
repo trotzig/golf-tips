@@ -24,7 +24,6 @@ fixes:
   - Take one or two more clubs to allow for the shorter carry.
 club_choice: Take about one more club; more if very cold.
 club_change: [1, 2]
-advanced: Keep spare balls in an inside pocket; warm balls fly farther.
 related: [rainy-conditions, into-the-wind, pre-shot-routine]
 updated: 2026-11-03
 ---

@@ -23,7 +23,6 @@ fixes:
   - Lay up to your favorite full-swing distance.
   - Lay up to flat fairway well short of the hazard.
 club_choice: Club for the lay-up target, then swing normally.
-advanced: A full wedge from flat ground beats an awkward short pitch.
 related: [choosing-a-target, thick-rough, punch-out-from-trees, fairway-bunker]
 updated: 2026-11-03
 ---

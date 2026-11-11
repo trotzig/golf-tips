@@ -55,7 +55,7 @@ export function textFields(s: Situation): Array<[string, string]> {
     ["summary", s.summary],
     ["body", s.body],
   ];
-  for (const key of ["club_choice", "drill", "advanced"] as const) {
+  for (const key of ["club_choice", "drill"] as const) {
     const value = s[key];
     if (value) fields.push([key, value]);
   }

@@ -24,7 +24,6 @@ fixes:
   - Take one or more extra clubs and fly it to the target.
 club_choice: Add one club per {10 mph} of headwind.
 drill: On a windy range, compare your normal club with one more swung easy.
-advanced: Tee the driver slightly lower.
 related: [downwind, crosswind, low-shot, bump-and-run]
 viz: into-the-wind
 updated: 2026-11-03

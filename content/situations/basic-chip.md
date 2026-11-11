@@ -26,7 +26,6 @@ fixes:
 club_choice: Pick a landing spot just on the green, then the club that rolls the rest.
 club_roll_chart: true
 drill: Chip to land on a towel, using different clubs.
-advanced: Learn each club's carry-to-roll ratio.
 related: [pitch-shot, bump-and-run, chip-or-putt, tight-lie]
 viz: basic-chip
 updated: 2026-11-03

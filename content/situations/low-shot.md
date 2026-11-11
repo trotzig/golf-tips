@@ -26,7 +26,6 @@ fixes:
   - Keep your hands ahead of the clubhead through impact.
 club_choice: More club, less effort.
 drill: Hit 7-irons finishing with your hands below your shoulders.
-advanced: A ball's width farther back flies noticeably lower.
 related: [high-shot, into-the-wind, punch-out-from-trees, divot-lie]
 viz: low-shot
 updated: 2026-11-03

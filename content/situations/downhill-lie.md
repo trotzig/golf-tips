@@ -26,7 +26,6 @@ fixes:
 club_choice: Take one club less, or swing softer.
 club_change: -1
 drill: Make practice swings that brush the grass after the ball spot.
-advanced: Near greens, land it shorter and let it run.
 related: [uphill-lie, ball-above-feet, ball-below-feet, tight-lie]
 viz: downhill-lie
 updated: 2026-11-03

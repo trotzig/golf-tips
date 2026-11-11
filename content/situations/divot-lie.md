@@ -24,7 +24,6 @@ fixes:
   - Take an iron and hit down; it digs the ball out cleanly.
 club_choice: Same club or one less; allow for roll.
 club_change: [-1, 0]
-advanced: From a sand-filled divot, pick it clean like a fairway bunker shot.
 related: [tight-lie, low-shot, fairway-bunker]
 viz: divot-lie
 updated: 2026-11-03

@@ -22,7 +22,6 @@ fixes:
   - Aim for the middle of the green, away from the trouble.
   - Club for your typical shot, so a slight miss still finds the green.
 club_choice: Between clubs, take the one that stays away from the trouble.
-advanced: Aim so your usual miss still finds a safe spot.
 related: [laying-up, flyer-lie, downwind, intentional-draw, intentional-fade]
 updated: 2026-11-03
 ---
